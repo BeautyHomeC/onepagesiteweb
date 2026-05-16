@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { updateFormation } from '../actions';
+import { updateFormation } from '../../actions';
 import { Edit2 } from 'lucide-react';
 
 type Formation = {

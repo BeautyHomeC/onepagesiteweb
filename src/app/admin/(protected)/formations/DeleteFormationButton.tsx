@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { deleteFormation } from '../actions';
+import { deleteFormation } from '../../actions';
 import { Trash2 } from 'lucide-react';
 
 export default function DeleteFormationButton({ id }: { id: string }) {

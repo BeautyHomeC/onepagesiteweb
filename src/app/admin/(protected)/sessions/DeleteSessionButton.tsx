@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { deleteSession } from '../actions';
+import { deleteSession } from '../../actions';
 import { Trash2 } from 'lucide-react';
 
 export default function DeleteSessionButton({ id }: { id: string }) {

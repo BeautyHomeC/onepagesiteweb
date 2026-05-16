@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createFormation, deleteFormation } from '../actions';
+import { createFormation, deleteFormation } from '../../actions';
 
 export default function CreateFormationForm() {
   const [isOpen, setIsOpen] = useState(false);

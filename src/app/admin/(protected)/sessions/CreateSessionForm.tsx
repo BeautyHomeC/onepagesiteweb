@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { createSession } from '../actions';
+import { createSession } from '../../actions';
 
 type Formation = { id: string, titre: string };
 

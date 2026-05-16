@@ -1,14 +1,9 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import DownloadContractButton from './DownloadContractButton';
+import DownloadContractButton from '../DownloadContractButton';
 
 export default async function AdminDashboard() {
   const supabase = await createClient();
-  const { data: authData, error: authError } = await supabase.auth.getUser();
-
-  if (authError || !authData?.user) {
-    redirect('/admin/login');
-  }
 
   const signOut = async () => {
     'use server'
