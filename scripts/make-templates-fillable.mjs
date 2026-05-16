@@ -22,7 +22,7 @@ const FIELDS = [
 
   // PAGE 1 — Article 1 (nom formation) + Article 2 (nombre d'élèves)
   { page: 0, name: 'formation_titre',   x:  57, y: Y(519),   w: 480, h: 14 },
-  { page: 0, name: 'nombre_eleves',     x: 196, y: Y(683.7), w: 18,  h: 13 },
+  { page: 0, name: 'nombre_eleves',     x: 197, y: Y(683.7), w:  10, h: 13 },
 
   // PAGE 2 — Article 4 (durée, date, horaire)
   { page: 1, name: 'duree_formation',   x: 165, y: Y(116.7), w: 380, h: 13 },
@@ -66,35 +66,16 @@ async function makeFillable(srcPath, outPath, extraFields = []) {
 
 async function main() {
   const jobs = [
-    {
-      label: 'contrat (particulier)',
-      src:   path.join(DOCS_DIR, 'contrat-source.pdf'),
-      out:   path.join(DOCS_DIR, 'contrat-template-v2.pdf'),
-      extra: [],
-    },
-    {
-      label: 'convention (pro)',
-      src:   path.join(DOCS_DIR, 'convention-source.pdf'),
-      out:   path.join(DOCS_DIR, 'convention-template-v2.pdf'),
-      extra: PRO_EXTRA,
-    },
+    { label: 'contrat (particulier)', src: path.join(DOCS_DIR, 'contrat-source.pdf'),    out: path.join(DOCS_DIR, 'contrat-template-v3.pdf'),    extra: [] },
+    { label: 'convention (pro)',      src: path.join(DOCS_DIR, 'convention-source.pdf'), out: path.join(DOCS_DIR, 'convention-template-v3.pdf'), extra: PRO_EXTRA },
   ];
 
   for (const job of jobs) {
-    if (!fs.existsSync(job.src)) {
-      console.error('❌ Source absente : ' + job.src);
-      continue;
-    }
+    if (!fs.existsSync(job.src)) { console.error('absent: ' + job.src); continue; }
     const { fields, bytes } = await makeFillable(job.src, job.out, job.extra);
-    console.log('✅ ' + job.label);
-    console.log('   → ' + path.basename(job.out) + ' (' + bytes + ' octets)');
-    console.log('   → ' + fields.length + ' champs : ' + fields.join(', ') + '\n');
+    console.log(job.label + ' -> ' + path.basename(job.out) + ' (' + bytes + ' octets, ' + fields.length + ' champs)');
   }
-
-  console.log('🎉 Templates fillable prêts.');
+  console.log('OK');
 }
 
-main().catch((err) => {
-  console.error('💥 Erreur :', err);
-  process.exit(1);
-});
+main().catch((e) => { console.error(e); process.exit(1); });

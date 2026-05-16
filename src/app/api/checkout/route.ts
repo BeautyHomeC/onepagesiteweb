@@ -9,10 +9,18 @@ export async function POST(req: Request) {
     });
 
     const body = await req.json();
-    const { session_id } = body;
+    const { session_id, consent } = body;
 
     if (!session_id) {
       return NextResponse.json({ error: 'Session ID is required' }, { status: 400 });
+    }
+
+    // Vérification du consentement triple (CGV + RGPD + contrat)
+    if (!consent?.cgv || !consent?.rgpd || !consent?.contrat) {
+      return NextResponse.json(
+        { error: 'Vous devez accepter les CGV, la RGPD et le contrat pour continuer.' },
+        { status: 400 },
+      );
     }
 
     const siteOrigin = new URL(req.url).origin;
@@ -54,9 +62,18 @@ export async function POST(req: Request) {
         invoice_creation: {
           enabled: true,
         },
-        // ── Champs Pro optionnels — si remplis, le webhook génère une
-        //    CONVENTION (convention-template.pdf) au lieu d'un CONTRAT.
+        // ── Champs collectés au checkout pour le contrat de formation ───────
+        //    • Instagram      → optionnel, reporté tel quel dans le contrat
+        //    • Raison sociale → si remplie, le webhook génère une CONVENTION
+        //                        (au lieu d'un contrat particulier)
+        //    • N° SIRET       → idem (pro)
         custom_fields: [
+          {
+            key: 'instagram',
+            label: { type: 'custom', custom: 'Compte Instagram (optionnel)' },
+            type: 'text',
+            optional: true,
+          },
           {
             key: 'raison_sociale',
             label: { type: 'custom', custom: 'Raison sociale (si professionnel)' },
@@ -70,6 +87,16 @@ export async function POST(req: Request) {
             optional: true,
           },
         ],
+        // ── Consentement légal RGPD/CGV directement intégré au paiement ────
+        consent_collection: {
+          terms_of_service: 'required',
+        },
+        custom_text: {
+          terms_of_service_acceptance: {
+            message:
+              "J'accepte les [Conditions Générales de Vente](https://www.beautyhomeconcept.fr/cgv), le [Règlement Intérieur](https://www.beautyhomeconcept.fr/reglement-interieur), la [Politique de Confidentialité (RGPD)](https://www.beautyhomeconcept.fr/mentions-legales) et le contrat de formation qui me sera envoyé par email après paiement.",
+          },
+        },
         line_items: [
           {
             price_data: {
@@ -90,8 +117,17 @@ export async function POST(req: Request) {
           formation_prix: String(formation.prix),
           date_debut: sessionData.date_debut,
           date_fin: sessionData.date_fin,
+          // Variables surchargeables par formation (cf. webhook stripe)
+          duree_formation: formation.duree_formation || formation.duree || '',
+          horaire:         formation.horaire || '9H30 / 17H',
+          nombre_eleves:   String(formation.nombre_eleves || 2),
+          programme_file:  formation.programme_file || '',
+          // Audit trail légal : preuve de consentement triple
           client_ip: ip,
-          consent_timestamp: new Date().toISOString(),
+          consent_timestamp: consent?.timestamp || new Date().toISOString(),
+          consent_cgv: consent?.cgv ? 'true' : 'false',
+          consent_rgpd: consent?.rgpd ? 'true' : 'false',
+          consent_contrat: consent?.contrat ? 'true' : 'false',
         },
         success_url: `${siteOrigin}/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${siteOrigin}/#formations`,

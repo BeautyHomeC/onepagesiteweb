@@ -72,6 +72,32 @@ export default function CreateFormationForm() {
           <input type="file" name="image" accept="image/*" className="w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-on-primary hover:file:bg-primary-container" />
         </div>
 
+        {/* Infos contractuelles */}
+        <hr className="border-surface-container-highest" />
+        <h3 className="font-headline-sm text-on-surface">Infos contractuelles (contrat de formation)</h3>
+
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">Durée détaillée</label>
+            <input type="text" name="duree_formation" placeholder="1 JOUR (7 HEURES) en présentiel" className="w-full bg-surface-container-low border border-surface-container-highest px-4 py-3 text-on-surface focus:outline-none focus:border-primary" />
+          </div>
+          <div>
+            <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">Horaire</label>
+            <input type="text" name="horaire" placeholder="9H30 / 17H" className="w-full bg-surface-container-low border border-surface-container-highest px-4 py-3 text-on-surface focus:outline-none focus:border-primary" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">Élèves max par session</label>
+            <input type="number" name="nombre_eleves" defaultValue={2} min="1" max="20" className="w-full bg-surface-container-low border border-surface-container-highest px-4 py-3 text-on-surface focus:outline-none focus:border-primary" />
+          </div>
+          <div>
+            <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">Programme PDF</label>
+            <input type="file" name="programme_pdf" accept="application/pdf" className="w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-on-primary hover:file:bg-primary-container" />
+          </div>
+        </div>
+
         <div className="pt-4 flex justify-end gap-4">
           <button type="button" onClick={() => setIsOpen(false)} className="px-6 py-3 text-sm font-label-caps tracking-widest text-on-surface-variant hover:text-on-surface">ANNULER</button>
           <button type="submit" disabled={isLoading} className="bg-primary text-on-primary px-6 py-3 font-label-caps tracking-widest text-sm hover:bg-primary-container hover:text-on-primary-container transition-colors disabled:opacity-50">

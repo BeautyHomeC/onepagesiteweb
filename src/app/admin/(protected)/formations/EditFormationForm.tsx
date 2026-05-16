@@ -10,6 +10,10 @@ type Formation = {
   description: string;
   prix: number;
   duree: string;
+  duree_formation?: string;
+  horaire?: string;
+  nombre_eleves?: number;
+  programme_pdf_url?: string;
   objectifs?: string;
   competences?: string;
   debouches?: string;
@@ -79,7 +83,7 @@ export default function EditFormationForm({ formation }: { formation: Formation 
               <input required type="number" step="0.01" name="prix" defaultValue={formation.prix} className="w-full bg-surface-container-low border border-surface-container-highest px-4 py-3 text-on-surface focus:outline-none focus:border-primary" />
             </div>
             <div>
-              <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">Durée (ex: 2 Jours)</label>
+              <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">Durée (affichage carte, ex: 2 Jours)</label>
               <input required type="text" name="duree" defaultValue={formation.duree} className="w-full bg-surface-container-low border border-surface-container-highest px-4 py-3 text-on-surface focus:outline-none focus:border-primary" />
             </div>
           </div>
@@ -87,6 +91,38 @@ export default function EditFormationForm({ formation }: { formation: Formation 
           <div>
             <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">Nouvelle image (laisser vide pour conserver l'actuelle)</label>
             <input type="file" name="image" accept="image/*" className="w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-on-primary hover:file:bg-primary-container" />
+          </div>
+
+          {/* ────────────── INFOS CONTRACTUELLES (Qualiopi / légal) ─────────── */}
+          <hr className="border-surface-container-highest my-8" />
+          <h3 className="font-headline-sm text-on-surface mb-2">Infos contractuelles (reportées sur le contrat de formation)</h3>
+          <p className="text-xs text-on-surface-variant mb-4">Ces données sont injectées automatiquement dans le contrat PDF généré après paiement.</p>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">Durée détaillée (contrat)</label>
+              <input type="text" name="duree_formation" defaultValue={formation.duree_formation} placeholder="1 JOUR (7 HEURES) en présentiel" className="w-full bg-surface-container-low border border-surface-container-highest px-4 py-3 text-on-surface focus:outline-none focus:border-primary" />
+            </div>
+            <div>
+              <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">Horaire</label>
+              <input type="text" name="horaire" defaultValue={formation.horaire} placeholder="9H30 / 17H" className="w-full bg-surface-container-low border border-surface-container-highest px-4 py-3 text-on-surface focus:outline-none focus:border-primary" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">Nombre max d'élèves par session</label>
+              <input type="number" name="nombre_eleves" defaultValue={formation.nombre_eleves || 2} min="1" max="20" className="w-full bg-surface-container-low border border-surface-container-highest px-4 py-3 text-on-surface focus:outline-none focus:border-primary" />
+            </div>
+            <div>
+              <label className="block text-sm font-label-caps tracking-wider text-on-surface-variant mb-2">
+                Programme PDF
+                {formation.programme_pdf_url && (
+                  <a href={formation.programme_pdf_url} target="_blank" className="ml-2 text-primary underline normal-case text-xs">(actuel)</a>
+                )}
+              </label>
+              <input type="file" name="programme_pdf" accept="application/pdf" className="w-full text-sm text-on-surface-variant file:mr-4 file:py-2 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-on-primary hover:file:bg-primary-container" />
+            </div>
           </div>
 
           <hr className="border-surface-container-highest my-8" />
