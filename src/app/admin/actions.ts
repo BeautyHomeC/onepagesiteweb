@@ -1,11 +1,19 @@
 'use server';
 
-import { createAdminClient } from '@/lib/supabase/server';
+import { createAdminClient, createClient } from '@/lib/supabase/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+
+async function requireAuth() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/admin/login');
+}
 
 // Formations
 export async function createFormation(formData: FormData) {
+  await requireAuth();
   const supabase = await createAdminClient();
   
   const titre = formData.get('titre') as string;
@@ -77,6 +85,7 @@ export async function createFormation(formData: FormData) {
 }
 
 export async function updateFormation(id: string, formData: FormData) {
+  await requireAuth();
   const supabase = await createAdminClient();
   
   const titre = formData.get('titre') as string;
@@ -150,6 +159,7 @@ export async function updateFormation(id: string, formData: FormData) {
 }
 
 export async function deleteFormation(id: string) {
+  await requireAuth();
   const supabase = await createAdminClient();
   
   const { error } = await supabase.from('formations').delete().eq('id', id);
@@ -166,6 +176,7 @@ export async function deleteFormation(id: string) {
 
 // Sessions
 export async function createSession(formData: FormData) {
+  await requireAuth();
   const supabase = await createAdminClient();
   
   const formation_id = formData.get('formation_id') as string;
@@ -189,6 +200,7 @@ export async function createSession(formData: FormData) {
 }
 
 export async function deleteSession(id: string) {
+  await requireAuth();
   const supabase = await createAdminClient();
   
   const { error } = await supabase.from('sessions').delete().eq('id', id);
