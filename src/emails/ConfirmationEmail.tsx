@@ -24,7 +24,7 @@ export default function ConfirmationEmail({
             <Text style={{ margin: 0, color: '#1b1c1c', marginTop: '10px' }}><strong>Lieu :</strong> Institut Beauty Home Concept, Amiens</Text>
           </Section>
           <Text style={{ color: '#4e463a', lineHeight: '1.6' }}>
-            Vous trouverez en pièce jointe de cet e-mail le livret d'accueil ainsi que nos Conditions Générales de Vente.
+            Vous trouverez en pièce jointe votre convention de formation signée.
             Nous sommes impatients de vous recevoir et de partager notre expertise.
           </Text>
           <Text style={{ color: '#1b1c1c', marginTop: '40px' }}>

@@ -56,3 +56,15 @@ CREATE POLICY "Images visibles par tous" ON storage.objects FOR SELECT USING (bu
 
 -- Autoriser l'upload d'images par l'administrateur
 CREATE POLICY "Admin peut uploader des images" ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'formations_images' AND auth.role() = 'authenticated');
+
+-- Fonction de décrémentation atomique des places (évite la race condition)
+-- À exécuter dans le dashboard Supabase > SQL Editor
+CREATE OR REPLACE FUNCTION public.decrement_places(session_id uuid)
+RETURNS void
+LANGUAGE sql
+SECURITY DEFINER
+AS $$
+  UPDATE public.sessions
+  SET places_disponibles = GREATEST(0, places_disponibles - 1)
+  WHERE id = session_id;
+$$;

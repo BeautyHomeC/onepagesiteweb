@@ -195,10 +195,22 @@ export async function POST(req: Request) {
 
     if (!supabaseSessionId) {
       console.error('Erreur: Aucun supabase_session_id trouvé dans les métadonnées.');
-      return NextResponse.json({ error: 'No session id in metadata' }, { status: 400 });
+      // Return 200 to prevent Stripe from retrying an unrecoverable error
+      return NextResponse.json({ received: true });
     }
 
     const supabase = await createAdminClient();
+
+    // Idempotency check: skip if already processed
+    const { data: existing } = await supabase
+      .from('reservations')
+      .select('id')
+      .eq('stripe_payment_id', stripeId)
+      .maybeSingle();
+
+    if (existing) {
+      return NextResponse.json({ received: true });
+    }
 
     // 1. Insertion de la réservation
     const { error: insertError } = await supabase.from('reservations').insert({
@@ -211,20 +223,26 @@ export async function POST(req: Request) {
 
     if (insertError) {
       console.error('Erreur insertion réservation:', insertError);
-      return NextResponse.json({ error: 'DB Insert Error' }, { status: 500 });
+      // Return 200 so Stripe doesn't retry — the error is logged for manual review
+      return NextResponse.json({ received: true });
     }
 
-    // 2. Décrémenter les places
+    // 2. Décrémenter les places et récupérer les données de session
     const { data: dbSession } = await supabase
       .from('sessions')
       .select('places_disponibles, date_debut, date_fin')
       .eq('id', supabaseSessionId)
       .single();
-    
+
     if (dbSession) {
-      await supabase.from('sessions').update({
-        places_disponibles: Math.max(0, dbSession.places_disponibles - 1)
-      }).eq('id', supabaseSessionId);
+      // Atomic decrement via SQL function (avoids TOCTOU race condition)
+      const { error: rpcError } = await supabase.rpc('decrement_places', { session_id: supabaseSessionId });
+      if (rpcError) {
+        // Fallback if function not yet deployed
+        await supabase.from('sessions').update({
+          places_disponibles: Math.max(0, dbSession.places_disponibles - 1)
+        }).eq('id', supabaseSessionId);
+      }
       
       const dateDebut = new Date(dateDebutRaw || dbSession.date_debut).toLocaleDateString('fr-FR');
       const dateFin = new Date(dateFinRaw || dbSession.date_fin).toLocaleDateString('fr-FR');
