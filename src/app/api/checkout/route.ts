@@ -50,6 +50,9 @@ export async function POST(req: Request) {
         },
         billing_address_collection: 'required',
         customer_creation: 'always',
+        invoice_creation: {
+          enabled: true,
+        },
         line_items: [
           {
             price_data: {
