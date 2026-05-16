@@ -81,13 +81,23 @@ export default function FormationsSection() {
   };
 
   return (
-    <section id="formations" className="bg-surface-container-lowest py-section-gap relative">
+    <section id="formations" className="bg-surface py-section-gap relative">
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-        <div className="flex justify-between items-end mb-16">
-          <h2 className="font-headline-md text-headline-md text-on-surface">Formations</h2>
-          <Link href="#formations" className="hidden md:inline-block text-on-surface-variant font-label-caps text-label-caps hover:text-primary transition-colors pb-1 border-b border-transparent hover:border-primary uppercase">
-            Découvrir les Formations
-          </Link>
+
+        {/* Section header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
+          <div>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-6 h-px bg-primary flex-shrink-0"></div>
+              <span className="font-label-caps text-label-caps text-primary uppercase tracking-[0.25em]">Catalogue</span>
+            </div>
+            <h2 className="font-playfair text-[36px] md:text-[48px] leading-[1.1] text-on-surface" style={{ letterSpacing: '-0.01em' }}>
+              Nos Formations
+            </h2>
+          </div>
+          <p className="font-body-md text-on-surface-variant max-w-xs md:text-right">
+            Présentiel · Amiens (80)<br />Sessions limitées à 1–2 élèves
+          </p>
         </div>
 
         {loading ? (
@@ -95,91 +105,89 @@ export default function FormationsSection() {
         ) : formations.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
             {formations.map((formation) => (
-              <div key={formation.id} className="group cursor-pointer bg-surface p-6 shadow-ambient transition-shadow duration-300 flex flex-col items-center text-center">
-                <div className="aspect-square mb-6 overflow-hidden bg-surface-container-low w-full p-2">
+              <div key={formation.id} className="group bg-surface-container-lowest border border-surface-container-highest flex flex-col overflow-hidden">
+                <div className="aspect-[4/3] overflow-hidden bg-surface-container-low">
                   {formation.image_url ? (
-                    <img 
-                      alt={formation.titre} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90" 
+                    <img
+                      alt={formation.titre}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                       src={formation.image_url}
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-surface-variant text-on-surface-variant font-body-md">Pas d'image</div>
+                    <div className="w-full h-full flex items-center justify-center bg-surface-container text-on-surface-variant font-body-md text-sm">
+                      <span className="material-symbols-outlined text-[48px] opacity-30" style={{ fontVariationSettings: "'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24" }}>image</span>
+                    </div>
                   )}
                 </div>
-                <h4 className="font-headline-sm text-headline-sm text-on-surface mb-2">{formation.titre}</h4>
-                <p className="font-body-md text-body-md text-on-surface-variant mb-4">{formation.description}</p>
-                <span className="font-label-caps text-label-caps text-primary uppercase mb-6 mt-auto">{formation.duree || "Sur mesure"}</span>
-                <Link 
-                  href={`/formations/${formation.id}`}
-                  className="w-full inline-block text-center border border-on-surface text-on-surface font-label-caps text-label-caps px-4 py-3 uppercase tracking-[0.2em] hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300 active:opacity-50 rounded-none"
-                >
-                  Découvrir le programme
-                </Link>
+                <div className="p-6 flex flex-col flex-1">
+                  <span className="font-label-caps text-label-caps text-primary uppercase tracking-[0.2em] mb-3">{formation.duree || "Sur mesure"}</span>
+                  <h4 className="font-playfair text-[22px] leading-snug text-on-surface mb-3">{formation.titre}</h4>
+                  <p className="font-body-md text-sm text-on-surface-variant leading-relaxed mb-5 flex-1">{formation.description}</p>
+                  <div className="flex items-center justify-between pt-4 border-t border-surface-container-highest mb-5">
+                    <div>
+                      <span className="font-playfair text-[28px] text-primary leading-none">{formation.prix ? `${formation.prix} €` : "—"}</span>
+                      <span className="font-label-caps text-[10px] text-on-surface-variant ml-2 uppercase tracking-widest">TTC</span>
+                    </div>
+                    <span className="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-widest">Acompte 30%</span>
+                  </div>
+                  <Link
+                    href={`/formations/${formation.id}`}
+                    className="w-full inline-block text-center bg-on-surface text-surface font-label-caps text-label-caps px-4 py-3.5 uppercase tracking-[0.2em] hover:bg-primary transition-all duration-300"
+                  >
+                    Découvrir le programme
+                  </Link>
+                </div>
               </div>
             ))}
           </div>
         ) : (
-          /* FALLBACK UI if Database is empty */
+          /* Fallback si base vide */
           <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-            {/* Card 1 */}
-            <div className="group cursor-pointer bg-surface p-6 shadow-ambient transition-shadow duration-300 flex flex-col items-center text-center">
-              <div className="aspect-square mb-6 overflow-hidden bg-surface-container-low w-full p-2">
-                <img 
-                  alt="Manucure Russe" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp1PbLB8PAw6WwBvWr3OksuzJoKLmAsb5gjEJ8nHAa6-ZfsIKYXtrWIaK-YUBvaLVDsdm5xh2C7peJw6_EB2qoW4nc8DmEnbcS0bhWow5HYNL1Z2wfn6f2QVi-DWZC4MKqFpxowjTxwEAqK4zLk22iBq4waGeR5veeHcZ2PIvSCwEgQ6PkrPHNH-MGSD5j3qw9ts6C8l8T2Tfu-XxqhKl7eCcex5FtKPtms4cwPXAWnccwP_1ewcVYQKvA4clwMyoAEIhfmmA6Vuhp"
-                />
+            {[
+              {
+                titre: "Masterclass Perfectionnement",
+                description: "Maîtrisez les techniques avancées et la préparation parfaite de l'ongle naturel.",
+                duree: "7h · Présentiel Amiens",
+                prix: "600",
+                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDp1PbLB8PAw6WwBvWr3OksuzJoKLmAsb5gjEJ8nHAa6-ZfsIKYXtrWIaK-YUBvaLVDsdm5xh2C7peJw6_EB2qoW4nc8DmEnbcS0bhWow5HYNL1Z2wfn6f2QVi-DWZC4MKqFpxowjTxwEAqK4zLk22iBq4waGeR5veeHcZ2PIvSCwEgQ6PkrPHNH-MGSD5j3qw9ts6C8l8T2Tfu-XxqhKl7eCcex5FtKPtms4cwPXAWnccwP_1ewcVYQKvA4clwMyoAEIhfmmA6Vuhp",
+              },
+              {
+                titre: "Manucure Russe Pro",
+                description: "L'art de la préparation à sec, la cuticule parfaite et la tenue longue durée.",
+                duree: "7h · Présentiel Amiens",
+                prix: "450",
+                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuATUmCuxJJzF9NQXSO41FZsJwgPsYS1KkTurDIZqkA76hdnvBUJlyDq0n82qfzSCETQ_glY0_0MUeTlfqgClFZwenCgO-fgVSehugvMi7S9BU-fPWmQAJe-K4tzcZwT_BqYgz2dsLm2HM_g1nBrFXdUTckAYsg0yOsdcabgkwa_weeGmw86g8vidQaQ05OcUhQFTTigthKsaySS1CuM6jvqw1lpBd_MPnVnm0f5r9BErCbz3M5GxuCq-bDzHzIaWZvmUx8gJ_5hMOi-",
+              },
+              {
+                titre: "Création de Salon Haut de Gamme",
+                description: "Développez une identité visuelle, une clientèle premium et une offre cohérente.",
+                duree: "Mentorat · Sur mesure",
+                prix: null,
+                img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAXWiv8EoIuFKzKkswIBuK-r2sdF7N-YjdEBz-f_G1OYHJAtSqQGYPV60M0nk4U_Wyy_HwBA0PgzWS3z7bruhGKJEm8UZAYroDjOAm7AoDH7-le_jm1pQ990j5220-5akf2_u66YJv5kg1QjSThUXYk---Bv-uNsOLfzNCjeSjML5syXGCsLpRu5lm1idlJnkGvpUBdys3h2Febr-vn70tXJRps9lnftD-65Aa4YsqwT7LSv6zr690Bl0GpTYP-x9Sp0KfcV8hZQ_9m",
+              },
+            ].map((f, i) => (
+              <div key={i} className="group bg-surface-container-lowest border border-surface-container-highest flex flex-col overflow-hidden">
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img alt={f.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src={f.img} />
+                </div>
+                <div className="p-6 flex flex-col flex-1">
+                  <span className="font-label-caps text-label-caps text-primary uppercase tracking-[0.2em] mb-3">{f.duree}</span>
+                  <h4 className="font-playfair text-[22px] leading-snug text-on-surface mb-3">{f.titre}</h4>
+                  <p className="font-body-md text-sm text-on-surface-variant leading-relaxed mb-5 flex-1">{f.description}</p>
+                  <div className="flex items-center justify-between pt-4 border-t border-surface-container-highest mb-5">
+                    <span className="font-playfair text-[28px] text-primary leading-none">{f.prix ? `${f.prix} €` : "Sur devis"}</span>
+                  </div>
+                  <button
+                    onClick={() => alert('Configurer la base de données Supabase pour activer les réservations.')}
+                    className="w-full bg-on-surface text-surface font-label-caps text-label-caps px-4 py-3.5 uppercase tracking-[0.2em] hover:bg-primary transition-all duration-300"
+                  >
+                    Réserver ma place
+                  </button>
+                </div>
               </div>
-              <h4 className="font-headline-sm text-headline-sm text-on-surface mb-2">Masterclass Perfectionnement</h4>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-4">Maîtrisez les techniques avancées et la préparation parfaite.</p>
-              <span className="font-label-caps text-label-caps text-primary uppercase mb-6 mt-auto">2 Jours • Présentiel Amiens</span>
-              <button onClick={() => alert('Veuillez configurer la base de données Supabase.')} className="w-full border border-on-surface text-on-surface font-label-caps text-label-caps px-4 py-3 uppercase tracking-[0.2em] hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300 active:opacity-50 rounded-none">
-                Réserver
-              </button>
-            </div>
-            
-            {/* Card 2 */}
-            <div className="group cursor-pointer bg-surface p-6 shadow-ambient transition-shadow duration-300 flex flex-col items-center text-center">
-              <div className="aspect-square mb-6 overflow-hidden bg-surface-container-low w-full p-2">
-                <img 
-                  alt="Nail Art Minimaliste" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuATUmCuxJJzF9NQXSO41FZsJwgPsYS1KkTurDIZqkA76hdnvBUJlyDq0n82qfzSCETQ_glY0_0MUeTlfqgClFZwenCgO-fgVSehugvMi7S9BU-fPWmQAJe-K4tzcZwT_BqYgz2dsLm2HM_g1nBrFXdUTckAYsg0yOsdcabgkwa_weeGmw86g8vidQaQ05OcUhQFTTigthKsaySS1CuM6jvqw1lpBd_MPnVnm0f5r9BErCbz3M5GxuCq-bDzHzIaWZvmUx8gJ_5hMOi-"
-                />
-              </div>
-              <h4 className="font-headline-sm text-headline-sm text-on-surface mb-2">Art & Esthétique</h4>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-4">L'art du minimalisme et des lignes épurées.</p>
-              <span className="font-label-caps text-label-caps text-primary uppercase mb-6 mt-auto">1 Jour • Présentiel Amiens</span>
-              <button onClick={() => alert('Veuillez configurer la base de données Supabase.')} className="w-full border border-on-surface text-on-surface font-label-caps text-label-caps px-4 py-3 uppercase tracking-[0.2em] hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300 active:opacity-50 rounded-none">
-                Réserver
-              </button>
-            </div>
-            
-            {/* Card 3 */}
-            <div className="group cursor-pointer bg-surface p-6 shadow-ambient transition-shadow duration-300 flex flex-col items-center text-center">
-              <div className="aspect-square mb-6 overflow-hidden bg-surface-container-low w-full p-2">
-                <img 
-                  alt="Gestion de Salon" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90" 
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXWiv8EoIuFKzKkswIBuK-r2sdF7N-YjdEBz-f_G1OYHJAtSqQGYPV60M0nk4U_Wyy_HwBA0PgzWS3z7bruhGKJEm8UZAYroDjOAm7AoDH7-le_jm1pQ990j5220-5akf2_u66YJv5kg1QjSThUXYk---Bv-uNsOLfzNCjeSjML5syXGCsLpRu5lm1idlJnkGvpUBdys3h2Febr-vn70tXJRps9lnftD-65Aa4YsqwT7LSv6zr690Bl0GpTYP-x9Sp0KfcV8hZQ_9m"
-                />
-              </div>
-              <h4 className="font-headline-sm text-headline-sm text-on-surface mb-2">Création de Salon Haut de Gamme</h4>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-4">Développez une identité visuelle et une clientèle premium.</p>
-              <span className="font-label-caps text-label-caps text-primary uppercase mb-6 mt-auto">Mentorat • Sur mesure</span>
-              <button onClick={() => alert('Veuillez configurer la base de données Supabase.')} className="w-full border border-on-surface text-on-surface font-label-caps text-label-caps px-4 py-3 uppercase tracking-[0.2em] hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300 active:opacity-50 rounded-none">
-                Réserver
-              </button>
-            </div>
+            ))}
           </div>
         )}
-        
-        <div className="mt-8 text-center md:hidden">
-          <Link href="#formations" className="inline-block border border-on-surface text-on-surface font-label-caps text-label-caps px-8 py-3 uppercase tracking-[0.2em] hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-colors w-full rounded-none">
-            Découvrir les Formations
-          </Link>
-        </div>
       </div>
     </section>
   );
