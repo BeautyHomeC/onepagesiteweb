@@ -50,9 +50,26 @@ export async function POST(req: Request) {
         },
         billing_address_collection: 'required',
         customer_creation: 'always',
+        // ── Facture légale auto-générée par Stripe (PDF + page hébergée) ────
         invoice_creation: {
           enabled: true,
         },
+        // ── Champs Pro optionnels — si remplis, le webhook génère une
+        //    CONVENTION (convention-template.pdf) au lieu d'un CONTRAT.
+        custom_fields: [
+          {
+            key: 'raison_sociale',
+            label: { type: 'custom', custom: 'Raison sociale (si professionnel)' },
+            type: 'text',
+            optional: true,
+          },
+          {
+            key: 'siret',
+            label: { type: 'custom', custom: 'N° SIRET (si professionnel)' },
+            type: 'text',
+            optional: true,
+          },
+        ],
         line_items: [
           {
             price_data: {

@@ -8,16 +8,54 @@ import { join } from 'path';
 import ConfirmationEmail from '@/emails/ConfirmationEmail';
 import AdminNotificationEmail from '@/emails/AdminNotificationEmail';
 
+type ClientType = 'particulier' | 'pro';
+
 // ─────────────────────────────────────────────────────────────────────────────
-// Charge le template PDF réel et ajoute une page de personnalisation à la fin.
-// Le template original n'est PAS modifié — les données client sont sur une
-// nouvelle page ajoutée, ce qui préserve la mise en page du contrat.
+//  GÉNÉRATION DU CONTRAT (particulier) OU DE LA CONVENTION (pro)
+// ─────────────────────────────────────────────────────────────────────────────
+//
+//  📂  EMPLACEMENT DES TEMPLATES :  public/documents/
+//
+//     ┌────────────────────────────┬──────────────────────────────────────────┐
+//     │ contrat-template.pdf       │  → utilisé pour les PARTICULIERS         │
+//     │ convention-template.pdf    │  → utilisé pour les PROFESSIONNELS       │
+//     └────────────────────────────┴──────────────────────────────────────────┘
+//
+//  ⚠️  Tes templates PDF doivent contenir des CHAMPS DE FORMULAIRE nommés
+//      EXACTEMENT comme ci-dessous (sinon les setField() seront silencieusement
+//      ignorés). Tu peux créer/éditer ces champs dans Adobe Acrobat Pro,
+//      LibreOffice, ou en ligne via PDFescape.
+//
+//      Champs attendus  ┌── nom_client         (Nom complet du stagiaire)
+//                       ├── prenom_client      (Prénom — optionnel si "nom_client" contient déjà tout)
+//                       ├── adresse_client     (Adresse postale)
+//                       ├── email_client
+//                       ├── telephone_client
+//                       ├── formation_titre
+//                       ├── date_debut         (JJ/MM/AAAA)
+//                       ├── date_fin           (JJ/MM/AAAA)
+//                       ├── prix_total         (ex : "350.00 €")
+//                       ├── acompte            (ex : "105.00 €")
+//                       ├── solde              (ex : "245.00 €")
+//                       ├── raison_sociale     (PRO uniquement)
+//                       └── siret              (PRO uniquement)
+//
 // ─────────────────────────────────────────────────────────────────────────────
 async function buildContractPDF(params: {
+  clientType: ClientType;
   nomClient: string;
+  prenomClient: string;
+  adresseClient: string;
   emailClient: string;
   telephoneClient: string;
+  instagramClient: string;
+  raisonSociale: string;
+  siret: string;
   formationTitre: string;
+  nombreEleves: string;
+  dureeFormation: string;
+  dateFormation: string;
+  horaire: string;
   dateDebut: string;
   dateFin: string;
   prixTotal: number;
@@ -27,282 +65,332 @@ async function buildContractPDF(params: {
   clientIp: string;
   consentTimestamp: string;
 }): Promise<Buffer> {
-  // ── 1. Charger le template contrat depuis public/documents/
-  // REMPLACE contrat-template.pdf par ton vrai fichier si tu en as un autre.
-  const templatePath = join(process.cwd(), 'public', 'documents', 'contrat-template.pdf');
+
+  // ── 1. Choix du template selon le type de client ────────────────────────
+  const templateFile =
+    params.clientType === 'pro' ? 'convention-template-v2.pdf' : 'contrat-template-v2.pdf';
+
+  const templatePath = join(process.cwd(), 'public', 'documents', templateFile);
   const templateBytes = readFileSync(templatePath);
   const pdfDoc = await PDFDocument.load(templateBytes);
 
-  // ── 2. Ajouter une page de personnalisation (données client + audit trail)
-  const page = pdfDoc.addPage([595, 842]); // A4
+  // ── 2. Remplir TOUS les champs de formulaire ────────────────────────────
+  const form = pdfDoc.getForm();
+
+  const setField = (name: string, value: string) => {
+    try { form.getTextField(name).setText(value || '—'); } catch { /* champ absent */ }
+  };
+
+  // — Identité stagiaire (page 1)
+  setField('nom_client',        params.nomClient);
+  setField('prenom_client',     params.prenomClient);
+  setField('adresse_client',    params.adresseClient);
+  setField('email_client',      params.emailClient);
+  setField('telephone_client',  params.telephoneClient);
+  setField('siret_client',      params.siret);
+  setField('instagram_client',  params.instagramClient);
+
+  // — Formation (page 1 & page 2)
+  setField('formation_titre',   params.formationTitre);
+  setField('nombre_eleves',     params.nombreEleves);
+  setField('duree_formation',   params.dureeFormation);
+  setField('date_formation',    params.dateFormation);
+  setField('horaire',           params.horaire);
+
+  // — Montants (page 2 & 3)
+  setField('prix_total',        `${params.prixTotal.toFixed(0)}€`);
+  setField('acompte',           `${params.acompte.toFixed(0)}€`);
+  setField('solde',             `${params.solde.toFixed(0)}`);
+
+  // — Date de signature (page 4)
+  setField('date_signature',    new Date(params.consentTimestamp).toLocaleDateString('fr-FR'));
+
+  // — Convention pro uniquement
+  if (params.clientType === 'pro') {
+    setField('raison_sociale', params.raisonSociale);
+  }
+
+  // Aplatissement : les champs deviennent non-modifiables (verrou légal)
+  form.flatten();
+
+  // ── 3. Sceau d'audit trail (signature électronique) sur la dernière page ─
+  const pages = pdfDoc.getPages();
+  const lastPage = pages[pages.length - 1];
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const { width, height } = page.getSize();
+  const { width } = lastPage.getSize();
 
   const brown = rgb(0.42, 0.30, 0.15);
-  const dark = rgb(0.1, 0.1, 0.1);
-  const gray = rgb(0.6, 0.6, 0.6);
   const cream = rgb(0.95, 0.90, 0.80);
-  const lightGray = rgb(0.95, 0.95, 0.95);
 
-  // En-tête
-  page.drawRectangle({ x: 0, y: height - 70, width, height: 70, color: brown });
-  page.drawText('BEAUTY HOME CONCEPT', { x: 40, y: height - 35, size: 14, font: helveticaBold, color: rgb(1, 1, 1) });
-  page.drawText('FICHE DE PERSONNALISATION — DONNÉES STAGIAIRE', { x: 40, y: height - 55, size: 9, font: helvetica, color: rgb(0.9, 0.85, 0.75) });
+  const sealY = 40;
+  lastPage.drawRectangle({
+    x: 30,
+    y: sealY,
+    width: width - 60,
+    height: 56,
+    color: cream,
+    borderColor: brown,
+    borderWidth: 0.7,
+  });
+  lastPage.drawText("SCEAU D'AUDIT TRAIL — SIGNATURE ÉLECTRONIQUE", {
+    x: 42, y: sealY + 40, size: 9, font: helveticaBold, color: brown,
+  });
+  lastPage.drawText(
+    `Signé électroniquement le ${new Date(params.consentTimestamp).toLocaleString('fr-FR')}.`,
+    { x: 42, y: sealY + 25, size: 8, font: helvetica, color: brown },
+  );
+  lastPage.drawText(
+    `IP : ${params.clientIp}   ·   Réf Stripe : ${params.stripeId}`,
+    { x: 42, y: sealY + 12, size: 8, font: helvetica, color: brown },
+  );
 
-  let y = height - 100;
-
-  // Référence et date
-  page.drawText(`Réf. contrat : ${params.stripeId}`, { x: 40, y, size: 8, font: helvetica, color: gray });
-  page.drawText(`Émis le : ${new Date().toLocaleDateString('fr-FR')}`, { x: 380, y, size: 8, font: helvetica, color: gray });
-
-  y -= 25;
-  page.drawLine({ start: { x: 40, y }, end: { x: 555, y }, thickness: 0.5, color: lightGray });
-
-  // Section : Stagiaire
-  y -= 22;
-  page.drawText('STAGIAIRE', { x: 40, y, size: 10, font: helveticaBold, color: brown });
-  const clientRows: [string, string][] = [
-    ['Nom complet', params.nomClient],
-    ['Email', params.emailClient],
-    ['Téléphone', params.telephoneClient],
-  ];
-  for (const [label, value] of clientRows) {
-    y -= 18;
-    page.drawRectangle({ x: 40, y: y - 3, width: 515, height: 15, color: lightGray, opacity: 0.6 });
-    page.drawText(label, { x: 45, y, size: 9, font: helveticaBold, color: dark });
-    page.drawText(value, { x: 200, y, size: 9, font: helvetica, color: dark });
-  }
-
-  y -= 28;
-  page.drawLine({ start: { x: 40, y }, end: { x: 555, y }, thickness: 0.5, color: lightGray });
-
-  // Section : Formation
-  y -= 22;
-  page.drawText('FORMATION', { x: 40, y, size: 10, font: helveticaBold, color: brown });
-  const formationRows: [string, string][] = [
-    ['Intitulé', params.formationTitre],
-    ['Date de début', params.dateDebut],
-    ['Date de fin', params.dateFin],
-    ['Lieu', '22A rue du Général Leclerc, App 13 — 80000 Amiens'],
-    ['Durée', '7 heures (9h30–17h00)'],
-    ['Format', 'Présentiel · 1 à 2 participants'],
-  ];
-  for (const [label, value] of formationRows) {
-    y -= 18;
-    page.drawRectangle({ x: 40, y: y - 3, width: 515, height: 15, color: lightGray, opacity: 0.6 });
-    page.drawText(label, { x: 45, y, size: 9, font: helveticaBold, color: dark });
-    page.drawText(value, { x: 200, y, size: 9, font: helvetica, color: dark });
-  }
-
-  y -= 28;
-  page.drawLine({ start: { x: 40, y }, end: { x: 555, y }, thickness: 0.5, color: lightGray });
-
-  // Section : Conditions financières
-  y -= 22;
-  page.drawText('CONDITIONS FINANCIÈRES', { x: 40, y, size: 10, font: helveticaBold, color: brown });
-  const financeRows: [string, string][] = [
-    ['Prix total TTC', `${params.prixTotal.toFixed(2)} €`],
-    ['Acompte réglé (30 %)', `${params.acompte.toFixed(2)} €`],
-    ['Solde restant dû', `${params.solde.toFixed(2)} €`],
-  ];
-  for (const [label, value] of financeRows) {
-    y -= 18;
-    page.drawRectangle({ x: 40, y: y - 3, width: 515, height: 15, color: lightGray, opacity: 0.6 });
-    page.drawText(label, { x: 45, y, size: 9, font: helveticaBold, color: dark });
-    page.drawText(value, { x: 200, y, size: 9, font: helveticaBold, color: dark });
-  }
-  y -= 14;
-  page.drawText('Le solde est à régler au plus tard le premier jour de la formation.', { x: 45, y, size: 8, font: helvetica, color: gray });
-
-  y -= 30;
-  page.drawLine({ start: { x: 40, y }, end: { x: 555, y }, thickness: 0.5, color: lightGray });
-
-  // Section : Audit Trail (signature électronique légale)
-  y -= 22;
-  page.drawText('SIGNATURE ÉLECTRONIQUE — AUDIT TRAIL', { x: 40, y, size: 10, font: helveticaBold, color: brown });
-  y -= 16;
-  page.drawText('La présente convention a été acceptée par consentement numérique et paiement sécurisé.', { x: 40, y, size: 9, font: helvetica, color: dark });
-  y -= 16;
-  page.drawText(`Consentement enregistré le : ${new Date(params.consentTimestamp).toLocaleString('fr-FR')}`, { x: 40, y, size: 9, font: helvetica, color: dark });
-  y -= 14;
-  page.drawText(`Adresse IP du signataire : ${params.clientIp}`, { x: 40, y, size: 9, font: helvetica, color: dark });
-  y -= 14;
-  page.drawText(`Référence transaction Stripe : ${params.stripeId}`, { x: 40, y, size: 9, font: helvetica, color: dark });
-
-  // Bloc audit (cadre beige)
-  y -= 30;
-  page.drawRectangle({ x: 40, y: y - 22, width: 515, height: 38, color: cream, borderColor: brown, borderWidth: 0.5 });
-  page.drawText('Validé par consentement numérique et paiement sécurisé Stripe.', { x: 48, y: y - 6, size: 8, font: helveticaBold, color: brown });
-  page.drawText(`Date : ${params.consentTimestamp}  ·  IP : ${params.clientIp}  ·  Réf : ${params.stripeId}`, { x: 48, y: y - 18, size: 7, font: helvetica, color: brown });
-
-  // Pied de page
-  page.drawRectangle({ x: 0, y: 0, width, height: 28, color: brown });
-  page.drawText('Beauty Home Concept · beautyhomeconcept@gmail.com · www.beautyhomeconcept.fr', { x: 40, y: 9, size: 7, font: helvetica, color: rgb(0.9, 0.85, 0.75) });
-
+  // ── 4. Sauvegarde en Buffer (mémoire) ───────────────────────────────────
   return Buffer.from(await pdfDoc.save());
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-
+//  WEBHOOK STRIPE — événement checkout.session.completed
+// ─────────────────────────────────────────────────────────────────────────────
 export async function POST(req: Request) {
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-04-22.dahlia' });
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    apiVersion: '2026-04-22.dahlia',
+  });
   const resend = new Resend(process.env.RESEND_API_KEY);
 
   const payload = await req.text();
   const signature = req.headers.get('stripe-signature');
-
   if (!signature) {
     return NextResponse.json({ error: 'No signature' }, { status: 400 });
   }
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(payload, signature, process.env.STRIPE_WEBHOOK_SECRET!);
+    event = stripe.webhooks.constructEvent(
+      payload,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET!,
+    );
   } catch (err: any) {
     console.error('Webhook signature verification failed:', err.message);
     return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session;
+  if (event.type !== 'checkout.session.completed') {
+    return NextResponse.json({ received: true });
+  }
 
-    const supabaseSessionId = session.metadata?.supabase_session_id;
-    const formationTitre = session.metadata?.formation_titre || 'Formation';
-    const formationPrix = parseFloat(session.metadata?.formation_prix || '0');
-    const dateDebutRaw = session.metadata?.date_debut || '';
-    const dateFinRaw = session.metadata?.date_fin || '';
-    const clientIp = session.metadata?.client_ip || 'IP non capturée';
-    const consentTimestamp = session.metadata?.consent_timestamp || new Date().toISOString();
+  const session = event.data.object as Stripe.Checkout.Session;
 
-    const nomClient = session.customer_details?.name || 'Client Inconnu';
-    const emailClient = session.customer_details?.email || '';
-    const telephoneClient = session.customer_details?.phone || 'Non renseigné';
-    const stripeId = (session.payment_intent as string) || session.id;
+  // ── 1. Extraction des métadonnées de la session ─────────────────────────
+  const supabaseSessionId = session.metadata?.supabase_session_id;
+  const formationTitre    = session.metadata?.formation_titre || 'Formation';
+  const formationPrix     = parseFloat(session.metadata?.formation_prix || '0');
+  const dateDebutRaw      = session.metadata?.date_debut || '';
+  const dateFinRaw        = session.metadata?.date_fin || '';
+  const clientIp          = session.metadata?.client_ip || 'IP non capturée';
+  const consentTimestamp  = session.metadata?.consent_timestamp || new Date().toISOString();
 
-    if (!supabaseSessionId) {
-      console.error('Webhook: supabase_session_id manquant dans les métadonnées.');
-      return NextResponse.json({ received: true });
-    }
+  // ── 2. Détection particulier vs pro (via custom_fields du checkout) ─────
+  const customFields = session.custom_fields || [];
+  const raisonSociale = customFields.find((f) => f.key === 'raison_sociale')?.text?.value || '';
+  const siret         = customFields.find((f) => f.key === 'siret')?.text?.value         || '';
+  const clientType: ClientType = raisonSociale.trim() ? 'pro' : 'particulier';
 
-    const supabase = await createAdminClient();
+  // ── 3. Coordonnées client ───────────────────────────────────────────────
+  const nomCompletRaw   = session.customer_details?.name || 'Client Inconnu';
+  const [prenomClient, ...nomParts] = nomCompletRaw.split(' ');
+  const nomClient       = nomParts.length ? nomParts.join(' ') : nomCompletRaw;
+  const emailClient     = session.customer_details?.email || '';
+  const telephoneClient = session.customer_details?.phone || 'Non renseigné';
+  const addr            = session.customer_details?.address;
+  const adresseClient   = addr
+    ? `${addr.line1 || ''}${addr.line2 ? ', ' + addr.line2 : ''}, ${addr.postal_code || ''} ${addr.city || ''} (${addr.country || ''})`
+    : 'Non renseignée';
+  const stripeId = (session.payment_intent as string) || session.id;
 
-    // Idempotence : ignorer si déjà traité
-    const { data: existing } = await supabase
-      .from('reservations')
-      .select('id')
-      .eq('stripe_payment_id', stripeId)
-      .maybeSingle();
-    if (existing) return NextResponse.json({ received: true });
+  if (!supabaseSessionId) {
+    console.error('Webhook: supabase_session_id manquant.');
+    return NextResponse.json({ received: true });
+  }
 
-    // 1. Insérer la réservation
-    const { error: insertError } = await supabase.from('reservations').insert({
+  const supabase = await createAdminClient();
+
+  // ── 4. Idempotence : ne traiter qu'une seule fois ───────────────────────
+  const { data: existing } = await supabase
+    .from('reservations')
+    .select('id')
+    .eq('stripe_payment_id', stripeId)
+    .maybeSingle();
+  if (existing) return NextResponse.json({ received: true });
+
+  // ── 5. Insertion de la réservation + décrément des places ───────────────
+  const { error: insertError } = await supabase.from('reservations').insert({
+    session_id: supabaseSessionId,
+    nom_client: nomCompletRaw,
+    email_client: emailClient,
+    telephone_client: telephoneClient,
+    stripe_payment_id: stripeId,
+  });
+  if (insertError) {
+    console.error('Erreur insertion réservation:', insertError);
+    return NextResponse.json({ received: true });
+  }
+
+  const { data: dbSession } = await supabase
+    .from('sessions')
+    .select('places_disponibles, date_debut, date_fin')
+    .eq('id', supabaseSessionId)
+    .single();
+
+  if (dbSession) {
+    const { error: rpcError } = await supabase.rpc('decrement_places', {
       session_id: supabaseSessionId,
-      nom_client: nomClient,
-      email_client: emailClient,
-      telephone_client: telephoneClient,
-      stripe_payment_id: stripeId,
     });
-    if (insertError) {
-      console.error('Erreur insertion réservation:', insertError);
-      return NextResponse.json({ received: true });
-    }
-
-    // 2. Récupérer les données de session + décrémenter les places
-    const { data: dbSession } = await supabase
-      .from('sessions')
-      .select('places_disponibles, date_debut, date_fin')
-      .eq('id', supabaseSessionId)
-      .single();
-
-    if (!dbSession) return NextResponse.json({ received: true });
-
-    const { error: rpcError } = await supabase.rpc('decrement_places', { session_id: supabaseSessionId });
     if (rpcError) {
-      await supabase.from('sessions').update({
-        places_disponibles: Math.max(0, dbSession.places_disponibles - 1),
-      }).eq('id', supabaseSessionId);
+      await supabase
+        .from('sessions')
+        .update({ places_disponibles: Math.max(0, dbSession.places_disponibles - 1) })
+        .eq('id', supabaseSessionId);
     }
+  }
 
-    const dateDebut = new Date(dateDebutRaw || dbSession.date_debut).toLocaleDateString('fr-FR');
-    const dateFin = new Date(dateFinRaw || dbSession.date_fin).toLocaleDateString('fr-FR');
-    const acompte = formationPrix * 0.3;
-    const solde = formationPrix * 0.7;
+  const dateDebut = new Date(dateDebutRaw || dbSession?.date_debut || Date.now())
+    .toLocaleDateString('fr-FR');
+  const dateFin   = new Date(dateFinRaw || dbSession?.date_fin || Date.now())
+    .toLocaleDateString('fr-FR');
+  const acompte = formationPrix * 0.3;
+  const solde   = formationPrix * 0.7;
 
-    // 3. Récupérer l'URL de la facture Stripe (si invoice_creation activé)
-    let invoiceUrl: string | null = null;
-    if (session.invoice) {
-      try {
-        const invoice = await stripe.invoices.retrieve(session.invoice as string);
-        invoiceUrl = invoice.hosted_invoice_url ?? null;
-      } catch (e) {
-        console.error('Impossible de récupérer la facture Stripe:', e);
-      }
-    }
-
+  // ── 6. Récupération de la facture légale Stripe (auto-générée) ──────────
+  let invoiceUrl: string | null = null;
+  if (session.invoice) {
     try {
-      // 4. Générer le contrat PDF (template réel + page de personnalisation)
-      const contractBuffer = await buildContractPDF({
-        nomClient, emailClient, telephoneClient,
-        formationTitre, dateDebut, dateFin,
-        prixTotal: formationPrix, acompte, solde,
-        stripeId, clientIp, consentTimestamp,
-      });
-
-      // 5. Archiver dans Supabase Storage
-      const { error: storageError } = await supabase.storage
-        .from('formations_images')
-        .upload(`contracts/${stripeId}.pdf`, contractBuffer, { contentType: 'application/pdf', upsert: true });
-      if (storageError) console.error('Erreur stockage Supabase:', storageError.message);
-
-      // 6. Charger le Règlement Intérieur (PDF statique)
-      // REMPLACE le fichier par ton vrai règlement intérieur dans public/documents/
-      const reglementPath = join(process.cwd(), 'public', 'documents', 'reglement-interieur.pdf');
-      const reglementBuffer = readFileSync(reglementPath);
-      const reglementBase64 = reglementBuffer.toString('base64');
-
-      const contractBase64 = contractBuffer.toString('base64');
-
-      // URL du programme de formation (hébergé dans public/documents/)
-      // ADAPTE le nom de fichier selon ta formation (un fichier par formation si besoin)
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://project-sjkut.vercel.app';
-      const programmeUrl = `${siteUrl}/documents/programme-manucure-russe.pdf`;
-
-      // 7. Email client : contrat + règlement en pièces jointes + boutons facture & programme
-      await resend.emails.send({
-        from: 'Beauty Home Concept <contact@beautyhomeconcept.fr>',
-        to: [emailClient],
-        subject: `Votre inscription est confirmée — ${formationTitre}`,
-        react: ConfirmationEmail({ nomClient, formationTitre, dateDebut, dateFin, invoiceUrl, programmeUrl }),
-        attachments: [
-          {
-            filename: `Contrat_${formationTitre.replace(/\s+/g, '_')}.pdf`,
-            content: contractBase64,
-          },
-          {
-            filename: 'Reglement_Interieur_Beauty_Home_Concept.pdf',
-            content: reglementBase64,
-          },
-        ],
-      });
-
-      // 8. Email admin : contrat en copie
-      await resend.emails.send({
-        from: 'Beauty Home Concept <contact@beautyhomeconcept.fr>',
-        to: ['beautyhomeconcept@gmail.com'],
-        subject: `Nouvelle inscription : ${formationTitre} — ${nomClient}`,
-        react: AdminNotificationEmail({ nomClient, emailClient, telephoneClient, formationTitre }),
-        attachments: [
-          {
-            filename: `Contrat_${nomClient.replace(/\s+/g, '_')}_${formationTitre.replace(/\s+/g, '_')}.pdf`,
-            content: contractBase64,
-          },
-        ],
-      });
-
-    } catch (err) {
-      console.error('Erreur génération/envoi PDF ou email:', err);
+      const invoice = await stripe.invoices.retrieve(session.invoice as string);
+      invoiceUrl = invoice.hosted_invoice_url ?? null;
+    } catch (e) {
+      console.error('Impossible de récupérer la facture Stripe:', e);
     }
+  }
+
+  try {
+    // ── 7. Génération du Contrat/Convention via pdf-lib ───────────────────
+    //
+    //  Les valeurs par défaut ci-dessous correspondent au format de
+    //  formation actuel (1 jour, 7h, 9h30-17h, 22A rue du Général Leclerc).
+    //  Tu peux les surcharger via les `metadata` Stripe pour chaque session
+    //  (durée_formation, horaire, nombre_eleves) si tu en crées de différents.
+    //
+    const dateFormation = dateDebut === dateFin
+      ? `Le ${dateDebut}`
+      : `Du ${dateDebut} au ${dateFin}`;
+
+    const contractBuffer = await buildContractPDF({
+      clientType,
+      nomClient,
+      prenomClient,
+      adresseClient,
+      emailClient,
+      telephoneClient,
+      instagramClient:  session.metadata?.instagram_client || '',
+      raisonSociale,
+      siret,
+      formationTitre,
+      nombreEleves:    session.metadata?.nombre_eleves   || '2',
+      dureeFormation:  session.metadata?.duree_formation || '1 JOUR (7 HEURES) en présentiel',
+      dateFormation,
+      horaire:         session.metadata?.horaire         || '9H30 / 17H',
+      dateDebut,
+      dateFin,
+      prixTotal: formationPrix,
+      acompte,
+      solde,
+      stripeId,
+      clientIp,
+      consentTimestamp,
+    });
+
+    // ── 8. Archivage du PDF dans Supabase Storage (audit & conformité) ────
+    await supabase.storage
+      .from('formations_images')
+      .upload(`contracts/${stripeId}.pdf`, contractBuffer, {
+        contentType: 'application/pdf',
+        upsert: true,
+      });
+
+    // ── 9. Règlement Intérieur (PDF statique) ─────────────────────────────
+    //
+    //  📂 PLACE TON RÈGLEMENT INTÉRIEUR ICI :
+    //        public/documents/reglement-interieur.pdf
+    //
+    const reglementPath   = join(process.cwd(), 'public', 'documents', 'reglement-interieur.pdf');
+    const reglementBuffer = readFileSync(reglementPath);
+    const reglementBase64 = reglementBuffer.toString('base64');
+    const contractBase64  = contractBuffer.toString('base64');
+
+    // ── 10. URL du programme détaillé (PDF public + plan d'accès) ─────────
+    //
+    //  📂 PLACE TES PROGRAMMES PDF (un par formation) ICI :
+    //        public/documents/programme-<slug>.pdf
+    //
+    //  Tu peux passer `programme_file` dans les metadata Stripe lors du
+    //  checkout (ex: "programme-rehausse-cils.pdf") pour mapper un fichier
+    //  spécifique par formation. Sinon, fallback sur le programme manucure.
+    //
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
+    const programmeFile = session.metadata?.programme_file || 'programme-manucure-russe.pdf';
+    const programmeUrl  = `${siteUrl}/documents/${programmeFile}`;
+
+    const docLabel = clientType === 'pro' ? 'Convention' : 'Contrat';
+
+    // ── 11. Email de confirmation au client (Éclat Minimaliste) ───────────
+    await resend.emails.send({
+      from: 'Beauty Home Concept <contact@beautyhomeconcept.fr>',
+      to: [emailClient],
+      subject: `Votre inscription est confirmée — ${formationTitre}`,
+      react: ConfirmationEmail({
+        nomClient: nomCompletRaw,
+        formationTitre,
+        dateDebut,
+        dateFin,
+        invoiceUrl,
+        programmeUrl,
+        clientType,
+      }),
+      attachments: [
+        // 1) Règlement Intérieur (statique, depuis public/documents/)
+        {
+          filename: 'Reglement_Interieur_Beauty_Home_Concept.pdf',
+          content: reglementBase64,
+        },
+        // 2) Contrat / Convention (Buffer généré dynamiquement)
+        {
+          filename: `${docLabel}_${formationTitre.replace(/\s+/g, '_')}.pdf`,
+          content: contractBase64,
+        },
+      ],
+    });
+
+    // ── 12. Notification interne à l'admin ────────────────────────────────
+    await resend.emails.send({
+      from: 'Beauty Home Concept <contact@beautyhomeconcept.fr>',
+      to: ['beautyhomeconcept@gmail.com'],
+      subject: `Nouvelle inscription : ${formationTitre} — ${nomCompletRaw}`,
+      react: AdminNotificationEmail({
+        nomClient: nomCompletRaw,
+        emailClient,
+        telephoneClient,
+        formationTitre,
+      }),
+      attachments: [
+        {
+          filename: `${docLabel}_${nomCompletRaw.replace(/\s+/g, '_')}.pdf`,
+          content: contractBase64,
+        },
+      ],
+    });
+  } catch (err) {
+    console.error('Erreur génération/envoi PDF ou email:', err);
   }
 
   return NextResponse.json({ received: true });
