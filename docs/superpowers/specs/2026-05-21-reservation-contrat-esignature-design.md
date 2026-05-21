@@ -217,6 +217,11 @@ Dernière page : Audit Trail
 - Contrat : statut ("Signé le JJ/MM/YYYY à HH:MM"), bouton "Télécharger le contrat signé" (signed URL)
 - Paiement : montant acompte, date, lien Stripe
 - Actions : "Marquer présente", "Annuler", "Renvoyer email confirmation"
+- **Bouton "Télécharger le dossier complet"** → génère et télécharge un ZIP contenant :
+  - `contrat-signé.pdf` — contrat de l'élève
+  - `fiche-inscription.pdf` — fiche récap générée côté serveur : nom, email, téléphone, adresse, type client, SIRET/raison sociale si pro, formation, date session, acompte payé, date d'inscription
+  - `programme-[formation].pdf` — si disponible
+  Route : `GET /api/admin/reservations/[id]/dossier` → retourne un `application/zip`
 
 ### `/admin/formations/[id]` — Section "Contrats"
 
@@ -254,11 +259,22 @@ Section "Documents" :
 
 **Fallback :** si `programme_pdf_url` est null → ne pas attacher (pas d'erreur). Log admin.
 
-### Email admin — Nouvelle inscription
+### Email admin (Camille) — Nouvelle inscription
 
-**Objet :** `Nouvelle inscription — [Nom] · [Formation] · [Date]`
+**Objet :** `Nouvelle inscription — [Prénom Nom] · [Formation] · [Date session]`
 
-**Corps :** Récapitulatif complet : infos client, type (pro/particulier), session, acompte reçu. Lien direct vers `/admin/reservations`.
+**Corps :** Récapitulatif complet :
+- Informations de l'élève : prénom, nom, email, téléphone, adresse
+- Type de client : Particulier / Professionnel (+ SIRET, raison sociale, Instagram si pro)
+- Formation, date de session
+- Acompte reçu (montant + date)
+- Rappel : solde de 70% à encaisser le dernier jour
+
+**Pièces jointes :**
+1. `contrat-signé.pdf` — le contrat signé électroniquement par l'élève
+2. `fiche-inscription.pdf` — fiche récapitulative complète (coordonnées + infos formation)
+
+**Lien :** bouton "Voir dans l'admin" → `/admin/reservations` (pré-filtré sur cette réservation)
 
 ---
 
