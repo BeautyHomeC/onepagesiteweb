@@ -6,6 +6,23 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '10mb',
     },
   },
+
+  // Exclude packages with WASM or native bindings from Turbopack bundling.
+  // These must be required at runtime via Node.js, not bundled at compile time.
+  serverExternalPackages: [
+    '@react-pdf/renderer',
+    '@react-pdf/font',
+    '@react-pdf/layout',
+    '@react-pdf/primitives',
+    'yoga-wasm-web',
+    'canvas',
+  ],
+
+  // Fix Turbopack workspace root detection (two lockfiles present)
+  turbopack: {
+    root: __dirname,
+  },
+
   images: {
     remotePatterns: [
       {
