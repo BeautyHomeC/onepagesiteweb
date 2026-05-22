@@ -2,11 +2,14 @@ import { createHash } from 'crypto'
 import React from 'react'
 
 // ─────────────────────────────────────────────────────────────────────────
-//  @react-pdf/renderer is loaded LAZILY inside each function.
-//  Static top-level imports cause Turbopack to bundle the WASM (yoga-wasm-web)
-//  dependency, which then fails at runtime with "f is not a function".
-//  Dynamic imports force Node.js to require() the package at call time,
-//  which properly resolves the native WASM bindings from node_modules.
+//  @react-pdf/renderer v4 API notes
+//
+//  renderToBuffer() was REMOVED in v4.  The replacement is:
+//    renderToStream(doc)  →  returns a Readable stream
+//  We pipe that stream into a Buffer ourselves.
+//
+//  Imports are kept dynamic so Turbopack/Next.js never bundles the package
+//  (yoga-wasm-web must be loaded from node_modules at runtime, not bundled).
 // ─────────────────────────────────────────────────────────────────────────
 
 export interface SignatureData {
@@ -56,11 +59,21 @@ function stripHtml(html: string): string {
     .trim()
 }
 
+/** Pipe a Readable stream into a Buffer */
+async function streamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
+  const chunks: Buffer[] = []
+  return new Promise<Buffer>((resolve, reject) => {
+    stream.on('data', (chunk: Buffer) => chunks.push(chunk))
+    stream.on('end', () => resolve(Buffer.concat(chunks)))
+    stream.on('error', reject)
+  })
+}
+
 export async function generateContractPDF(params: ContractPDFParams): Promise<Buffer> {
-  // Dynamic import — loaded at call time, not at bundle time
-  const ReactPDF = await import('@react-pdf/renderer')
-  const mod = (ReactPDF.default ?? ReactPDF) as any
-  const { Document, Page, Text, View, StyleSheet, renderToBuffer } = mod
+  const {
+    renderToStream,
+    Document, Page, Text, View, StyleSheet,
+  } = await import('@react-pdf/renderer')
 
   const styles = StyleSheet.create({
     page:       { fontFamily: 'Helvetica', fontSize: 10, padding: 50, color: '#1b1c1c', lineHeight: 1.6 },
@@ -80,7 +93,7 @@ export async function generateContractPDF(params: ContractPDFParams): Promise<Bu
       React.createElement(View, {},
         React.createElement(Text, { style: styles.title }, params.formationTitre),
         ...plainText.split('\n\n').filter(Boolean).map((para, i) =>
-          React.createElement(Text, { key: i, style: styles.body }, para.trim())
+          React.createElement(Text, { key: String(i), style: styles.body }, para.trim())
         ),
         React.createElement(View, { style: styles.auditBox },
           React.createElement(Text, { style: styles.auditTitle }, 'CERTIFICAT DE SIGNATURE ÉLECTRONIQUE'),
@@ -109,14 +122,15 @@ export async function generateContractPDF(params: ContractPDFParams): Promise<Bu
     )
   )
 
-  return renderToBuffer(doc)
+  const stream = await renderToStream(doc)
+  return streamToBuffer(stream)
 }
 
 export async function generateFichePDF(params: FichePDFParams): Promise<Buffer> {
-  // Dynamic import — same reason as generateContractPDF
-  const ReactPDF = await import('@react-pdf/renderer')
-  const mod = (ReactPDF.default ?? ReactPDF) as any
-  const { Document, Page, Text, View, StyleSheet, renderToBuffer } = mod
+  const {
+    renderToStream,
+    Document, Page, Text, View, StyleSheet,
+  } = await import('@react-pdf/renderer')
 
   const styles = StyleSheet.create({
     page:       { fontFamily: 'Helvetica', fontSize: 10, padding: 50, color: '#1b1c1c', lineHeight: 1.6 },
@@ -126,29 +140,29 @@ export async function generateFichePDF(params: FichePDFParams): Promise<Buffer> 
   })
 
   const rows: [string, string][] = [
-    ['Prénom',            params.prenom],
-    ['Nom',               params.nom],
-    ['Email',             params.email],
-    ['Téléphone',         params.telephone],
-    ['Adresse',           params.adresse],
-    ['Type de client',    params.client_type === 'pro' ? 'Professionnel' : 'Particulier'],
+    ['Prénom',              params.prenom],
+    ['Nom',                 params.nom],
+    ['Email',               params.email],
+    ['Téléphone',           params.telephone],
+    ['Adresse',             params.adresse],
+    ['Type de client',      params.client_type === 'pro' ? 'Professionnel' : 'Particulier'],
     ...(params.client_type === 'pro' ? [
       ['Raison sociale', params.raison_sociale ?? ''],
-      ['SIRET',          params.siret ?? ''],
-      ['Instagram',      params.instagram ?? ''],
+      ['SIRET',          params.siret          ?? ''],
+      ['Instagram',      params.instagram      ?? ''],
     ] as [string, string][] : []),
-    ['Formation',         params.formation_titre],
-    ['Session',           params.date_session],
-    ['Acompte réglé',     `${params.acompte} €`],
-    ['Date d\'inscription', new Date(params.created_at).toLocaleDateString('fr-FR')],
+    ['Formation',           params.formation_titre],
+    ['Session',             params.date_session],
+    ['Acompte réglé',       `${params.acompte} €`],
+    ["Date d'inscription",  new Date(params.created_at).toLocaleDateString('fr-FR')],
   ]
 
   const doc = React.createElement(Document, {},
     React.createElement(Page, { size: 'A4', style: styles.page },
       React.createElement(View, {},
-        React.createElement(Text, { style: styles.title }, 'Fiche d\'inscription — Beauty Home Concept'),
+        React.createElement(Text, { style: styles.title }, "Fiche d'inscription — Beauty Home Concept"),
         ...rows.map(([label, value], i) =>
-          React.createElement(Text, { key: i, style: styles.body },
+          React.createElement(Text, { key: String(i), style: styles.body },
             React.createElement(Text, { style: styles.auditLabel }, `${label} : `),
             value
           )
@@ -157,5 +171,6 @@ export async function generateFichePDF(params: FichePDFParams): Promise<Buffer> 
     )
   )
 
-  return renderToBuffer(doc)
+  const stream = await renderToStream(doc)
+  return streamToBuffer(stream)
 }
