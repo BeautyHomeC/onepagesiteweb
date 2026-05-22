@@ -6,6 +6,15 @@ const nextConfig: NextConfig = {
   // and crashes with ERR_INVALID_ARG_TYPE if it is undefined.
   outputFileTracingRoot: path.resolve("."),
 
+  // Exclude @react-pdf/renderer and its WASM dependency from bundling.
+  // These packages rely on yoga-wasm-web which must be loaded by Node.js at
+  // runtime from node_modules — bundling them breaks the WASM initialisation
+  // and causes "f/m is not a function" errors at runtime.
+  serverExternalPackages: [
+    '@react-pdf/renderer',
+    'yoga-wasm-web',
+  ],
+
   experimental: {
     serverActions: {
       bodySizeLimit: '10mb',
