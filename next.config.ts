@@ -7,16 +7,9 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // Exclude packages with WASM or native bindings from Turbopack bundling.
-  // These must be required at runtime via Node.js, not bundled at compile time.
-  serverExternalPackages: [
-    '@react-pdf/renderer',
-    '@react-pdf/font',
-    '@react-pdf/layout',
-    '@react-pdf/primitives',
-    'yoga-wasm-web',
-    'canvas',
-  ],
+  // Exclude @react-pdf/renderer (WASM) from Turbopack bundling.
+  // Only list direct dependencies — transitive ones are resolved automatically.
+  serverExternalPackages: ['@react-pdf/renderer'],
 
   images: {
     remotePatterns: [
