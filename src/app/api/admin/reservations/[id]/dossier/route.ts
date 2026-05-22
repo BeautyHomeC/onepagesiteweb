@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server'
 import JSZip from 'jszip'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/server'
-import { generateFichePDF } from '@/lib/contract/pdf'
 
 interface Params {
   params: Promise<{ id: string }>
@@ -53,6 +52,7 @@ export async function GET(req: Request, { params }: Params) {
 
   // 1. Fiche d'inscription PDF
   try {
+    const { generateFichePDF } = await import('@/lib/contract/pdf')
     const ficheBuffer = await generateFichePDF({
       prenom:           reservation.prenom ?? '',
       nom:              reservation.nom ?? '',

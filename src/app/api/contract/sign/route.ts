@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { renderTemplate, buildTemplateVars } from '@/lib/contract/template'
-import { generateContractPDF, type SignatureData } from '@/lib/contract/pdf'
+import type { SignatureData } from '@/lib/contract/pdf'
 import { randomUUID } from 'crypto'
 
 export async function POST(req: Request) {
@@ -78,6 +78,7 @@ export async function POST(req: Request) {
 
     const contenuRendu = renderTemplate(template.contenu, vars)
 
+    const { generateContractPDF } = await import('@/lib/contract/pdf')
     const pdfBuffer = await generateContractPDF({
       contenuHtml: contenuRendu,
       formationTitre: formation?.titre ?? '',

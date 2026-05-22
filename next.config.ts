@@ -7,10 +7,6 @@ const nextConfig: NextConfig = {
     },
   },
 
-  // Exclude @react-pdf/renderer (WASM) from Turbopack bundling.
-  // Only list direct dependencies — transitive ones are resolved automatically.
-  serverExternalPackages: ['@react-pdf/renderer'],
-
   images: {
     remotePatterns: [
       {
