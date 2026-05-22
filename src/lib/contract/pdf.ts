@@ -2,6 +2,8 @@ import ReactPDF from '@react-pdf/renderer'
 import { createHash } from 'crypto'
 import React from 'react'
 
+// renderToBuffer is a named export inside the ReactPDF namespace (index.d.ts: `export const renderToBuffer`).
+// The CommonJS default export carries all namespace members, so destructuring from ReactPDF works correctly.
 const { Document, Page, Text, View, StyleSheet, renderToBuffer } = ReactPDF
 
 const styles = StyleSheet.create({
@@ -54,6 +56,10 @@ function stripHtml(html: string): string {
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&nbsp;/g, ' ')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
     .trim()
 }
 

@@ -16,7 +16,7 @@ export interface TemplateVars {
   acompte: string
   solde: string
   date_signature: string
-  clause_rgpd: string
+  // clause_rgpd is intentionally absent: renderTemplate always injects RGPD_CLAUSE directly
 }
 
 export function renderTemplate(contenu: string, vars: TemplateVars): string {
@@ -61,7 +61,7 @@ export function buildTemplateVars(params: {
   prix: number
 }): TemplateVars {
   const acompte = Math.round(params.prix * 0.3)
-  const solde   = Math.round(params.prix * 0.7)
+  const solde   = params.prix - acompte
   const dateSession = params.date_debut === params.date_fin
     ? `le ${params.date_debut}`
     : `du ${params.date_debut} au ${params.date_fin}`
@@ -82,6 +82,5 @@ export function buildTemplateVars(params: {
     acompte:        `${acompte} €`,
     solde:          `${solde} €`,
     date_signature: new Date().toLocaleDateString('fr-FR'),
-    clause_rgpd:    RGPD_CLAUSE,
   }
 }
