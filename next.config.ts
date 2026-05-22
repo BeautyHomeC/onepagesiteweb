@@ -18,11 +18,6 @@ const nextConfig: NextConfig = {
     'canvas',
   ],
 
-  // Fix Turbopack workspace root detection (two lockfiles present)
-  turbopack: {
-    root: __dirname,
-  },
-
   images: {
     remotePatterns: [
       {
