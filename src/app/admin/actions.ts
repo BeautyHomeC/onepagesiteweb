@@ -176,3 +176,54 @@ export async function deleteSession(id: string) {
   revalidatePath('/');
   return { success: true };
 }
+
+// ─────────────────────────────────────────────────────────────────────────
+//  Contrats (contract_templates)
+// ─────────────────────────────────────────────────────────────────────────
+export async function saveContractTemplate(formationId: string, contenu: string) {
+  await requireAuth();
+  const supabase = await createAdminClient();
+
+  // Get current max version for this formation
+  const { data: latest } = await supabase
+    .from('contract_templates')
+    .select('version')
+    .eq('formation_id', formationId)
+    .order('version', { ascending: false })
+    .limit(1)
+    .single();
+
+  const nextVersion = (latest?.version ?? 0) + 1;
+
+  const { error } = await supabase
+    .from('contract_templates')
+    .insert([{ formation_id: formationId, contenu, version: nextVersion }]);
+
+  if (error) {
+    console.error('saveContractTemplate error:', error);
+    throw new Error('Erreur lors de la sauvegarde du modèle de contrat');
+  }
+
+  revalidatePath(`/admin/formations/${formationId}/contrats`);
+  return { success: true, version: nextVersion };
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+//  Paramètres admin (parametres_admin)
+// ─────────────────────────────────────────────────────────────────────────
+export async function saveParametre(cle: string, valeur: string) {
+  await requireAuth();
+  const supabase = await createAdminClient();
+
+  const { error } = await supabase
+    .from('parametres_admin')
+    .upsert([{ cle, valeur }], { onConflict: 'cle' });
+
+  if (error) {
+    console.error('saveParametre error:', error);
+    throw new Error(`Erreur lors de la sauvegarde du paramètre "${cle}"`);
+  }
+
+  revalidatePath('/admin/parametres');
+  return { success: true };
+}

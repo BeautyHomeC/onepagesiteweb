@@ -30,8 +30,14 @@ export default async function FormationsAdminPage() {
                 <span>{formation.duree}</span>
                 <span className="text-primary">{formation.prix} €</span>
               </div>
-              <div className="grid grid-cols-2 border-t border-surface-container-highest divide-x divide-surface-container-highest">
+              <div className="grid grid-cols-3 border-t border-surface-container-highest divide-x divide-surface-container-highest">
                 <EditFormationForm formation={formation} />
+                <a
+                  href={`/admin/formations/${formation.id}/contrats`}
+                  className="py-3 text-center text-xs font-label-caps tracking-wider text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors"
+                >
+                  CONTRATS
+                </a>
                 <DeleteFormationButton id={formation.id} />
               </div>
             </div>
