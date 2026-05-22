@@ -17,6 +17,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <Link href="/admin" className="hover:text-primary transition-colors whitespace-nowrap">TABLEAU DE BORD</Link>
         <Link href="/admin/formations" className="hover:text-primary transition-colors whitespace-nowrap">FORMATIONS</Link>
         <Link href="/admin/sessions" className="hover:text-primary transition-colors whitespace-nowrap">SESSIONS</Link>
+        <Link href="/admin/reservations" className="hover:text-primary transition-colors whitespace-nowrap">RÉSERVATIONS</Link>
+        <Link href="/admin/parametres" className="hover:text-primary transition-colors whitespace-nowrap">PARAMÈTRES</Link>
       </nav>
       <main className="p-6 md:p-12 max-w-7xl mx-auto">
         {children}
