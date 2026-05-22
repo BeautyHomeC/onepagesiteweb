@@ -184,20 +184,27 @@ export async function saveContractTemplate(formationId: string, contenu: string)
   await requireAuth();
   const supabase = await createAdminClient();
 
-  // Get current max version for this formation
+  // Get current max version for this formation (maybeSingle: null if no row yet)
   const { data: latest } = await supabase
     .from('contract_templates')
     .select('version')
     .eq('formation_id', formationId)
     .order('version', { ascending: false })
     .limit(1)
-    .single();
+    .maybeSingle();
 
   const nextVersion = (latest?.version ?? 0) + 1;
 
+  // Upsert the same content for both client types so the sign route always finds a template
   const { error } = await supabase
     .from('contract_templates')
-    .insert([{ formation_id: formationId, contenu, version: nextVersion }]);
+    .upsert(
+      [
+        { formation_id: formationId, type: 'particulier', contenu, version: nextVersion },
+        { formation_id: formationId, type: 'pro',         contenu, version: nextVersion },
+      ],
+      { onConflict: 'formation_id,type' },
+    );
 
   if (error) {
     console.error('saveContractTemplate error:', error);

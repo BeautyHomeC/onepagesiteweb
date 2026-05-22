@@ -20,14 +20,15 @@ export default async function ContratFormationPage({ params }: Props) {
 
   if (error || !formation) notFound()
 
-  // Load latest contract template for this formation
+  // Load latest contract template for this formation (particulier type as reference)
   const { data: template } = await supabase
     .from('contract_templates')
     .select('contenu, version')
     .eq('formation_id', id)
+    .eq('type', 'particulier')
     .order('version', { ascending: false })
     .limit(1)
-    .single()
+    .maybeSingle()
 
   return (
     <div className="space-y-8">
