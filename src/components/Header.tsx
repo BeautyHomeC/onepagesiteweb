@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { href: "/#formations", label: "Formations", num: "03" },
   { href: "/#testimonials", label: "Témoignages", num: "04" },
   { href: "/financement", label: "Financement", num: "05" },
+  { href: "/calendrier", label: "Calendrier", num: "06" },
 ];
 
 export default function Header() {
