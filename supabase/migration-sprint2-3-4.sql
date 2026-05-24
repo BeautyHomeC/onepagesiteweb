@@ -1,7 +1,7 @@
 -- ─── google_rating ─────────────────────────────────────────────────────────
 create table if not exists google_rating (
   id int primary key default 1 check (id = 1),
-  note decimal(2,1) not null default 5.0,
+  note decimal(2,1) not null default 5.0 check (note >= 0.0 and note <= 5.0),
   nb_avis int not null default 0,
   google_url text not null default '',
   updated_at timestamptz not null default now()
@@ -25,7 +25,7 @@ create table if not exists contact_messages (
   id uuid primary key default gen_random_uuid(),
   prenom text not null,
   nom text not null,
-  email text not null,
+  email text not null check (email ~ '^[^\s@]+@[^\s@]+\.[^\s@]+$'),
   message text not null,
   lu boolean not null default false,
   created_at timestamptz not null default now()
@@ -38,3 +38,6 @@ create policy "Public insert contact_messages"
 
 create policy "Service role all contact_messages"
   on contact_messages for all using (auth.role() = 'service_role');
+
+create index if not exists idx_contact_messages_created_at on contact_messages (created_at desc);
+create index if not exists idx_contact_messages_lu on contact_messages (lu);
