@@ -5,6 +5,7 @@ import AboutSection from "@/components/AboutSection";
 import FormationsSection from "@/components/FormationsSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import FaqSection from "@/components/FaqSection";
+import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
         <FormationsSection />
         <TestimonialsSection />
         <FaqSection />
+        <ContactSection />
       </main>
       <Footer />
     </>
