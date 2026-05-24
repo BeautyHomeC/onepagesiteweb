@@ -1,7 +1,6 @@
 'use server'
 
-import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 
@@ -23,6 +22,7 @@ export async function updateGoogleRating(fd: FormData) {
 
   if (isNaN(note) || note < 0 || note > 5) return { error: 'Note invalide (0–5)' }
   if (isNaN(nb_avis) || nb_avis < 0) return { error: "Nombre d'avis invalide" }
+  if (googleUrl && !googleUrl.startsWith('https://')) return { error: 'URL invalide — doit commencer par https://' }
 
   const supabase = await createAdminClient()
   const { error } = await supabase
