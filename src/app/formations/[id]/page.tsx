@@ -77,10 +77,10 @@ export default async function FormationDetailPage({ params }: { params: Promise<
                   </div>
                 </div>
                 {/* Financing note */}
-                <div className="flex items-center gap-2 text-[10px] text-on-surface-variant uppercase tracking-widest" style={{ fontFamily: 'var(--font-hanken)' }}>
+                <Link href="/financement" className="flex items-center gap-2 text-[10px] text-on-surface-variant uppercase tracking-widest hover:text-primary transition-colors duration-200" style={{ fontFamily: 'var(--font-hanken)' }}>
                   <span className="h-px w-4 bg-primary/40 shrink-0" />
-                  Éligible FAFCEA · OPCO · CPF
-                </div>
+                  Éligible FAFCEA · OPCO · CPF — En savoir plus
+                </Link>
               </div>
 
               {/* Booking Component */}

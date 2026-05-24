@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: "/methode-camille", label: "La Fondatrice", num: "02" },
   { href: "/#formations", label: "Formations", num: "03" },
   { href: "/#testimonials", label: "Témoignages", num: "04" },
+  { href: "/financement", label: "Financement", num: "05" },
 ];
 
 export default function Header() {
