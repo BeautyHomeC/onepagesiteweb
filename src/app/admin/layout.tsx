@@ -23,6 +23,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <Link href="/admin/reservations" className="hover:text-primary transition-colors whitespace-nowrap">RÉSERVATIONS</Link>
         <Link href="/admin/temoignages" className="hover:text-primary transition-colors whitespace-nowrap">TÉMOIGNAGES</Link>
         <Link href="/admin/liste-attente" className="hover:text-primary transition-colors whitespace-nowrap">LISTE D'ATTENTE</Link>
+        <Link href="/admin/google-rating" className="hover:text-primary transition-colors whitespace-nowrap">NOTE GOOGLE</Link>
         <Link href="/admin/parametres" className="hover:text-primary transition-colors whitespace-nowrap">PARAMÈTRES</Link>
       </nav>
       <main className="p-6 md:p-12 max-w-7xl mx-auto">
