@@ -1,0 +1,119 @@
+<h2>Design — Lancement complet</h2>
+<p class="subtitle">6 fonctionnalités, architecture technique détaillée. Dites-moi si quelque chose ne vous convient pas.</p>
+
+<div class="section">
+  <span class="label">Fonctionnalité 1 — Photos gérables</span>
+  <div class="mockup" style="margin-top:10px;">
+    <div class="mockup-header">Admin → Paramètres du site</div>
+    <div class="mockup-body" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:16px;">
+      <div style="border:2px dashed #ccc;padding:20px;text-align:center;border-radius:6px;">
+        <div style="font-size:24px;">🖼️</div>
+        <div style="font-size:13px;margin-top:8px;color:#666;">Photo Hero (bannière d'accueil)<br><small>Cliquez pour uploader</small></div>
+      </div>
+      <div style="border:2px dashed #ccc;padding:20px;text-align:center;border-radius:6px;">
+        <div style="font-size:24px;">👤</div>
+        <div style="font-size:13px;margin-top:8px;color:#666;">Photo Portrait Camille<br><small>Cliquez pour uploader</small></div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:#555;margin-top:10px;">→ Nouvelle table Supabase <code>site_settings</code> + upload dans Supabase Storage. Vous changez vos photos depuis l'admin sans toucher au code.</p>
+</div>
+
+<div class="section">
+  <span class="label">Fonctionnalité 2 — Dates de sessions sur la homepage</span>
+  <div class="mockup" style="margin-top:10px;">
+    <div class="mockup-header">Carte formation (homepage)</div>
+    <div class="mockup-body" style="padding:16px;">
+      <div style="border:1px solid #ddd;padding:16px;border-radius:6px;max-width:280px;">
+        <div style="background:#eee;height:120px;border-radius:4px;margin-bottom:12px;display:flex;align-items:center;justify-content:center;color:#999;font-size:12px;">Image formation</div>
+        <div style="font-weight:600;font-size:15px;">Masterclass Perfectionnement</div>
+        <div style="font-size:12px;color:#666;margin:6px 0 10px;">Maîtrisez les techniques avancées…</div>
+        <div style="background:#f9f0e8;padding:8px 10px;border-radius:4px;font-size:12px;display:flex;justify-content:space-between;">
+          <span>📅 <strong>Prochaine session</strong></span>
+          <span style="color:#755a2d;font-weight:600;">15 juin 2026</span>
+        </div>
+        <div style="font-size:11px;color:#888;margin-top:6px;text-align:right;">2 places restantes</div>
+        <button style="width:100%;margin-top:10px;padding:8px;background:#1b1c1c;color:white;border:none;font-size:11px;letter-spacing:0.1em;cursor:pointer;">DÉCOUVRIR LE PROGRAMME</button>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:#555;margin-top:10px;">→ La homepage affiche déjà les formations depuis Supabase. On ajoute une requête pour récupérer la prochaine session disponible de chaque formation en même temps.</p>
+</div>
+
+<div class="section">
+  <span class="label">Fonctionnalité 3 — Bouton WhatsApp flottant</span>
+  <div class="mockup" style="margin-top:10px;">
+    <div class="mockup-header">Bas de page (toutes les pages)</div>
+    <div class="mockup-body" style="position:relative;height:80px;padding:16px;">
+      <div style="position:absolute;bottom:16px;right:16px;background:#25d366;color:white;border-radius:50px;padding:10px 18px;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+        💬 WhatsApp
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:#555;margin-top:10px;">→ Composant <code>FloatingContact</code> ajouté dans le layout. Lien vers votre numéro WhatsApp. Optionnel : email en fallback si pas de WhatsApp pro.</p>
+</div>
+
+<div class="section">
+  <span class="label">Fonctionnalité 4 — Liste d'attente (sessions complètes)</span>
+  <div class="mockup" style="margin-top:10px;">
+    <div class="mockup-header">Page formation — session complète</div>
+    <div class="mockup-body" style="padding:16px;">
+      <div style="border:1px solid #e2b96b;background:#fffbf0;padding:16px;border-radius:6px;max-width:320px;">
+        <div style="font-weight:600;font-size:13px;color:#92400e;">Session du 15 juin — COMPLÈTE</div>
+        <p style="font-size:12px;color:#666;margin:8px 0;">Laissez votre email pour être prévenu si une place se libère.</p>
+        <input style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:12px;margin-bottom:8px;" placeholder="votre@email.fr">
+        <input style="width:100%;padding:8px;border:1px solid #ddd;border-radius:4px;font-size:12px;margin-bottom:10px;" placeholder="Votre prénom">
+        <button style="width:100%;padding:8px;background:#755a2d;color:white;border:none;font-size:11px;letter-spacing:0.1em;cursor:pointer;">M'INSCRIRE SUR LISTE D'ATTENTE</button>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:#555;margin-top:10px;">→ Nouvelle table Supabase <code>liste_attente</code>. Quand places_disponibles = 0 sur la page de la formation, le bouton "Réserver" est remplacé par ce formulaire. Vous voyez les inscrits depuis l'admin.</p>
+</div>
+
+<div class="section">
+  <span class="label">Fonctionnalité 5 — Capture email newsletter</span>
+  <div class="mockup" style="margin-top:10px;">
+    <div class="mockup-header">Section footer ou fin de page</div>
+    <div class="mockup-body" style="padding:16px;">
+      <div style="background:#1b1c1c;padding:20px;border-radius:6px;color:white;max-width:400px;">
+        <div style="font-size:15px;font-weight:600;margin-bottom:6px;">Être prévenu des prochaines sessions</div>
+        <div style="font-size:12px;color:#aaa;margin-bottom:14px;">Recevez les nouvelles dates dès qu'elles sont publiées.</div>
+        <div style="display:flex;gap:8px;">
+          <input style="flex:1;padding:8px;border:1px solid #444;background:#2a2a2a;color:white;border-radius:4px;font-size:12px;" placeholder="votre@email.fr">
+          <button style="padding:8px 16px;background:#755a2d;color:white;border:none;font-size:11px;cursor:pointer;">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:13px;color:#555;margin-top:10px;">→ Nouvelle table Supabase <code>newsletter</code>. Formulaire intégré dans le footer ou en section dédiée avant le footer. Emails consultables depuis l'admin pour vos annonces.</p>
+</div>
+
+<div class="section">
+  <span class="label">Fonctionnalité 6 — Témoignages depuis l'admin</span>
+  <div class="mockup" style="margin-top:10px;">
+    <div class="mockup-header">Admin → Témoignages</div>
+    <div class="mockup-body" style="padding:16px;">
+      <table style="width:100%;font-size:12px;border-collapse:collapse;">
+        <tr style="background:#f5f5f5;">
+          <th style="padding:8px;text-align:left;border-bottom:1px solid #ddd;">Auteur</th>
+          <th style="padding:8px;text-align:left;border-bottom:1px solid #ddd;">Extrait</th>
+          <th style="padding:8px;text-align:center;border-bottom:1px solid #ddd;">Visible</th>
+          <th style="padding:8px;border-bottom:1px solid #ddd;"></th>
+        </tr>
+        <tr>
+          <td style="padding:8px;border-bottom:1px solid #f0f0f0;">Sarah L.</td>
+          <td style="padding:8px;border-bottom:1px solid #f0f0f0;color:#666;">Formation incroyable…</td>
+          <td style="padding:8px;text-align:center;border-bottom:1px solid #f0f0f0;">✅</td>
+          <td style="padding:8px;border-bottom:1px solid #f0f0f0;"><button style="font-size:11px;padding:3px 8px;cursor:pointer;">Éditer</button></td>
+        </tr>
+        <tr>
+          <td style="padding:8px;">+ Ajouter un témoignage</td>
+          <td colspan="3"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <p style="font-size:13px;color:#555;margin-top:10px;">→ Nouvelle table Supabase <code>temoignages</code>. La section témoignages lit depuis la DB au lieu du tableau codé en dur. CRUD complet dans l'admin (créer, modifier, afficher/masquer).</p>
+</div>
+
+<p class="subtitle" style="margin-top:20px;padding:12px;background:#f0f9ff;border-radius:6px;">Ce design vous convient-il ? Dites-moi si un point est à modifier avant qu'on passe à la rédaction du plan d'implémentation.</p>

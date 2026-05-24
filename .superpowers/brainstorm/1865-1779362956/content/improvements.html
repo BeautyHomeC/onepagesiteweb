@@ -1,0 +1,169 @@
+<style>
+  .q-label { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #755a2d; font-family: sans-serif; margin-bottom: 6px; }
+  .q-title { font-size: 22px; font-family: Georgia, serif; color: #1b1c1c; margin-bottom: 6px; font-weight: 400; }
+  .q-sub  { font-size: 13px; color: #4e463a; margin-bottom: 28px; font-family: sans-serif; line-height: 1.6; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .idea-card {
+    border: 1px solid #d1c5b6;
+    border-radius: 3px;
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    background: #fff;
+    user-select: none;
+  }
+  .idea-card:hover { border-color: #755a2d; background: #fdf9f4; }
+  .idea-card.selected { border-color: #755a2d; background: #fdf9f4; box-shadow: 0 0 0 2px #755a2d22; }
+
+  .idea-icon { font-size: 18px; margin-bottom: 8px; }
+  .idea-impact { display: inline-block; font-size: 8px; letter-spacing: .15em; text-transform: uppercase; font-family: sans-serif; padding: 2px 7px; border-radius: 10px; margin-bottom: 8px; }
+  .impact-high { background: #e8f5e9; color: #2e7d32; }
+  .impact-med { background: #fff3e0; color: #e65100; }
+  .impact-low { background: #f3e5f5; color: #6a1b9a; }
+
+  .idea-title { font-family: Georgia, serif; font-size: 14px; color: #1b1c1c; font-weight: 400; margin-bottom: 5px; }
+  .idea-desc { font-size: 11px; color: #4e463a; line-height: 1.55; font-family: sans-serif; }
+
+  .section-sep { margin: 24px 0 16px; font-size: 10px; letter-spacing: .25em; text-transform: uppercase; color: #7f7669; font-family: sans-serif; border-bottom: 1px solid #e8e0d4; padding-bottom: 8px; }
+</style>
+
+<p class="q-label">Améliorations · Beauty Home Concept</p>
+<h2 class="q-title">Quelles idées t'intéressent ?</h2>
+<p class="q-sub">Sélectionne tout ce qui t'attire — je priorise ensuite avec toi. Chaque idée a un impact estimé sur l'attractivité et les conversions.</p>
+
+<div class="section-sep">Conversions & Formations</div>
+<div class="grid-2">
+
+  <div class="idea-card" data-choice="countdown" onclick="toggleSelect(this)">
+    <div class="idea-icon">⏱</div>
+    <div class="idea-impact impact-high">Impact élevé</div>
+    <div class="idea-title">Compte à rebours sessions</div>
+    <div class="idea-desc">Minuteur "Il reste X jours" sur les cartes formation et la page détail. Crée l'urgence sans être agressif.</div>
+  </div>
+
+  <div class="idea-card" data-choice="financements" onclick="toggleSelect(this)">
+    <div class="idea-icon">💳</div>
+    <div class="idea-impact impact-high">Impact élevé</div>
+    <div class="idea-title">Page Financement dédiée</div>
+    <div class="idea-desc">Explication pas-à-pas FAFCEA / OPCO / CPF avec simulateur ou checklist. Lève le frein principal à l'inscription.</div>
+  </div>
+
+  <div class="idea-card" data-choice="pdf" onclick="toggleSelect(this)">
+    <div class="idea-icon">📄</div>
+    <div class="idea-impact impact-high">Impact élevé</div>
+    <div class="idea-title">PDF de formation téléchargeable</div>
+    <div class="idea-desc">Bouton "Télécharger le programme" sur chaque page formation. Utile pour les demandeuses de financement.</div>
+  </div>
+
+  <div class="idea-card" data-choice="waitlist-email" onclick="toggleSelect(this)">
+    <div class="idea-icon">✉️</div>
+    <div class="idea-impact impact-high">Impact élevé</div>
+    <div class="idea-title">Inscription liste d'attente réelle</div>
+    <div class="idea-desc">Formulaire email intégré (pas juste mailto). Les inscrits reçoivent un email auto dès qu'une place se libère.</div>
+  </div>
+
+</div>
+
+<div class="section-sep">Preuve sociale & Confiance</div>
+<div class="grid-2">
+
+  <div class="idea-card" data-choice="google-reviews" onclick="toggleSelect(this)">
+    <div class="idea-icon">⭐</div>
+    <div class="idea-impact impact-high">Impact élevé</div>
+    <div class="idea-title">Note Google affichée</div>
+    <div class="idea-desc">Afficher la moyenne Google (ex: "5,0 · 47 avis") dans le hero ou la section témoignages. Crédibilité immédiate.</div>
+  </div>
+
+  <div class="idea-card" data-choice="galerie" onclick="toggleSelect(this)">
+    <div class="idea-icon">🖼</div>
+    <div class="idea-impact impact-med">Impact moyen</div>
+    <div class="idea-title">Galerie avant/après</div>
+    <div class="idea-desc">Section photo des travaux des élèves après formation. Montre le résultat concret. Alimente aussi Instagram.</div>
+  </div>
+
+  <div class="idea-card" data-choice="instagram" onclick="toggleSelect(this)">
+    <div class="idea-icon">📸</div>
+    <div class="idea-impact impact-med">Impact moyen</div>
+    <div class="idea-title">Feed Instagram live</div>
+    <div class="idea-desc">6-9 dernières photos Instagram affichées automatiquement. Prouve l'activité du compte et donne envie de s'abonner.</div>
+  </div>
+
+  <div class="idea-card" data-choice="counter" onclick="toggleSelect(this)">
+    <div class="idea-icon">🏆</div>
+    <div class="idea-impact impact-med">Impact moyen</div>
+    <div class="idea-title">Compteurs animés</div>
+    <div class="idea-desc">"1000+ clientes formées · 30+ formations · 5 étoiles" qui s'animent au scroll. Renforce la preuve sociale en quelques secondes.</div>
+  </div>
+
+</div>
+
+<div class="section-sep">UX Formations</div>
+<div class="grid-2">
+
+  <div class="idea-card" data-choice="comparaison" onclick="toggleSelect(this)">
+    <div class="idea-icon">⚖️</div>
+    <div class="idea-impact impact-med">Impact moyen</div>
+    <div class="idea-title">Tableau comparatif des formations</div>
+    <div class="idea-desc">Tableau "Formation A vs B vs C" avec lignes : durée, niveau, prix, ce qu'on apprend. Aide à choisir rapidement.</div>
+  </div>
+
+  <div class="idea-card" data-choice="quiz" onclick="toggleSelect(this)">
+    <div class="idea-icon">🧭</div>
+    <div class="idea-impact impact-med">Impact moyen</div>
+    <div class="idea-title">Quiz "Quelle formation pour moi ?"</div>
+    <div class="idea-desc">3-4 questions rapides → recommandation personnalisée. Original, mémorable, augmente l'engagement.</div>
+  </div>
+
+  <div class="idea-card" data-choice="calendrier" onclick="toggleSelect(this)">
+    <div class="idea-icon">📅</div>
+    <div class="idea-impact impact-med">Impact moyen</div>
+    <div class="idea-title">Vue calendrier des sessions</div>
+    <div class="idea-desc">Voir toutes les sessions à venir sur un calendrier mensuel. Utile pour les pros qui planifient longtemps à l'avance.</div>
+  </div>
+
+  <div class="idea-card" data-choice="faq-formation" onclick="toggleSelect(this)">
+    <div class="idea-icon">❓</div>
+    <div class="idea-impact impact-low">Impact ciblé</div>
+    <div class="idea-title">FAQ par formation</div>
+    <div class="idea-desc">Questions spécifiques à chaque formation sur sa page détail (en plus de la FAQ globale). Réduit les emails de renseignement.</div>
+  </div>
+
+</div>
+
+<div class="section-sep">Design & Expérience</div>
+<div class="grid-2">
+
+  <div class="idea-card" data-choice="dark-mode" onclick="toggleSelect(this)">
+    <div class="idea-icon">🌙</div>
+    <div class="idea-impact impact-low">Impact ciblé</div>
+    <div class="idea-title">Mode sombre</div>
+    <div class="idea-desc">Version dark du site — fond très sombre, or chaud pour les accents. Très luxueux, cohérent avec l'image haut de gamme.</div>
+  </div>
+
+  <div class="idea-card" data-choice="cursor" onclick="toggleSelect(this)">
+    <div class="idea-icon">✦</div>
+    <div class="idea-impact impact-low">Impact ciblé</div>
+    <div class="idea-title">Curseur personnalisé</div>
+    <div class="idea-desc">Petit curseur doré ou croix fine sur desktop. Détail mémorable qui renforce l'univers luxe sans être ostentatoire.</div>
+  </div>
+
+  <div class="idea-card" data-choice="page-transition" onclick="toggleSelect(this)">
+    <div class="idea-icon">🎬</div>
+    <div class="idea-impact impact-low">Impact ciblé</div>
+    <div class="idea-title">Transitions de page</div>
+    <div class="idea-desc">Animation de transition entre les pages (fade ou slide). Rend la navigation plus fluide et haut de gamme.</div>
+  </div>
+
+  <div class="idea-card" data-choice="contact-form" onclick="toggleSelect(this)">
+    <div class="idea-icon">💬</div>
+    <div class="idea-impact impact-med">Impact moyen</div>
+    <div class="idea-title">Formulaire de contact</div>
+    <div class="idea-desc">Un vrai formulaire intégré (nom, email, message, objet) qui envoie un email sans ouvrir le client mail. Plus professionnel.</div>
+  </div>
+
+</div>
+
+<p style="margin-top:20px; font-size:11px; color:#7f7669; font-family:sans-serif; text-align:center;">Sélectionne tout ce qui t'intéresse · Tu peux en choisir plusieurs</p>

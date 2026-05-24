@@ -2,18 +2,30 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-surface-container-low dark:bg-surface-container-low">
+    <footer className="w-full bg-surface-container-lowest border-t border-outline-variant/30">
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop pt-16 pb-8">
         
         {/* Top Footer */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-surface-container-highest">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pb-12 border-b border-outline-variant/30">
           
           {/* Brand */}
           <div>
-            <span className="font-headline-sm text-headline-sm text-on-surface uppercase tracking-[0.2em] block mb-4">Beauty Home Concept</span>
-            <p className="font-body-md text-sm text-on-surface-variant leading-relaxed">
-              Institut de formation professionnelle en prothésie ongulaire. Certifié Qualiopi. Situé à Amiens (80).
+            <span className="font-playfair text-xl text-on-surface uppercase tracking-[0.15em] block mb-4">Beauty Home Concept</span>
+            <p className="font-body-md text-sm text-on-surface-variant leading-relaxed mb-6">
+              Institut de formation professionnelle en prothésie ongulaire. Situé à Amiens (80).
             </p>
+            <div className="inline-flex items-center gap-3 border border-primary/25 px-3 py-2">
+              <span
+                className="material-symbols-outlined text-[20px] text-primary flex-shrink-0"
+                style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
+              >
+                award_star
+              </span>
+              <span className="font-label-caps text-[9px] text-primary uppercase tracking-widest leading-tight">
+                Certifié Qualiopi<br />
+                <span className="text-on-surface-variant font-body-md normal-case tracking-normal text-[10px]">FAFCEA · OPCO · CPF</span>
+              </span>
+            </div>
           </div>
 
           {/* Navigation */}

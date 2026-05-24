@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Beauty Home Concept — Prototype améliorations</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        "primary": "#755a2d",
+        "on-primary": "#ffffff",
+        "primary-container": "#b59562",
+        "on-primary-container": "#432e04",
+        "secondary": "#5e5e5c",
+        "background": "#faf9f9",
+        "on-background": "#1b1c1c",
+        "surface": "#faf9f9",
+        "on-surface": "#1b1c1c",
+        "on-surface-variant": "#4e463a",
+        "surface-container-lowest": "#ffffff",
+        "surface-container-low": "#f4f3f3",
+        "surface-container": "#efeded",
+        "surface-container-high": "#e9e8e8",
+        "surface-container-highest": "#e3e2e2",
+        "surface-variant": "#e3e2e2",
+        "inverse-surface": "#2f3031",
+        "inverse-on-surface": "#f2f0f0",
+        "outline": "#7f7669",
+        "outline-variant": "#d1c5b6",
+        "error": "#ba1a1a",
+      },
+      spacing: {
+        "section-gap": "120px",
+        "margin-mobile": "24px",
+        "margin-desktop": "80px",
+        "gutter": "24px",
+        "container-max": "1440px",
+      },
+      fontFamily: {
+        "display": ["Playfair Display"],
+        "body": ["Hanken Grotesk"],
+      },
+    }
+  }
+}
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+  .material-symbols-outlined.fill { font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  body { min-height: max(884px, 100dvh); }
+
+  /* Session badge */
+  .session-badge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fef9f0;
+    border: 1px solid #e8d5a3;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+  }
+
+  /* Waitlist */
+  .waitlist-form input {
+    width: 100%;
+    border: 1px solid #d1c5b6;
+    padding: 10px 12px;
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 14px;
+    color: #1b1c1c;
+    background: #fff;
+    outline: none;
+    margin-bottom: 8px;
+    transition: border-color .2s;
+  }
+  .waitlist-form input:focus { border-color: #755a2d; }
+
+  /* WhatsApp */
+  .whatsapp-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 200;
+    background: #25d366;
+    color: white;
+    border-radius: 50px;
+    padding: 12px 20px;
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.18);
+    cursor: pointer;
+    border: none;
+    transition: background .2s, transform .15s;
+    letter-spacing: 0.02em;
+  }
+  .whatsapp-fab:hover { background: #1da851; transform: translateY(-2px); }
+
+  /* Fade entrance */
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .fade-up { animation: fadeUp .6s ease both; }
+  .delay-1 { animation-delay: .1s; }
+  .delay-2 { animation-delay: .2s; }
+</style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container" style="font-family:'Hanken Grotesk',sans-serif;font-size:16px;font-weight:300;line-height:1.6;">
+
+<!-- ═══════════════════════════════════════════
+     HEADER — identique à l'existant
+════════════════════════════════════════════ -->
+<header class="fixed top-0 w-full bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 z-50">
+  <div class="flex items-center justify-between w-full px-4 md:px-margin-desktop py-5 max-w-container-max mx-auto">
+    <div class="flex items-center w-[80px] md:w-[120px]">
+      <button class="text-primary hover:opacity-70 transition-opacity p-2 -ml-2">
+        <span class="material-symbols-outlined text-[24px] md:text-[28px]">menu</span>
+      </button>
+    </div>
+    <div class="flex-1 flex justify-center">
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(12px,2vw,20px);letter-spacing:0.2em;text-transform:uppercase;" class="text-on-surface whitespace-nowrap">Beauty Home Concept</h1>
+    </div>
+    <div class="flex items-center justify-end w-[80px] md:w-[120px]">
+      <button class="text-primary font-medium hover:opacity-70 transition-opacity whitespace-nowrap" style="font-size:10px;letter-spacing:0.18em;font-family:'Hanken Grotesk',sans-serif;">
+        S'INSCRIRE
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="pt-[100px] pb-24 md:pb-0">
+
+<!-- ═══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-24">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+    <div class="md:col-span-5 md:col-start-1 flex flex-col justify-center order-2 md:order-1 mt-12 md:mt-0 z-10 relative">
+      <h2 class="fade-up text-on-surface mb-8" style="font-family:'Playfair Display',serif;font-size:clamp(40px,5vw,64px);line-height:1.1;letter-spacing:-0.02em;font-weight:400;">
+        Élevez votre expertise. Formations professionnelles en prothésie ongulaire.
+      </h2>
+      <p class="fade-up delay-1 text-on-surface-variant mb-10 max-w-md" style="font-size:18px;line-height:1.6;letter-spacing:0.01em;font-weight:300;">
+        Plongez dans l'univers de Beauty Home Concept. Une approche architecturale et minimaliste de l'ongle, conçue par Camille, experte passionnée.
+      </p>
+      <div class="fade-up delay-2">
+        <a href="#formations" class="inline-block border border-on-surface text-on-surface px-8 py-4 uppercase tracking-[0.2em] hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300" style="font-size:12px;letter-spacing:0.2em;font-family:'Hanken Grotesk',sans-serif;font-weight:400;">
+          Découvrir les Formations
+        </a>
+      </div>
+    </div>
+    <div class="md:col-span-6 md:col-start-7 order-1 md:order-2 h-[530px] md:h-[707px] w-full overflow-hidden p-4 bg-surface-container-lowest">
+      <img alt="Expert nail work" class="w-full h-full object-cover object-center"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnpPIu5PNiqQWNpyQFNQ4UiBYNhdVVsS96X8TljpqPG1__mH3lqHa37VdsoikxKybUZJKrp9rMdCOQvfFdjlJryLfXuCBWDLGs9pW3X4y8jMN0JbIbxCU7_9G7IYsuH_WZRs1NbIsxm_KIZknW53004GUNQRTYGISGqcIsKnElpLMrf8jH1wAfj80EWaKHZBw_sIjiR7RpVo7pXYG1ae7MnW0FpIzyLPGp-wROwyzE_yAaU-DdGwPHgqiPkQPVp1VOe827dwhVQOyr"/>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     ABOUT
+════════════════════════════════════════════ -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+    <div class="md:col-span-4 md:col-start-2">
+      <div class="aspect-[3/4] overflow-hidden p-4 bg-surface-container-lowest">
+        <img alt="Portrait de Camille" class="w-full h-full object-cover"
+          src="https://lh3.googleusercontent.com/aida/ADBb0ugxECCJY7H2l1WFyi4dtnwWdSWY2jLuhCiwlM7dSYkWc8Kp6C2aQxs2ZnaIdWh2YcYeEuVN2jAfLA9SNl8tc9QILOhz8Oh4WDGIbe-l5KrF5YxR_9U7AfwLC9l9sBc5qb0P0xwJdahYdm84nPJfN2CYNEycv2581szCM1dKem_Lxp2anFaBiDRx0Lp9CpTSNsLkIl-x_TP2ZModfkaIltN-6fevytkUeW6HiA9pKY6mTOuHzt9Uks7aOSdSya_uMsAVFJtBOwEc-oU"/>
+      </div>
+    </div>
+    <div class="md:col-span-5 md:col-start-7 flex flex-col justify-center mt-12 md:mt-0">
+      <div class="mb-8 w-16 h-16 rounded-full bg-surface-container-low flex items-center justify-center">
+        <span class="material-symbols-outlined text-[32px] text-primary" style="font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;">verified</span>
+      </div>
+      <h3 class="text-on-surface mb-6" style="font-family:'Playfair Display',serif;font-size:24px;line-height:1.4;font-weight:400;">La Méthode Camille</h3>
+      <div class="text-on-surface-variant space-y-6" style="font-size:16px;line-height:1.6;font-weight:300;">
+        <p>Prothésiste ongulaire certifiée et spécialiste de la manucure russe, je partage ma propre méthode professionnelle, forgée au fil de 5 ans de pratique et de plus de 30 formations suivies en France et à l'étranger.</p>
+        <p>Chaque geste est pensé pour sublimer l'ongle naturel avec une précision absolue. Mes formations sont certifiées <strong class="font-medium">Qualiopi</strong>, garantissant une prise en charge possible par vos organismes de financement (FAFCEA, OPCO).</p>
+      </div>
+      <div class="mt-8 p-4 border border-primary/30 bg-surface flex items-center gap-4">
+        <span class="material-symbols-outlined text-[40px] text-primary" style="font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;">award_star</span>
+        <div>
+          <p class="text-primary uppercase tracking-widest" style="font-size:12px;font-weight:400;letter-spacing:0.2em;">Certifiée Qualiopi</p>
+          <p class="text-on-surface-variant mt-1" style="font-size:12px;font-weight:300;">Formations éligibles FAFCEA, OPCO, CPF.</p>
+        </div>
+      </div>
+      <div class="mt-10">
+        <a href="#" class="inline-flex items-center text-on-surface hover:text-primary transition-colors uppercase pb-1 border-b border-on-surface hover:border-primary" style="font-size:12px;letter-spacing:0.2em;font-weight:400;">
+          En savoir plus <span class="material-symbols-outlined ml-2 text-[16px]" style="font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;">arrow_forward</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FORMATIONS — avec badges sessions 🆕
+════════════════════════════════════════════ -->
+<section id="formations" class="bg-surface-container-lowest py-section-gap relative">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="flex justify-between items-end mb-16">
+      <h2 class="text-on-surface" style="font-family:'Playfair Display',serif;font-size:32px;line-height:1.3;font-weight:400;">Formations</h2>
+      <a href="#" class="hidden md:inline-block text-on-surface-variant hover:text-primary transition-colors pb-1 border-b border-transparent hover:border-primary uppercase" style="font-size:12px;letter-spacing:0.2em;font-weight:400;">Toutes les sessions</a>
+    </div>
+
+    <!-- Info nouvelle fonctionnalité -->
+    <div class="mb-8 p-3 border border-outline-variant bg-surface flex items-start gap-3" style="font-size:12px;">
+      <span class="material-symbols-outlined text-primary text-[18px] mt-0.5" style="font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;">info</span>
+      <span class="text-on-surface-variant"><strong class="text-on-surface font-medium">Nouveau :</strong> La prochaine date disponible apparaît directement sur chaque carte. Les sessions complètes affichent une liste d'attente.</span>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+
+      <!-- Card 1 — Places disponibles -->
+      <div class="group cursor-pointer bg-surface p-6 shadow-[0_8px_40px_rgba(181,149,98,0.05)] flex flex-col items-center text-center">
+        <div class="aspect-square mb-6 overflow-hidden bg-surface-container-low w-full p-2">
+          <img alt="Masterclass Perfectionnement" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp1PbLB8PAw6WwBvWr3OksuzJoKLmAsb5gjEJ8nHAa6-ZfsIKYXtrWIaK-YUBvaLVDsdm5xh2C7peJw6_EB2qoW4nc8DmEnbcS0bhWow5HYNL1Z2wfn6f2QVi-DWZC4MKqFpxowjTxwEAqK4zLk22iBq4waGeR5veeHcZ2PIvSCwEgQ6PkrPHNH-MGSD5j3qw9ts6C8l8T2Tfu-XxqhKl7eCcex5FtKPtms4cwPXAWnccwP_1ewcVYQKvA4clwMyoAEIhfmmA6Vuhp"/>
+        </div>
+        <h4 class="text-on-surface mb-2" style="font-family:'Playfair Display',serif;font-size:24px;line-height:1.4;font-weight:400;">Masterclass Perfectionnement</h4>
+        <p class="text-on-surface-variant mb-4" style="font-size:16px;line-height:1.6;font-weight:300;">Maîtrisez les techniques avancées et la préparation parfaite.</p>
+        <span class="text-primary uppercase mb-4" style="font-size:12px;letter-spacing:0.2em;font-weight:400;">2 Jours · Présentiel Amiens</span>
+
+        <!-- 🆕 Badge session -->
+        <div class="w-full session-badge mb-1">
+          <span style="font-size:11px;color:#92400e;font-weight:500;">📅 Prochaine session</span>
+          <span style="font-size:12px;color:#755a2d;font-weight:600;">14 juin 2026</span>
+        </div>
+        <p class="text-on-surface-variant w-full text-right mb-4" style="font-size:11px;">2 places restantes</p>
+
+        <a href="#" class="w-full inline-block text-center border border-on-surface text-on-surface px-4 py-3 uppercase tracking-[0.2em] hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300 mt-auto" style="font-size:12px;letter-spacing:0.2em;font-weight:400;">
+          Découvrir le programme
+        </a>
+      </div>
+
+      <!-- Card 2 — SESSION COMPLÈTE avec liste d'attente 🆕 -->
+      <div class="group cursor-pointer bg-surface p-6 shadow-[0_8px_40px_rgba(181,149,98,0.05)] flex flex-col items-center text-center">
+        <div class="aspect-square mb-6 overflow-hidden bg-surface-container-low w-full p-2">
+          <img alt="Art & Esthétique" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuATUmCuxJJzF9NQXSO41FZsJwgPsYS1KkTurDIZqkA76hdnvBUJlyDq0n82qfzSCETQ_glY0_0MUeTlfqgClFZwenCgO-fgVSehugvMi7S9BU-fPWmQAJe-K4tzcZwT_BqYgz2dsLm2HM_g1nBrFXdUTckAYsg0yOsdcabgkwa_weeGmw86g8vidQaQ05OcUhQFTTigthKsaySS1CuM6jvqw1lpBd_MPnVnm0f5r9BErCbz3M5GxuCq-bDzHzIaWZvmUx8gJ_5hMOi-"/>
+        </div>
+        <h4 class="text-on-surface mb-2" style="font-family:'Playfair Display',serif;font-size:24px;line-height:1.4;font-weight:400;">Art &amp; Esthétique</h4>
+        <p class="text-on-surface-variant mb-4" style="font-size:16px;line-height:1.6;font-weight:300;">L'art du minimalisme et des lignes épurées.</p>
+        <span class="text-primary uppercase mb-4" style="font-size:12px;letter-spacing:0.2em;font-weight:400;">1 Jour · Présentiel Amiens</span>
+
+        <!-- Badge session complète -->
+        <div class="w-full mb-1" style="display:flex;align-items:center;justify-content:space-between;background:#fff5f5;border:1px solid #fca5a5;padding:8px 12px;">
+          <span style="font-size:11px;color:#991b1b;font-weight:500;">📅 Prochaine session</span>
+          <span style="font-size:12px;color:#dc2626;font-weight:600;">28 juin 2026</span>
+        </div>
+        <p class="w-full text-right mb-3" style="font-size:11px;color:#dc2626;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;">Session complète</p>
+
+        <!-- Zone liste d'attente -->
+        <div id="waitlist-area" class="w-full mt-auto">
+          <button onclick="openWaitlist()" class="w-full border text-primary px-4 py-3 uppercase tracking-[0.2em] hover:bg-primary hover:border-primary hover:text-white transition-all duration-300" style="border-color:#755a2d;font-size:11px;letter-spacing:0.18em;font-family:'Hanken Grotesk',sans-serif;background:none;cursor:pointer;">
+            Liste d'attente
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="group cursor-pointer bg-surface p-6 shadow-[0_8px_40px_rgba(181,149,98,0.05)] flex flex-col items-center text-center">
+        <div class="aspect-square mb-6 overflow-hidden bg-surface-container-low w-full p-2">
+          <img alt="Création de Salon" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out opacity-90"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXWiv8EoIuFKzKkswIBuK-r2sdF7N-YjdEBz-f_G1OYHJAtSqQGYPV60M0nk4U_Wyy_HwBA0PgzWS3z7bruhGKJEm8UZAYroDjOAm7AoDH7-le_jm1pQ990j5220-5akf2_u66YJv5kg1QjSThUXYk---Bv-uNsOLfzNCjeSjML5syXGCsLpRu5lm1idlJnkGvpUBdys3h2Febr-vn70tXJRps9lnftD-65Aa4YsqwT7LSv6zr690Bl0GpTYP-x9Sp0KfcV8hZQ_9m"/>
+        </div>
+        <h4 class="text-on-surface mb-2" style="font-family:'Playfair Display',serif;font-size:24px;line-height:1.4;font-weight:400;">Création de Salon Haut de Gamme</h4>
+        <p class="text-on-surface-variant mb-4" style="font-size:16px;line-height:1.6;font-weight:300;">Développez une identité visuelle et une clientèle premium.</p>
+        <span class="text-primary uppercase mb-4" style="font-size:12px;letter-spacing:0.2em;font-weight:400;">Mentorat · Sur mesure</span>
+
+        <div class="w-full session-badge mb-1">
+          <span style="font-size:11px;color:#92400e;font-weight:500;">📅 Prochaine session</span>
+          <span style="font-size:12px;color:#755a2d;font-weight:600;">5 juil. 2026</span>
+        </div>
+        <p class="text-on-surface-variant w-full text-right mb-4" style="font-size:11px;">1 place restante</p>
+
+        <a href="#" class="w-full inline-block text-center border border-on-surface text-on-surface px-4 py-3 uppercase tracking-[0.2em] hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300 mt-auto" style="font-size:12px;letter-spacing:0.2em;font-weight:400;">
+          Découvrir le programme
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     TÉMOIGNAGES
+════════════════════════════════════════════ -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16">
+    <h2 class="text-on-surface" style="font-family:'Playfair Display',serif;font-size:32px;line-height:1.3;font-weight:400;">Ce qu'en disent les élèves.</h2>
+    <div class="flex items-center gap-1">
+      <span class="material-symbols-outlined fill text-primary" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+      <span class="material-symbols-outlined fill text-primary" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+      <span class="material-symbols-outlined fill text-primary" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+      <span class="material-symbols-outlined fill text-primary" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+      <span class="material-symbols-outlined fill text-primary" style="font-size:16px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+      <span class="ml-2 text-on-surface-variant" style="font-size:11px;">5/5 · Toutes les élèves</span>
+    </div>
+  </div>
+
+  <!-- Note admin -->
+  <div class="mb-8 p-3 border border-outline-variant bg-surface flex items-start gap-3" style="font-size:12px;">
+    <span class="material-symbols-outlined text-primary text-[18px] mt-0.5" style="font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24;">admin_panel_settings</span>
+    <span class="text-on-surface-variant"><strong class="text-on-surface font-medium">Nouveau :</strong> Ces témoignages seront gérables depuis votre espace admin — ajout, modification, afficher/masquer. Fini le code.</span>
+  </div>
+
+  <div class="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory gap-5 pb-6 -mx-6 px-6 md:mx-0 md:px-0">
+    <article class="min-w-[min(88vw,380px)] md:min-w-[380px] snap-center flex flex-col bg-surface-container-low border border-outline-variant/40 p-8">
+      <span style="font-family:'Playfair Display',serif;font-size:72px;line-height:1;color:rgba(117,90,45,0.2);margin-top:-8px;margin-bottom:8px;display:block;">"</span>
+      <div class="flex gap-0.5 mb-5">
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+      </div>
+      <p class="text-on-surface-variant flex-1 mb-8" style="font-size:14px;line-height:1.7;font-style:italic;">Formation incroyable ! Camille est une pédagogue hors pair. En une journée, j'ai totalement revu ma technique de manucure russe. Mes clientes voient la différence immédiatement.</p>
+      <div class="border-t border-outline-variant/40 pt-5">
+        <p style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;" class="text-on-surface">Sarah L.</p>
+        <p class="text-on-surface-variant mt-0.5 tracking-wide" style="font-size:11px;">Prothésiste ongulaire · Lille</p>
+      </div>
+    </article>
+    <article class="min-w-[min(88vw,380px)] md:min-w-[380px] snap-center flex flex-col bg-surface-container-low border border-outline-variant/40 p-8">
+      <span style="font-family:'Playfair Display',serif;font-size:72px;line-height:1;color:rgba(117,90,45,0.2);margin-top:-8px;margin-bottom:8px;display:block;">"</span>
+      <div class="flex gap-0.5 mb-5">
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+      </div>
+      <p class="text-on-surface-variant flex-1 mb-8" style="font-size:14px;line-height:1.7;font-style:italic;">La formation est certifiée Qualiopi, j'ai pu la faire financer par mon OPCO sans avancer d'argent. Le contenu est sérieux, le matériel fourni est top. Je recommande à 100%.</p>
+      <div class="border-t border-outline-variant/40 pt-5">
+        <p style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;" class="text-on-surface">Julie M.</p>
+        <p class="text-on-surface-variant mt-0.5 tracking-wide" style="font-size:11px;">Auto-entrepreneuse · Amiens</p>
+      </div>
+    </article>
+    <article class="min-w-[min(88vw,380px)] md:min-w-[380px] snap-center flex flex-col bg-surface-container-low border border-outline-variant/40 p-8">
+      <span style="font-family:'Playfair Display',serif;font-size:72px;line-height:1;color:rgba(117,90,45,0.2);margin-top:-8px;margin-bottom:8px;display:block;">"</span>
+      <div class="flex gap-0.5 mb-5">
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+        <span class="material-symbols-outlined fill text-primary" style="font-size:14px;font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;">star</span>
+      </div>
+      <p class="text-on-surface-variant flex-1 mb-8" style="font-size:14px;line-height:1.7;font-style:italic;">Camille partage vraiment sa méthode, ses secrets de pro. On ne repart pas les mains vides : livret pédagogique, attestation, et un suivi post-formation. Du sérieux !</p>
+      <div class="border-t border-outline-variant/40 pt-5">
+        <p style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;" class="text-on-surface">Laëtitia B.</p>
+        <p class="text-on-surface-variant mt-0.5 tracking-wide" style="font-size:11px;">Prothésiste · Reims</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     NEWSLETTER 🆕
+════════════════════════════════════════════ -->
+<section class="py-section-gap" style="background:#2f3031;">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+      <div class="md:col-span-6">
+        <p class="text-primary uppercase mb-4" style="font-size:12px;letter-spacing:0.2em;font-weight:400;">Restez informée</p>
+        <h2 class="mb-5" style="font-family:'Playfair Display',serif;font-size:clamp(28px,3vw,40px);line-height:1.2;font-weight:400;color:#f2f0f0;">
+          Être prévenue des prochaines sessions
+        </h2>
+        <p style="font-size:16px;line-height:1.6;font-weight:300;color:rgba(242,240,240,0.6);">
+          Recevez les nouvelles dates dès leur publication. Aucun spam, désabonnement en un clic.
+        </p>
+      </div>
+      <div class="md:col-span-5 md:col-start-8" id="nl-container">
+        <div class="flex flex-col gap-3">
+          <input id="nl-email" type="email" placeholder="votre@email.fr"
+            style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:#f2f0f0;padding:14px 16px;font-family:'Hanken Grotesk',sans-serif;font-size:15px;font-weight:300;outline:none;width:100%;transition:border-color .2s;"
+            onfocus="this.style.borderColor='#755a2d'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'"/>
+          <button onclick="submitNewsletter()"
+            class="border border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 uppercase px-8 py-4 w-full"
+            style="font-size:12px;letter-spacing:0.2em;font-family:'Hanken Grotesk',sans-serif;font-weight:400;background:none;cursor:pointer;">
+            M'inscrire
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer class="w-full bg-inverse-surface" style="background:#2f3031;">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-14 pb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 pb-12 border-b" style="border-color:rgba(242,240,240,0.1);">
+      <div>
+        <span style="font-family:'Playfair Display',serif;font-size:17px;letter-spacing:0.2em;text-transform:uppercase;color:#f2f0f0;display:block;margin-bottom:16px;">Beauty Home Concept</span>
+        <p style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:rgba(242,240,240,0.45);line-height:1.6;max-width:260px;">Institut de formation professionnelle en prothésie ongulaire. Certifié Qualiopi. Situé à Amiens (80).</p>
+      </div>
+      <div>
+        <p style="font-size:10px;font-family:'Hanken Grotesk',sans-serif;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:rgba(242,240,240,0.4);margin-bottom:20px;">Navigation</p>
+        <nav class="flex flex-col gap-3">
+          <a href="#" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;" class="hover:text-primary transition-colors">Accueil</a>
+          <a href="#" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;" class="hover:text-primary transition-colors">La Méthode Camille</a>
+          <a href="#formations" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;" class="hover:text-primary transition-colors">Formations</a>
+          <a href="#" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;" class="hover:text-primary transition-colors">FAQ</a>
+        </nav>
+      </div>
+      <div>
+        <p style="font-size:10px;font-family:'Hanken Grotesk',sans-serif;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;color:rgba(242,240,240,0.4);margin-bottom:20px;">Nous retrouver</p>
+        <div class="flex flex-col gap-3">
+          <a href="https://www.instagram.com/beauty_home.concept" target="_blank" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;display:flex;align-items:center;gap:10px;" class="hover:text-primary transition-colors">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @beauty_home.concept
+          </a>
+          <a href="https://www.tiktok.com/@beautyhomeconcept" target="_blank" style="font-family:'Hanken Grotesk',sans-serif;font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;display:flex;align-items:center;gap:10px;" class="hover:text-primary transition-colors">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.31 6.31 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.18 8.18 0 004.79 1.54V7.01a4.84 4.84 0 01-1.02-.32z"/></svg>
+            @beautyhomeconcept
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col md:flex-row justify-between items-center pt-7 gap-4">
+      <p style="font-size:11px;font-family:'Hanken Grotesk',sans-serif;color:rgba(242,240,240,0.3);">© 2026 Beauty Home Concept · Amiens, France</p>
+      <div class="flex gap-6">
+        <a href="#" style="font-size:11px;font-family:'Hanken Grotesk',sans-serif;color:rgba(242,240,240,0.3);text-decoration:none;" class="hover:text-primary transition-colors">Mentions légales</a>
+        <a href="#" style="font-size:11px;font-family:'Hanken Grotesk',sans-serif;color:rgba(242,240,240,0.3);text-decoration:none;" class="hover:text-primary transition-colors">CGV</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     WHATSAPP FLOTTANT 🆕
+════════════════════════════════════════════ -->
+<button class="whatsapp-fab">
+  <svg style="width:18px;height:18px;flex-shrink:0;" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+  Une question ?
+</button>
+
+<!-- MODAL LISTE D'ATTENTE -->
+<div id="waitlist-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:300;align-items:center;justify-content:center;">
+  <div style="background:white;max-width:420px;width:90%;padding:40px;position:relative;">
+    <button onclick="closeWaitlist()" style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:#7f7669;">
+      <span class="material-symbols-outlined text-[24px]">close</span>
+    </button>
+    <h3 style="font-family:'Playfair Display',serif;font-size:24px;font-weight:400;color:#1b1c1c;margin-bottom:8px;">Liste d'attente</h3>
+    <p style="font-size:14px;color:#4e463a;font-weight:300;margin-bottom:24px;">Session du <strong>28 juin 2026</strong> — complète. Laissez votre contact, on vous prévient si une place se libère.</p>
+    <div class="waitlist-form" id="wl-form">
+      <input type="text" placeholder="Votre prénom" />
+      <input type="email" placeholder="votre@email.fr" />
+      <button onclick="submitWaitlist()" style="width:100%;background:#755a2d;color:white;border:none;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;padding:14px;font-family:'Hanken Grotesk',sans-serif;cursor:pointer;transition:background .2s;">
+        M'inscrire sur liste d'attente
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openWaitlist() {
+  const modal = document.getElementById('waitlist-modal');
+  modal.style.display = 'flex';
+}
+function closeWaitlist() {
+  document.getElementById('waitlist-modal').style.display = 'none';
+}
+function submitWaitlist() {
+  document.getElementById('wl-form').innerHTML = '<div style="background:#f0fdf4;border:1px solid #86efac;color:#166534;padding:16px;font-size:14px;text-align:center;line-height:1.5;">✅ Inscrit·e sur la liste d\'attente !<br>Vous serez prévenu·e en priorité si une place se libère.</div>';
+}
+function submitNewsletter() {
+  const email = document.getElementById('nl-email').value;
+  if (!email) return;
+  document.getElementById('nl-container').innerHTML = '<p style="font-family:\'Playfair Display\',serif;font-size:22px;font-weight:400;color:#f2f0f0;">✓ Parfait — vous serez prévenue dès que de nouvelles sessions sont publiées.</p>';
+}
+// Fermer modal en cliquant dehors
+document.getElementById('waitlist-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeWaitlist();
+});
+</script>
+
+</body>
+</html>

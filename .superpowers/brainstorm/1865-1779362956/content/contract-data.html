@@ -1,0 +1,98 @@
+<style>
+  .q-label { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #755a2d; font-family: sans-serif; margin-bottom: 6px; }
+  .q-title { font-size: 22px; font-family: Georgia, serif; color: #1b1c1c; margin-bottom: 6px; font-weight: 400; }
+  .q-sub  { font-size: 13px; color: #4e463a; margin-bottom: 28px; font-family: sans-serif; line-height: 1.6; }
+
+  .schema { font-family: 'Courier New', monospace; font-size: 10px; background: #1b1c1c; color: #d4c5a9; padding: 16px; border-radius: 3px; line-height: 1.7; overflow: auto; }
+  .sql-kw { color: #c792ea; }
+  .sql-type { color: #82aaff; }
+  .sql-str { color: #c3e88d; }
+  .sql-cmt { color: #546e7a; }
+  .sql-var { color: #f78c6c; }
+
+  .section-sep { margin: 20px 0 12px; font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: #7f7669; font-family: sans-serif; border-bottom: 1px solid #e8e0d4; padding-bottom: 6px; }
+
+  .changes { display: flex; flex-direction: column; gap: 8px; }
+  .change { display: flex; gap: 10px; align-items: flex-start; padding: 10px; background: #faf9f9; border: 1px solid #e3e2e2; border-radius: 2px; }
+  .change-badge { font-size: 8px; letter-spacing: .1em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; flex-shrink: 0; margin-top: 2px; }
+  .badge-new { background: #e8f5e9; color: #2e7d32; }
+  .badge-mod { background: #fff3e0; color: #e65100; }
+  .change-content { flex: 1; }
+  .change-title { font-family: Georgia, serif; font-size: 13px; color: #1b1c1c; font-weight: 400; margin-bottom: 3px; }
+  .change-desc { font-size: 10px; color: #4e463a; line-height: 1.5; font-family: sans-serif; }
+  .change-code { font-family: monospace; font-size: 9px; color: #755a2d; margin-top: 3px; }
+</style>
+
+<p class="q-label">Design · Données</p>
+<h2 class="q-title">Schéma de données</h2>
+<p class="q-sub">Ce qu'on ajoute ou modifie dans Supabase pour faire fonctionner le nouveau système.</p>
+
+<div class="section-sep">Nouvelle table — contract_templates</div>
+
+<div class="schema">
+<span class="sql-cmt">-- Un template par formation × type de client</span>
+<br><span class="sql-kw">create table</span> <span class="sql-var">contract_templates</span> (
+<br>  id         <span class="sql-type">uuid</span> primary key default gen_random_uuid(),
+<br>  formation_id <span class="sql-type">uuid</span> references formations(id) on delete cascade,
+<br>  type       <span class="sql-type">text</span> not null check (type in (<span class="sql-str">'particulier'</span>, <span class="sql-str">'pro'</span>)),
+<br>  titre      <span class="sql-type">text</span>,          <span class="sql-cmt">-- ex: "Contrat Manucure Russe Pro"</span>
+<br>  contenu    <span class="sql-type">text</span> not null, <span class="sql-cmt">-- HTML/Markdown avec {{variables}}</span>
+<br>  version    <span class="sql-type">int</span> default 1,
+<br>  updated_at <span class="sql-type">timestamptz</span> default now(),
+<br>  unique(formation_id, type)
+<br>);
+</div>
+
+<div class="section-sep">Modifications — table reservations</div>
+
+<div class="changes">
+
+  <div class="change">
+    <span class="change-badge badge-new">Nouveau</span>
+    <div class="change-content">
+      <div class="change-title">contrat_signe_url</div>
+      <div class="change-desc">URL Supabase Storage du PDF signé + scellé. Généré juste avant le redirect Stripe. Archivé dans le bucket <code>contracts</code>.</div>
+      <div class="change-code">contrat_signe_url text</div>
+    </div>
+  </div>
+
+  <div class="change">
+    <span class="change-badge badge-new">Nouveau</span>
+    <div class="change-content">
+      <div class="change-title">signature_data</div>
+      <div class="change-desc">JSON contenant : type (text/draw), valeur (nom tapé ou base64 du canvas), horodatage, IP, user-agent. Valeur probatoire de l'audit trail.</div>
+      <div class="change-code">signature_data jsonb</div>
+    </div>
+  </div>
+
+  <div class="change">
+    <span class="change-badge badge-new">Nouveau</span>
+    <div class="change-content">
+      <div class="change-title">client_type</div>
+      <div class="change-desc">Particulier ou professionnel — détermine quel template utiliser et quels champs afficher (SIRET, raison sociale).</div>
+      <div class="change-code">client_type text check (client_type in ('particulier', 'pro'))</div>
+    </div>
+  </div>
+
+  <div class="change">
+    <span class="change-badge badge-mod">Modifié</span>
+    <div class="change-content">
+      <div class="change-title">statut</div>
+      <div class="change-desc">Valeurs étendues : <strong>en_attente_signature</strong> (contrat généré, pas encore signé), <strong>en_attente_paiement</strong> (signé, pas encore payé), <strong>confirmee</strong>, <strong>presente</strong>, <strong>annulee</strong>.</div>
+      <div class="change-code">statut text check (statut in ('en_attente_signature','en_attente_paiement','confirmee','presente','annulee'))</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="section-sep">Bucket Supabase Storage — contracts</div>
+
+<div class="changes">
+  <div class="change">
+    <span class="change-badge badge-new">Nouveau</span>
+    <div class="change-content">
+      <div class="change-title">Chemin : contracts/{reservation_id}/contrat-signé.pdf</div>
+      <div class="change-desc">Accès privé (signed URL générée côté serveur). Lecture publique désactivée — seul l'admin et le webhook peuvent y accéder. Attaché à l'email de confirmation.</div>
+    </div>
+  </div>
+</div>

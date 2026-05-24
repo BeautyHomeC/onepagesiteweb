@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     question: "Y a-t-il un suivi après la formation ?",
-    answer: "Oui ! Camille assure un suivi post-formation par mail et via les réseaux sociaux. Si vous avez des questions techniques ou souhaitez faire réviser un geste, elle reste disponible pour ses anciennes élèves.",
+    answer: "Oui. Camille assure un suivi post-formation par mail et via les réseaux sociaux. Si vous avez des questions techniques ou souhaitez faire réviser un geste, elle reste disponible pour ses anciennes élèves.",
   },
 ];
 
@@ -35,36 +35,64 @@ export default function FaqSection() {
   return (
     <section id="faq" className="bg-surface-container-low py-section-gap">
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-        <h2 className="font-headline-md text-headline-md text-on-surface text-center mb-4">Questions fréquentes</h2>
-        <p className="font-body-md text-on-surface-variant text-center mb-16">Tout ce que vous devez savoir avant de vous inscrire.</p>
-        
-        <div className="max-w-[720px] mx-auto divide-y divide-surface-container-highest">
-          {faqs.map((faq, i) => (
-            <div key={i} className="py-6">
-              <button
-                onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full flex justify-between items-center text-left gap-4"
+        <div className="grid md:grid-cols-[5fr_7fr] gap-16 md:gap-24">
+
+          {/* Left: sticky heading */}
+          <div className="md:sticky md:top-[108px] md:self-start z-10">
+            <p className="font-label-caps text-label-caps text-primary uppercase mb-4">Informations</p>
+            <h2 className="font-headline-md text-headline-md text-on-surface mb-8">
+              Questions fréquentes.
+            </h2>
+            <a
+              href="mailto:contact@beautyhomeconcept.fr?subject=Renseignements formation"
+              className="inline-flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors duration-200 font-body-md text-body-md active:opacity-70"
+              onClick={(e) => {
+                // Fallback: if mailto fails, copy email to clipboard
+                if (!window.navigator.userAgent.includes('Mobile')) return;
+                e.preventDefault();
+                navigator.clipboard?.writeText('contact@beautyhomeconcept.fr');
+              }}
+            >
+              <span
+                className="material-symbols-outlined text-[18px]"
+                style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
               >
-                <span className="font-body-md text-on-surface font-medium">{faq.question}</span>
-                <span
-                  className="material-symbols-outlined text-primary flex-shrink-0 transition-transform duration-300"
-                  style={{
-                    transform: openIndex === i ? "rotate(180deg)" : "rotate(0deg)",
-                    fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24",
-                  }}
+                mail
+              </span>
+              Nous écrire
+            </a>
+            <p className="text-[11px] text-on-surface-variant/60 mt-2 font-body-md">
+              contact@beautyhomeconcept.fr
+            </p>
+          </div>
+
+          {/* Right: accordion */}
+          <div className="divide-y divide-outline-variant/40">
+            {faqs.map((faq, i) => (
+              <div key={i} className="py-6">
+                <button
+                  onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                  className="w-full flex justify-between items-center text-left gap-4 active:opacity-70"
                 >
-                  expand_more
-                </span>
-              </button>
-              <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  openIndex === i ? "max-h-96 mt-4" : "max-h-0"
-                }`}
-              >
-                <p className="font-body-md text-on-surface-variant leading-relaxed">{faq.answer}</p>
+                  <span className="font-body-md text-on-surface font-medium">{faq.question}</span>
+                  <span
+                    className="material-symbols-outlined text-primary flex-shrink-0"
+                    style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
+                  >
+                    {openIndex === i ? "close" : "add"}
+                  </span>
+                </button>
+                <div className={`faq-body${openIndex === i ? " faq-open" : ""}`}>
+                  <div className="overflow-hidden">
+                    <p className="font-body-md text-on-surface-variant leading-relaxed pt-4">
+                      {faq.answer}
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
         </div>
       </div>
     </section>

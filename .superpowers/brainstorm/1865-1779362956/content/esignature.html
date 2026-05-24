@@ -1,0 +1,99 @@
+<style>
+  .q-label { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #755a2d; font-family: sans-serif; margin-bottom: 6px; }
+  .q-title { font-size: 22px; font-family: Georgia, serif; color: #1b1c1c; margin-bottom: 6px; font-weight: 400; }
+  .q-sub  { font-size: 13px; color: #4e463a; margin-bottom: 28px; font-family: sans-serif; line-height: 1.6; }
+
+  .mock { background: #faf9f9; border: 1px solid #e3e2e2; border-radius: 3px; padding: 16px; font-family: sans-serif; }
+  .mock-doc { background: #fff; border: 1px solid #e3e2e2; padding: 12px; margin-bottom: 12px; font-size: 9px; color: #4e463a; line-height: 1.6; max-height: 80px; overflow: hidden; position: relative; }
+  .mock-doc::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 24px; background: linear-gradient(transparent, #fff); }
+  .mock-label { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: #755a2d; margin-bottom: 6px; }
+  .mock-input { border: 1px solid #d1c5b6; border-radius: 1px; padding: 7px 10px; font-size: 11px; color: #1b1c1c; width: 100%; box-sizing: border-box; background: #fff; }
+  .mock-canvas { border: 1px solid #d1c5b6; border-radius: 1px; background: #fff; height: 52px; display: flex; align-items: center; justify-content: center; color: #b0a898; font-size: 9px; font-style: italic; position: relative; }
+  .mock-sig-line { position: absolute; bottom: 12px; left: 12px; right: 12px; border-bottom: 1px solid #e3e2e2; }
+  .mock-sig-label { position: absolute; bottom: 2px; left: 12px; font-size: 7px; color: #b0a898; }
+  .mock-sig-text { font-family: 'Georgia', cursive; font-size: 18px; color: #1b1c1c; }
+  .mock-btn { font-size: 8px; letter-spacing: .15em; text-transform: uppercase; padding: 8px 16px; background: #755a2d; color: #fff; border-radius: 1px; text-align: center; margin-top: 10px; }
+  .mock-note { font-size: 8px; color: #7f7669; margin-top: 6px; text-align: center; }
+  .mock-tabs { display: flex; gap: 0; margin-bottom: 10px; }
+  .mock-tab { font-size: 8px; letter-spacing: .1em; text-transform: uppercase; padding: 5px 10px; border: 1px solid #e3e2e2; color: #7f7669; flex: 1; text-align: center; }
+  .mock-tab.active { color: #755a2d; border-color: #755a2d; background: rgba(117,90,45,.04); }
+</style>
+
+<p class="q-label">Signature électronique</p>
+<h2 class="q-title">Comment l'élève signe son contrat ?</h2>
+<p class="q-sub">Après avoir lu le contrat en entier, l'élève le signe avant de passer au paiement.</p>
+
+<div class="cards">
+
+  <!-- Option A: Saisir son nom -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock">
+        <div class="mock-doc">
+          CONTRAT DE FORMATION PROFESSIONNELLE<br>
+          Entre <strong>Sarah Laurent</strong>, demeurant à Paris 11e,<br>
+          et Beauty Home Concept, organisme de formation enregistré sous le n° 32 59 09189 59…<br>
+          Article 1 — Objet de la formation…
+        </div>
+        <div class="mock-label">Signature</div>
+        <input class="mock-input" type="text" placeholder="Tapez votre nom complet pour signer" value="Sarah Laurent" readonly />
+        <div class="mock-note">En saisissant votre nom, vous attestez avoir lu et accepté le contrat</div>
+        <div class="mock-btn">Signer et continuer vers le paiement →</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Saisir son nom complet</h3>
+      <p>L'élève tape son prénom et nom dans un champ. Simple, rapide, légalement valide en France avec l'horodatage + IP conservés. Même valeur probatoire qu'un "J'accepte les CGV".</p>
+    </div>
+  </div>
+
+  <!-- Option B: Dessiner sa signature -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock">
+        <div class="mock-doc">
+          CONTRAT DE FORMATION PROFESSIONNELLE<br>
+          Entre <strong>Sarah Laurent</strong>, demeurant à Paris 11e,<br>
+          et Beauty Home Concept, organisme de formation enregistré sous le n° 32 59 09189 59…<br>
+          Article 1 — Objet de la formation…
+        </div>
+        <div class="mock-label">Signature manuscrite</div>
+        <div class="mock-canvas">
+          <div class="mock-sig-line"></div>
+          <div class="mock-sig-label">Signez dans ce cadre</div>
+          <span style="font-family:cursive;font-size:22px;color:#1b1c1c;opacity:.7;transform:rotate(-3deg);display:inline-block;">Sarah L.</span>
+        </div>
+        <div class="mock-note">Dessinez votre signature avec le doigt (mobile) ou la souris</div>
+        <div class="mock-btn">Valider la signature →</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Dessiner sa signature</h3>
+      <p>Canvas de signature à la doigt/souris. La signature dessinée est capturée comme image et incrustée dans le PDF. Plus visuel, sentiment d'authenticité. Mais friction plus élevée sur desktop.</p>
+    </div>
+  </div>
+
+  <!-- Option C: Les deux (tabs) -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock">
+        <div class="mock-doc">
+          CONTRAT DE FORMATION PROFESSIONNELLE<br>
+          Entre <strong>Sarah Laurent</strong>, demeurant à Paris 11e,<br>
+          et Beauty Home Concept…
+        </div>
+        <div class="mock-tabs">
+          <div class="mock-tab active">Taper mon nom</div>
+          <div class="mock-tab">Dessiner</div>
+        </div>
+        <input class="mock-input" type="text" value="Sarah Laurent" readonly />
+        <div class="mock-btn">Signer et payer →</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Au choix (Recommandé)</h3>
+      <p>L'élève choisit : taper son nom (rapide, desktop-friendly) ou dessiner (mobile-friendly). Les deux modes ont la même valeur légale. Offre la flexibilité sans surcharger l'interface.</p>
+    </div>
+  </div>
+
+</div>

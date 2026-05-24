@@ -2,6 +2,7 @@ import { createAdminClient } from '@/lib/supabase/server';
 import CreateFormationForm from './CreateFormationForm';
 import DeleteFormationButton from './DeleteFormationButton';
 import EditFormationForm from './EditFormationForm';
+import ProgrammePdfUpload from './ProgrammePdfUpload';
 
 export default async function FormationsAdminPage() {
   const supabase = await createAdminClient();
@@ -30,7 +31,9 @@ export default async function FormationsAdminPage() {
                 <span>{formation.duree}</span>
                 <span className="text-primary">{formation.prix} €</span>
               </div>
-              <div className="grid grid-cols-3 border-t border-surface-container-highest divide-x divide-surface-container-highest">
+              <ProgrammePdfUpload formationId={formation.id} currentUrl={formation.programme_pdf_url ?? null} />
+
+              <div className="grid grid-cols-3 border-t border-surface-container-highest divide-x divide-surface-container-highest mt-3">
                 <EditFormationForm formation={formation} />
                 <a
                   href={`/admin/formations/${formation.id}/contrats`}

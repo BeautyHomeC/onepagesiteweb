@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beauty Home Concept — Prototype améliorations</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #755a2d;
+    --primary-container: #b59562;
+    --bg: #faf9f9;
+    --surface: #fff;
+    --dark: #1b1c1c;
+    --text: #1b1c1c;
+    --text-muted: #6b6460;
+    --border: #e0ddd9;
+  }
+  body { font-family: 'Hanken Grotesk', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; }
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+  /* NAV */
+  nav { background: white; border-bottom: 1px solid var(--border); padding: 16px 48px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 14px; letter-spacing: 0.2em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 32px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
+  .nav-links a { text-decoration: none; color: inherit; transition: color .2s; }
+  .nav-links a:hover { color: var(--primary); }
+  .nav-cta { background: var(--dark); color: white; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 10px 20px; border: none; cursor: pointer; transition: background .2s; }
+  .nav-cta:hover { background: var(--primary); }
+
+  /* HERO */
+  .hero { max-width: 1200px; margin: 0 auto; padding: 64px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .hero-tag { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--primary); margin-bottom: 20px; }
+  .hero h1 { font-size: clamp(36px, 4vw, 56px); line-height: 1.1; margin-bottom: 20px; color: var(--dark); }
+  .hero p { font-size: 16px; line-height: 1.7; color: var(--text-muted); margin-bottom: 32px; font-weight: 300; }
+  .btn-outline { display: inline-block; border: 1px solid var(--dark); color: var(--dark); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; padding: 14px 32px; cursor: pointer; background: none; transition: all .3s; text-decoration: none; }
+  .btn-outline:hover { background: var(--primary-container); border-color: var(--primary-container); color: white; }
+  .hero-img { aspect-ratio: 4/5; overflow: hidden; background: #e8e4e0; }
+  .hero-img img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* SECTION */
+  .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; }
+  .section-header h2 { font-size: 32px; }
+  .section-note { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
+
+  /* FORMATIONS */
+  .formations { background: white; padding: 64px 0; }
+  .formations-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+  .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  /* CARD */
+  .card { background: white; border: 1px solid var(--border); display: flex; flex-direction: column; }
+  .card-img { aspect-ratio: 1; overflow: hidden; background: #f0ede9; }
+  .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s ease; }
+  .card:hover .card-img img { transform: scale(1.05); }
+  .card-body { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+  .card-body h3 { font-size: 18px; margin-bottom: 8px; }
+  .card-body p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px; font-weight: 300; }
+  .card-duree { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--primary); margin-bottom: 16px; }
+
+  /* 🆕 SESSION BADGE */
+  .session-badge {
+    background: #fef9f0;
+    border: 1px solid #e8d5a3;
+    border-radius: 4px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .session-badge .label { font-size: 11px; color: #92400e; font-weight: 500; }
+  .session-badge .date { font-size: 12px; color: var(--primary); font-weight: 600; }
+  .session-places { font-size: 11px; color: var(--text-muted); text-align: right; margin-bottom: 16px; }
+  .session-full { font-size: 11px; color: #dc2626; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; margin-bottom: 12px; }
+
+  /* CTA BUTTONS */
+  .btn-primary { width: 100%; background: var(--dark); color: white; border: 1px solid var(--dark); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 12px; cursor: pointer; margin-top: auto; transition: all .2s; }
+  .btn-primary:hover { background: var(--primary); border-color: var(--primary); }
+  .btn-waitlist { width: 100%; background: none; color: var(--primary); border: 1px solid var(--primary); font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; padding: 12px; cursor: pointer; margin-top: auto; transition: all .2s; }
+  .btn-waitlist:hover { background: var(--primary); color: white; }
+
+  /* WAITLIST FORM */
+  .waitlist-form { border: 1px solid #e8d5a3; background: #fef9f0; padding: 16px; border-radius: 4px; }
+  .waitlist-form p { font-size: 12px; color: #92400e; margin-bottom: 12px; }
+  .waitlist-form input { width: 100%; border: 1px solid #e0ddd9; padding: 9px 12px; font-size: 13px; font-family: inherit; margin-bottom: 8px; outline: none; }
+  .waitlist-form input:focus { border-color: var(--primary); }
+  .waitlist-form button { width: 100%; background: var(--primary); color: white; border: none; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; padding: 11px; cursor: pointer; }
+  .success-msg { background: #f0fdf4; border: 1px solid #86efac; color: #166534; padding: 12px; font-size: 13px; text-align: center; border-radius: 4px; }
+
+  /* NEW BADGE */
+  .new-badge { display: inline-block; background: var(--primary); color: white; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; margin-left: 8px; vertical-align: middle; }
+
+  /* NEWSLETTER */
+  .newsletter { background: var(--dark); padding: 80px 48px; text-align: center; }
+  .newsletter .tag { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--primary-container); margin-bottom: 16px; }
+  .newsletter h2 { font-size: 32px; color: white; margin-bottom: 12px; }
+  .newsletter p { font-size: 14px; color: #9ca3af; margin-bottom: 32px; font-weight: 300; }
+  .newsletter-form { display: flex; gap: 8px; max-width: 440px; margin: 0 auto; }
+  .newsletter-form input { flex: 1; background: #2c2c2c; border: 1px solid #444; color: white; padding: 13px 16px; font-size: 14px; font-family: inherit; outline: none; transition: border-color .2s; }
+  .newsletter-form input:focus { border-color: var(--primary); }
+  .newsletter-form button { background: var(--primary); color: white; border: none; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 13px 24px; cursor: pointer; white-space: nowrap; transition: background .2s; }
+  .newsletter-form button:hover { background: var(--primary-container); }
+  .newsletter-success { color: #4ade80; font-size: 15px; }
+
+  /* TESTIMONIALS */
+  .testimonials { padding: 64px 0; background: var(--bg); }
+  .testimonials-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+  .admin-note { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 12px 16px; font-size: 12px; color: #1d4ed8; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+  .testimonials-grid { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 8px; }
+  .testimonial-card { min-width: 300px; background: white; border: 1px solid var(--border); padding: 28px; flex-shrink: 0; }
+  .testimonial-quote { font-family: 'Playfair Display', serif; font-size: 52px; line-height: 1; color: rgba(117,90,45,.15); margin-bottom: 8px; }
+  .testimonial-text { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 20px; font-style: italic; }
+  .testimonial-author { border-top: 1px solid var(--border); padding-top: 14px; }
+  .testimonial-name { font-family: 'Playfair Display', serif; font-size: 15px; }
+  .testimonial-role { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+  /* WHATSAPP */
+  .whatsapp-btn { position: fixed; bottom: 24px; right: 24px; z-index: 200; background: #25d366; color: white; border-radius: 50px; padding: 12px 20px; font-size: 14px; font-family: 'Hanken Grotesk', sans-serif; font-weight: 500; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 20px rgba(0,0,0,.2); cursor: pointer; border: none; transition: background .2s, transform .2s; }
+  .whatsapp-btn:hover { background: #1da851; transform: translateY(-2px); }
+  .whatsapp-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+  /* FOOTER */
+  footer { background: var(--dark); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
+  footer p { font-size: 11px; color: #6b7280; }
+  footer .links { display: flex; gap: 24px; }
+  footer a { font-size: 11px; color: #6b7280; text-decoration: none; transition: color .2s; }
+  footer a:hover { color: var(--primary-container); }
+
+  /* ANNOTATIONS */
+  .annotation { position: relative; }
+  .annotation::after { content: attr(data-tip); position: absolute; top: -32px; left: 50%; transform: translateX(-50%); background: #1d4ed8; color: white; font-family: 'Hanken Grotesk', sans-serif; font-size: 11px; padding: 4px 10px; border-radius: 4px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .2s; }
+  .annotation:hover::after { opacity: 1; }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { grid-template-columns: 1fr; padding: 32px 20px; gap: 32px; }
+    .hero-img { order: -1; aspect-ratio: 3/2; }
+    .formations-inner, .testimonials-inner { padding: 0 20px; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .newsletter { padding: 48px 20px; }
+    .newsletter-form { flex-direction: column; }
+    footer { flex-direction: column; gap: 16px; padding: 24px 20px; text-align: center; }
+    footer .links { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">Beauty Home Concept</span>
+  <div class="nav-links">
+    <a href="#formations">Formations</a>
+    <a href="#testimonials">Témoignages</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <button class="nav-cta">S'inscrire</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div>
+    <p class="hero-tag">Certifiée Qualiopi · Amiens · Hauts-de-France</p>
+    <h1>Élevez votre expertise en prothésie ongulaire.</h1>
+    <p>Formations professionnelles par Camille — une approche architecturale et minimaliste de l'ongle, finançables FAFCEA, OPCO, CPF.</p>
+    <a href="#formations" class="btn-outline">Découvrir les formations</a>
+  </div>
+  <div class="hero-img">
+    <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&h=750&fit=crop" alt="Nail art Camille">
+  </div>
+</div>
+
+<!-- FORMATIONS -->
+<section class="formations" id="formations">
+  <div class="formations-inner">
+    <div class="section-header">
+      <h2>Formations <span class="new-badge">Nouveau</span></h2>
+      <span class="section-note">Sessions disponibles</span>
+    </div>
+    <p style="font-size:12px;color:#2563eb;background:#eff6ff;border:1px solid #bfdbfe;padding:10px 14px;border-radius:4px;margin-bottom:28px;">
+      🆕 <strong>Nouveau :</strong> La prochaine date disponible et le nombre de places restantes apparaissent maintenant directement sur chaque carte.
+    </p>
+    <div class="cards-grid">
+
+      <!-- Card 1 — Places dispo -->
+      <div class="card">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop" alt="Masterclass">
+        </div>
+        <div class="card-body">
+          <h3>Masterclass Perfectionnement</h3>
+          <p>Maîtrisez les techniques avancées et la préparation parfaite de la manucure russe.</p>
+          <span class="card-duree">2 Jours · Présentiel Amiens</span>
+          <div class="session-badge annotation" data-tip="Requête Supabase ajoutée">
+            <span class="label">📅 Prochaine session</span>
+            <span class="date">14 juin 2026</span>
+          </div>
+          <div class="session-places">2 places restantes</div>
+          <button class="btn-primary" style="margin-top:auto;">Découvrir le programme</button>
+        </div>
+      </div>
+
+      <!-- Card 2 — Session COMPLÈTE avec liste d'attente -->
+      <div class="card" id="card-full">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop&grayscale" alt="Art Esthétique">
+        </div>
+        <div class="card-body">
+          <h3>Art &amp; Esthétique Minimaliste</h3>
+          <p>L'art du minimalisme et des lignes épurées pour sublimer l'ongle naturel.</p>
+          <span class="card-duree">1 Jour · Présentiel Amiens</span>
+          <div class="session-badge" style="background:#fff5f5;border-color:#fca5a5;">
+            <span class="label" style="color:#991b1b;">📅 Prochaine session</span>
+            <span class="date" style="color:#dc2626;">28 juin 2026</span>
+          </div>
+          <div class="session-full" style="margin-top:6px;">Session complète</div>
+          <div id="waitlist-area">
+            <button class="btn-waitlist" onclick="openWaitlist()">Rejoindre la liste d'attente</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 — Mentorat -->
+      <div class="card">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop&hue-rotate=30deg" alt="Création salon">
+        </div>
+        <div class="card-body">
+          <h3>Création de Salon Haut de Gamme</h3>
+          <p>Développez une identité visuelle forte et fidélisez une clientèle premium.</p>
+          <span class="card-duree">Mentorat · Sur mesure</span>
+          <div class="session-badge annotation" data-tip="Requête Supabase ajoutée">
+            <span class="label">📅 Prochaine session</span>
+            <span class="date">5 juil. 2026</span>
+          </div>
+          <div class="session-places">1 place restante</div>
+          <button class="btn-primary" style="margin-top:auto;">Découvrir le programme</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-inner">
+    <div class="section-header">
+      <h2>Ce qu'en disent les élèves <span class="new-badge">Gérable</span></h2>
+      <span class="section-note">5/5 · Toutes les élèves</span>
+    </div>
+    <div class="admin-note">
+      🔧 <strong>Nouveau :</strong> Ces témoignages seront gérables depuis votre admin — ajout, modification, afficher/masquer. Plus besoin de modifier le code.
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Formation incroyable ! Camille est une pédagogue hors pair. En une journée, j'ai totalement revu ma technique de manucure russe.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Sarah L.</div>
+          <div class="testimonial-role">Prothésiste ongulaire · Lille</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Je venais avec 2 ans de pratique et je suis repartie avec des automatismes que je n'aurais jamais appris seule. Le format petit groupe est un vrai plus.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Amandine R.</div>
+          <div class="testimonial-role">Esthéticienne · Paris</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Certifiée Qualiopi, j'ai pu la faire financer par mon OPCO sans avancer d'argent. Le contenu est sérieux, le matériel fourni est top.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Julie M.</div>
+          <div class="testimonial-role">Auto-entrepreneuse · Amiens</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Camille partage vraiment sa méthode, ses secrets de pro. Livret pédagogique, attestation, suivi post-formation. Du sérieux !</p>
+        <div class="testimonial-author">
+          <div class="testimonial-name">Laëtitia B.</div>
+          <div class="testimonial-role">Prothésiste · Reims</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter" id="newsletter">
+  <p class="tag">Restez informée</p>
+  <h2>Être prévenue des prochaines sessions</h2>
+  <p>Recevez les nouvelles dates dès leur publication. Aucun spam, désabonnement en un clic.</p>
+  <div id="newsletter-container">
+    <div class="newsletter-form">
+      <input type="email" id="nl-email" placeholder="votre@email.fr" />
+      <button onclick="submitNewsletter()">M'inscrire</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Beauty Home Concept · Amiens, France</p>
+  <div class="links">
+    <a href="#">Mentions légales</a>
+    <a href="#">CGV</a>
+    <a href="#">Admin</a>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOTTANT -->
+<button class="whatsapp-btn annotation" data-tip="Bouton fixe sur toutes les pages">
+  <svg fill="currentColor" viewBox="0 0 24 24">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+  Une question ?
+</button>
+
+<script>
+function openWaitlist() {
+  const area = document.getElementById('waitlist-area');
+  area.innerHTML = `
+    <div class="waitlist-form">
+      <p>Laissez votre email — on vous prévient si une place se libère.</p>
+      <input type="text" placeholder="Votre prénom" />
+      <input type="email" placeholder="votre@email.fr" />
+      <button onclick="submitWaitlist()">M'inscrire sur liste d'attente</button>
+    </div>
+  `;
+}
+
+function submitWaitlist() {
+  const area = document.getElementById('waitlist-area');
+  area.innerHTML = '<div class="success-msg">✅ Inscrit·e ! Vous serez prévenu·e en priorité si une place se libère.</div>';
+}
+
+function submitNewsletter() {
+  const email = document.getElementById('nl-email').value;
+  if (!email) return;
+  document.getElementById('newsletter-container').innerHTML = '<p class="newsletter-success">✅ Parfait ! Vous serez prévenue dès que de nouvelles sessions sont publiées.</p>';
+}
+</script>
+
+</body>
+</html>

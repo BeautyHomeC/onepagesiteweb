@@ -14,8 +14,14 @@ const hanken = Hanken_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "L'Académie - Beauté Pure",
-  description: "Découvrez l'excellence de la prothésie ongulaire avec Camille, experte certifiée Qualiopi à Amiens, Hauts-de-France. Formations et prestations sur mesure.",
+  title: "Beauty Home Concept | Formation Prothésie Ongulaire · Amiens",
+  description: "Formations professionnelles en prothésie ongulaire certifiées Qualiopi, animées par Camille à Amiens. Manucure russe, nail art, technique de précision. Financement FAFCEA, OPCO, CPF.",
+  openGraph: {
+    title: "Beauty Home Concept",
+    description: "Formations prothésie ongulaire certifiées Qualiopi · Amiens",
+    locale: "fr_FR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

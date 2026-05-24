@@ -1,0 +1,73 @@
+<h2>Mon diagnostic du site</h2>
+<p class="subtitle">Ce que j'ai trouvé en lisant le code — par ordre d'impact sur vos inscriptions.</p>
+
+<div class="section">
+  <span class="label" style="color:#e53e3e;">🔴 Critique — impact immédiat</span>
+  <div class="options" style="margin-top:12px;">
+
+    <div class="option" data-choice="photos" onclick="toggleSelect(this)" style="border-left: 4px solid #e53e3e;">
+      <div class="letter" style="background:#e53e3e;">1</div>
+      <div class="content">
+        <h3>Fausses photos partout</h3>
+        <p>Le Hero et la section "À propos" utilisent des images IA générées automatiquement (lh3.googleusercontent.com/aida-public/…). Vos visiteurs voient des photos qui ne vous ressemblent pas. C'est le problème n°1 de crédibilité.</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="sessions-visibilite" onclick="toggleSelect(this)" style="border-left: 4px solid #e53e3e;">
+      <div class="letter" style="background:#e53e3e;">2</div>
+      <div class="content">
+        <h3>Les dates de sessions sont invisibles</h3>
+        <p>Pour voir les prochaines sessions disponibles, l'utilisateur doit cliquer "Découvrir le programme" → attendre la page de détail → voir les dates. Chaque clic supplémentaire = inscriptions perdues. Les dates devraient être visibles directement sur la homepage.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <span class="label" style="color:#d69e2e;">🟡 Important — améliore la confiance</span>
+  <div class="options" style="margin-top:12px;" data-multiselect>
+
+    <div class="option" data-choice="temoignages" onclick="toggleSelect(this)" style="border-left: 4px solid #d69e2e;">
+      <div class="letter" style="background:#d69e2e;">3</div>
+      <div class="content">
+        <h3>Témoignages codés en dur</h3>
+        <p>Les 4 avis (Sarah L., Amandine R., Julie M., Laëtitia B.) sont écrits directement dans le code. Un visiteur qui cherche à vérifier ne trouvera rien. Des vrais avis Google ou des témoignages gérables depuis l'admin seraient bien plus convaincants.</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="liste-attente" onclick="toggleSelect(this)" style="border-left: 4px solid #d69e2e;">
+      <div class="letter" style="background:#d69e2e;">4</div>
+      <div class="content">
+        <h3>Pas de liste d'attente</h3>
+        <p>Quand une session est complète (places_disponibles = 0), elle disparaît silencieusement. Personne ne peut laisser son email pour être prévenu. Une liste d'attente simple vous ferait récupérer des inscriptions automatiquement à chaque annulation.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="section">
+  <span class="label" style="color:#38a169;">🟢 Bonus — finition & confort</span>
+  <div class="options" style="margin-top:12px;" data-multiselect>
+
+    <div class="option" data-choice="whatsapp" onclick="toggleSelect(this)" style="border-left: 4px solid #38a169;">
+      <div class="letter" style="background:#38a169;">5</div>
+      <div class="content">
+        <h3>Bouton contact flottant (WhatsApp / email)</h3>
+        <p>Beaucoup de clientes veulent poser une question avant de s'inscrire. Un bouton flottant WhatsApp ou email en bas de page convertit très bien pour ce type de formation.</p>
+      </div>
+    </div>
+
+    <div class="option" data-choice="newsletter" onclick="toggleSelect(this)" style="border-left: 4px solid #38a169;">
+      <div class="letter" style="background:#38a169;">6</div>
+      <div class="content">
+        <h3>Capture email / newsletter</h3>
+        <p>Aucun moyen de garder le contact avec quelqu'un qui visite mais n'est pas prêt à s'inscrire. Un simple "Être prévenu des prochaines sessions" suffirait.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:24px;">Cliquez sur les points qui vous parlent le plus — on travaillera dessus en priorité.</p>

@@ -1,0 +1,161 @@
+<style>
+  .q-label { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #755a2d; font-family: sans-serif; margin-bottom: 6px; }
+  .q-title { font-size: 22px; font-family: Georgia, serif; color: #1b1c1c; margin-bottom: 6px; font-weight: 400; }
+  .q-sub  { font-size: 13px; color: #4e463a; margin-bottom: 28px; font-family: sans-serif; }
+
+  /* Mini mock components */
+  .mock-section { background: #faf9f9; border: 1px solid #e8e0d4; border-radius: 4px; padding: 18px 16px; margin-bottom: 10px; }
+  .mock-tag { display: inline-block; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: #755a2d; font-family: sans-serif; margin-bottom: 8px; }
+  .mock-heading { font-family: Georgia, serif; font-size: 16px; color: #1b1c1c; margin-bottom: 12px; font-weight: 400; }
+  .mock-rule { height: 1px; background: #e8e0d4; margin: 10px 0; }
+
+  /* Card types */
+  .mock-row { display: flex; gap: 10px; overflow: hidden; }
+  .mock-card { border: 1px solid #d1c5b6; background: #fff; padding: 12px; flex: 1; min-width: 0; border-radius: 2px; }
+  .mock-card-video { border: 1px solid #d1c5b6; background: #efeded; padding: 0; flex: 1; min-width: 0; border-radius: 2px; overflow: hidden; position: relative; }
+  .mock-video-thumb { height: 80px; background: linear-gradient(135deg, #1b1c1c 0%, #2f3031 100%); display: flex; align-items: center; justify-content: center; }
+  .mock-play { width: 28px; height: 28px; border: 1.5px solid rgba(255,255,255,.6); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .mock-play::after { content: ''; width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 9px solid rgba(255,255,255,.8); margin-left: 2px; }
+  .mock-card-body { padding: 10px 10px 8px; }
+  .mock-quote { font-size: 9px; color: #4e463a; line-height: 1.5; margin-bottom: 6px; font-family: sans-serif; }
+  .mock-author { font-size: 8px; letter-spacing: .15em; text-transform: uppercase; color: #1b1c1c; font-family: sans-serif; }
+  .mock-author-role { font-size: 8px; color: #7f7669; font-family: sans-serif; }
+  .mock-stars { font-size: 9px; color: #755a2d; margin-bottom: 4px; }
+
+  /* Tabs */
+  .mock-tabs { display: flex; gap: 0; border-bottom: 1px solid #d1c5b6; margin-bottom: 12px; }
+  .mock-tab { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; font-family: sans-serif; padding: 6px 12px; color: #7f7669; border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: default; }
+  .mock-tab.active { color: #755a2d; border-bottom-color: #755a2d; }
+
+  /* Featured video */
+  .mock-featured { background: #1b1c1c; border-radius: 2px; height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; position: relative; }
+  .mock-featured-play { width: 40px; height: 40px; border: 2px solid rgba(255,255,255,.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .mock-featured-play::after { content: ''; width: 0; height: 0; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 14px solid rgba(255,255,255,.8); margin-left: 3px; }
+  .mock-badge { position: absolute; top: 8px; left: 8px; background: rgba(117,90,45,.85); color: #fff; font-size: 7px; letter-spacing: .15em; text-transform: uppercase; font-family: sans-serif; padding: 2px 6px; border-radius: 1px; }
+  .mock-mini-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .mock-mini-card { border: 1px solid #d1c5b6; background: #fff; padding: 8px; border-radius: 2px; }
+  .mock-mini-text { font-size: 7px; color: #4e463a; font-family: sans-serif; line-height: 1.4; }
+  .mock-mini-author { font-size: 7px; color: #7f7669; font-family: sans-serif; margin-top: 4px; }
+
+  /* Dot indicator */
+  .mock-dots { display: flex; gap: 4px; justify-content: center; margin-top: 8px; }
+  .mock-dot { width: 4px; height: 4px; border-radius: 50%; background: #d1c5b6; }
+  .mock-dot.active { background: #755a2d; }
+</style>
+
+<p class="q-label">Témoignages · Layout</p>
+<h2 class="q-title">Comment intégrer les vidéos dans la section témoignages ?</h2>
+<p class="q-sub">Les témoignages texte actuels restent. Les vidéos s'y ajoutent. Quelle approche ?</p>
+
+<div class="cards">
+
+  <!-- Option A: Mixed carousel -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-section">
+        <div class="mock-tag">Témoignages</div>
+        <div class="mock-heading">Ce qu'en disent les élèves.</div>
+        <div class="mock-row">
+          <div class="mock-card-video">
+            <div class="mock-video-thumb"><div class="mock-play"></div></div>
+            <div class="mock-card-body">
+              <div class="mock-author" style="margin-bottom:2px;">Sarah L.</div>
+              <div class="mock-author-role">Prothésiste — Lille</div>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-stars">★★★★★</div>
+            <div class="mock-quote">"Formation incroyable. Camille est une pédagogue hors pair..."</div>
+            <div class="mock-rule"></div>
+            <div class="mock-author">Amandine R.</div>
+            <div class="mock-author-role">Esthéticienne — Paris</div>
+          </div>
+          <div class="mock-card-video">
+            <div class="mock-video-thumb"><div class="mock-play"></div></div>
+            <div class="mock-card-body">
+              <div class="mock-author" style="margin-bottom:2px;">Julie M.</div>
+              <div class="mock-author-role">Auto-entrepreneuse — Amiens</div>
+            </div>
+          </div>
+        </div>
+        <div class="mock-dots">
+          <div class="mock-dot active"></div><div class="mock-dot"></div><div class="mock-dot"></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Carrousel mixte</h3>
+      <p>Vidéos et textes alternés dans le même scroll horizontal. Une carte vidéo = miniature sombre + bouton play. Seamless, tout dans un flux.</p>
+    </div>
+  </div>
+
+  <!-- Option B: Tabs -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-section">
+        <div class="mock-tag">Témoignages</div>
+        <div class="mock-heading">Ce qu'en disent les élèves.</div>
+        <div class="mock-tabs">
+          <div class="mock-tab active">Avis écrits</div>
+          <div class="mock-tab">Vidéos</div>
+        </div>
+        <div class="mock-row">
+          <div class="mock-card">
+            <div class="mock-stars">★★★★★</div>
+            <div class="mock-quote">"Formation incroyable. Camille est une pédagogue hors pair..."</div>
+            <div class="mock-rule"></div>
+            <div class="mock-author">Sarah L.</div>
+            <div class="mock-author-role">Prothésiste — Lille</div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-stars">★★★★★</div>
+            <div class="mock-quote">"Je venais avec 2 ans de pratique et je suis repartie..."</div>
+            <div class="mock-rule"></div>
+            <div class="mock-author">Amandine R.</div>
+            <div class="mock-author-role">Esthéticienne — Paris</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Onglets séparés</h3>
+      <p>Un onglet "Avis écrits", un onglet "Vidéos". Navigation claire, les deux types ne se mélangent pas. Idéal si tu as beaucoup de vidéos.</p>
+    </div>
+  </div>
+
+  <!-- Option C: Featured video + text grid -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="mock-section">
+        <div class="mock-tag">Témoignages</div>
+        <div class="mock-heading">Ce qu'en disent les élèves.</div>
+        <div class="mock-featured">
+          <div class="mock-badge">Vidéo à la une</div>
+          <div class="mock-featured-play"></div>
+        </div>
+        <div class="mock-mini-grid">
+          <div class="mock-mini-card">
+            <div class="mock-stars" style="font-size:7px;">★★★★★</div>
+            <div class="mock-mini-text">"Camille est une pédagogue hors pair..."</div>
+            <div class="mock-mini-author">Sarah L.</div>
+          </div>
+          <div class="mock-mini-card">
+            <div class="mock-stars" style="font-size:7px;">★★★★★</div>
+            <div class="mock-mini-text">"Le format petit groupe est un vrai plus..."</div>
+            <div class="mock-mini-author">Amandine R.</div>
+          </div>
+          <div class="mock-mini-card">
+            <div class="mock-stars" style="font-size:7px;">★★★★★</div>
+            <div class="mock-mini-text">"Certifiée Qualiopi, j'ai pu faire financer..."</div>
+            <div class="mock-mini-author">Julie M.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Vidéo vedette + grille texte</h3>
+      <p>Une grande vidéo "à la une" en haut (ton meilleur témoignage vidéo), puis les avis texte en grille en dessous. Fort impact visuel, hiérarchie claire.</p>
+    </div>
+  </div>
+
+</div>

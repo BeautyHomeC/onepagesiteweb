@@ -7,26 +7,30 @@ export default function MethodeCamillePage() {
     <>
       <Header />
       <main className="pt-[100px] pb-24 bg-surface-container-lowest min-h-screen">
-        
+
         {/* Hero Banner */}
         <div className="relative w-full h-[40vh] min-h-[300px] max-h-[500px] bg-surface-container-low overflow-hidden">
           <div className="absolute inset-0">
-            <img 
-              src="https://lh3.googleusercontent.com/aida/ADBb0ugxECCJY7H2l1WFyi4dtnwWdSWY2jLuhCiwlM7dSYkWc8Kp6C2aQxs2ZnaIdWh2YcYeEuVN2jAfLA9SNl8tc9QILOhz8Oh4WDGIbe-l5KrF5YxR_9U7AfwLC9l9sBc5qb0P0xwJdahYdm84nPJfN2CYNEycv2581szCM1dKem_Lxp2anFaBiDRx0Lp9CpTSNsLkIl-x_TP2ZModfkaIltN-6fevytkUeW6HiA9pKY6mTOuHzt9Uks7aOSdSya_uMsAVFJtBOwEc-oU" 
-              alt="Camille au travail" 
+            <img
+              src="https://lh3.googleusercontent.com/aida/ADBb0ugxECCJY7H2l1WFyi4dtnwWdSWY2jLuhCiwlM7dSYkWc8Kp6C2aQxs2ZnaIdWh2YcYeEuVN2jAfLA9SNl8tc9QILOhz8Oh4WDGIbe-l5KrF5YxR_9U7AfwLC9l9sBc5qb0P0xwJdahYdm84nPJfN2CYNEycv2581szCM1dKem_Lxp2anFaBiDRx0Lp9CpTSNsLkIl-x_TP2ZModfkaIltN-6fevytkUeW6HiA9pKY6mTOuHzt9Uks7aOSdSya_uMsAVFJtBOwEc-oU"
+              alt="Camille au travail"
               className="w-full h-full object-cover opacity-60 mix-blend-overlay"
             />
           </div>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-            <span className="font-label-caps text-primary tracking-[0.3em] uppercase mb-4 block">Beauty Home Concept</span>
-            <h1 className="font-headline-lg text-4xl md:text-6xl text-on-surface mb-6 leading-tight">À propos de Camille</h1>
+            <span className="font-label-caps text-primary tracking-[0.3em] uppercase mb-4 block animate-hero-in">
+              Beauty Home Concept
+            </span>
+            <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface leading-tight animate-hero-in anim-delay-80">
+              À propos de Camille
+            </h1>
           </div>
         </div>
 
         {/* Content Section */}
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            
+
             {/* Text Content */}
             <div className="order-2 lg:order-1">
               <h2 className="font-headline-md text-3xl text-on-surface mb-8">Mon parcours, ma passion</h2>
@@ -43,25 +47,33 @@ export default function MethodeCamillePage() {
               </div>
             </div>
 
-            {/* Stats Grid */}
-            <div className="order-1 lg:order-2 grid grid-cols-2 gap-6">
-              <div className="bg-surface p-8 shadow-ambient border border-surface-container-highest text-center flex flex-col justify-center">
-                <span className="font-headline-lg text-4xl md:text-5xl text-primary mb-2">5+</span>
-                <span className="font-label-caps text-sm text-on-surface uppercase tracking-widest">Ans d'expérience</span>
-                <span className="text-xs text-on-surface-variant mt-2">Praticienne certifiée</span>
-              </div>
-              <div className="bg-surface p-8 shadow-ambient border border-surface-container-highest text-center flex flex-col justify-center mt-12">
-                <span className="font-headline-lg text-4xl md:text-5xl text-primary mb-2">30+</span>
-                <span className="font-label-caps text-sm text-on-surface uppercase tracking-widest">Formations</span>
-                <span className="text-xs text-on-surface-variant mt-2">France & Étranger</span>
-              </div>
-              <div className="bg-surface p-8 shadow-ambient border border-surface-container-highest text-center flex flex-col justify-center">
-                <span className="font-headline-lg text-4xl md:text-5xl text-primary mb-2">1000+</span>
-                <span className="font-label-caps text-sm text-on-surface uppercase tracking-widest">Clientes</span>
-                <span className="text-xs text-on-surface-variant mt-2">Note moyenne : 5⭐</span>
-              </div>
-              <div className="bg-surface p-8 shadow-ambient border border-surface-container-highest flex flex-col justify-center items-center mt-12">
-                <span className="material-symbols-outlined text-[48px] text-primary" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>award_star</span>
+            {/* Stats — editorial layout */}
+            <div className="order-1 lg:order-2">
+              <div className="grid grid-cols-2 gap-x-12 gap-y-12 pt-8 border-t border-outline-variant/30">
+                <div>
+                  <p className="font-playfair text-5xl md:text-6xl text-primary mb-2 leading-none">5+</p>
+                  <p className="font-label-caps text-[11px] text-on-surface uppercase tracking-widest mb-1">Ans d'expérience</p>
+                  <p className="text-xs text-on-surface-variant">Praticienne certifiée</p>
+                </div>
+                <div className="mt-10">
+                  <p className="font-playfair text-5xl md:text-6xl text-primary mb-2 leading-none">30+</p>
+                  <p className="font-label-caps text-[11px] text-on-surface uppercase tracking-widest mb-1">Formations</p>
+                  <p className="text-xs text-on-surface-variant">France &amp; Étranger</p>
+                </div>
+                <div>
+                  <p className="font-playfair text-5xl md:text-6xl text-primary mb-2 leading-none">1000+</p>
+                  <p className="font-label-caps text-[11px] text-on-surface uppercase tracking-widest mb-1">Clientes</p>
+                  <p className="text-xs text-on-surface-variant">Note moyenne 5 étoiles</p>
+                </div>
+                <div className="mt-10 flex flex-col justify-center">
+                  <span
+                    className="material-symbols-outlined text-[40px] text-primary/40 mb-2"
+                    style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
+                  >
+                    award_star
+                  </span>
+                  <p className="font-label-caps text-[10px] text-primary uppercase tracking-widest">Certifiée Qualiopi</p>
+                </div>
               </div>
             </div>
 
@@ -69,36 +81,51 @@ export default function MethodeCamillePage() {
         </div>
 
         {/* Values Section */}
-        <div className="bg-surface py-24 border-y border-surface-container-highest">
+        <div className="bg-surface py-24 border-y border-outline-variant/30">
           <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
             <div className="text-center mb-16">
-              <h2 className="font-headline-md text-3xl text-on-surface mb-4">Mon Expertise & Mes Valeurs</h2>
-              <p className="text-on-surface-variant font-body-md">Découvrez mon parcours et les principes qui guident chaque prestation.</p>
+              <p className="font-label-caps text-label-caps text-primary uppercase mb-4">Mes engagements</p>
+              <h2 className="font-headline-md text-3xl text-on-surface">Expertise &amp; Valeurs</h2>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto rounded-full bg-surface-container-low flex items-center justify-center mb-6">
-                  <span className="material-symbols-outlined text-[32px] text-primary" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>school</span>
+                <div className="inline-flex items-center justify-center w-14 h-14 border border-primary/20 bg-surface-container-lowest mb-6">
+                  <span
+                    className="material-symbols-outlined text-[28px] text-primary"
+                    style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
+                  >
+                    school
+                  </span>
                 </div>
                 <h3 className="font-headline-sm text-xl text-on-surface mb-4">Expertise</h3>
-                <p className="font-body-md text-on-surface-variant">Des techniques maîtrisées et des formations continues pour des résultats impeccables.</p>
+                <p className="font-body-md text-on-surface-variant max-w-[30ch] mx-auto">Des techniques maîtrisées et des formations continues pour des résultats impeccables.</p>
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto rounded-full bg-surface-container-low flex items-center justify-center mb-6">
-                  <span className="material-symbols-outlined text-[32px] text-primary" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>spa</span>
+                <div className="inline-flex items-center justify-center w-14 h-14 border border-primary/20 bg-surface-container-lowest mb-6">
+                  <span
+                    className="material-symbols-outlined text-[28px] text-primary"
+                    style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
+                  >
+                    spa
+                  </span>
                 </div>
                 <h3 className="font-headline-sm text-xl text-on-surface mb-4">Bien-être</h3>
-                <p className="font-body-md text-on-surface-variant">Un cadre apaisant et une approche personnalisée pour un moment de pure détente.</p>
+                <p className="font-body-md text-on-surface-variant max-w-[30ch] mx-auto">Un cadre apaisant et une approche personnalisée pour un moment de pure détente.</p>
               </div>
 
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto rounded-full bg-surface-container-low flex items-center justify-center mb-6">
-                  <span className="material-symbols-outlined text-[32px] text-primary" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>diamond</span>
+                <div className="inline-flex items-center justify-center w-14 h-14 border border-primary/20 bg-surface-container-lowest mb-6">
+                  <span
+                    className="material-symbols-outlined text-[28px] text-primary"
+                    style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
+                  >
+                    diamond
+                  </span>
                 </div>
                 <h3 className="font-headline-sm text-xl text-on-surface mb-4">Qualité</h3>
-                <p className="font-body-md text-on-surface-variant">Utilisation de produits haut de gamme pour des prestations durables et respectueuses.</p>
+                <p className="font-body-md text-on-surface-variant max-w-[30ch] mx-auto">Utilisation de produits haut de gamme pour des prestations durables et respectueuses.</p>
               </div>
             </div>
           </div>
@@ -106,12 +133,13 @@ export default function MethodeCamillePage() {
 
         {/* CTA Section */}
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-24 text-center">
-          <h2 className="font-headline-md text-3xl text-on-surface mb-8">Prête à découvrir mes prestations ?</h2>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
-            <Link href="/#formations" className="bg-primary text-on-primary font-label-caps text-sm px-8 py-4 uppercase tracking-[0.2em] hover:bg-primary-container hover:text-on-primary-container transition-all">
-              Explorer les formations
-            </Link>
-          </div>
+          <h2 className="font-headline-md text-3xl text-on-surface mb-8">Prête à découvrir mes formations ?</h2>
+          <Link
+            href="/#formations"
+            className="inline-block border border-on-surface text-on-surface font-label-caps text-label-caps px-8 py-4 uppercase tracking-[0.2em] hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-[color,background-color,border-color,transform] duration-300 active:scale-[0.97]"
+          >
+            Explorer les formations
+          </Link>
         </div>
 
       </main>

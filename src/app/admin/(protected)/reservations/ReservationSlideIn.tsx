@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 
 interface Reservation {
   id: string
@@ -42,12 +42,34 @@ const STATUT_LABEL: Record<string, { label: string; color: string }> = {
 }
 
 export default function ReservationSlideIn({ reservation, onClose }: Props) {
+  const [cancelPending, startCancel] = useTransition()
+  const [cancelResult, setCancelResult] = useState<{ notified?: number; error?: string } | null>(null)
+
   // Close on Escape key
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
   }, [onClose])
+
+  // Reset cancel result when reservation changes
+  useEffect(() => { setCancelResult(null) }, [reservation?.id])
+
+  const handleCancel = () => {
+    if (!reservation) return
+    if (!confirm("Annuler cette réservation et notifier la liste d'attente ?")) return
+    startCancel(async () => {
+      const res = await fetch(`/api/admin/reservations/${reservation.id}/cancel`, { method: 'POST' })
+      const json = await res.json()
+      if (res.ok) {
+        setCancelResult({ notified: json.notified })
+        // Reload page to update statut
+        setTimeout(() => { window.location.reload() }, 1500)
+      } else {
+        setCancelResult({ error: json.error ?? 'Erreur' })
+      }
+    })
+  }
 
   const nomComplet = reservation
     ? ((`${reservation.prenom ?? ''} ${reservation.nom ?? ''}`.trim() || reservation.nom_client) ?? '—')
@@ -163,6 +185,27 @@ export default function ReservationSlideIn({ reservation, onClose }: Props) {
                   </svg>
                   TÉLÉCHARGER LE DOSSIER (ZIP)
                 </a>
+
+                {reservation.statut !== 'annulee' && (
+                  <div>
+                    <button
+                      type="button"
+                      onClick={handleCancel}
+                      disabled={cancelPending}
+                      className="w-full inline-flex items-center justify-center gap-2 border border-error/40 text-error/70 px-4 py-2.5 text-xs font-label-caps tracking-wider hover:border-error hover:text-error disabled:opacity-40 transition-colors"
+                    >
+                      {cancelPending ? '…' : 'ANNULER LA RÉSERVATION'}
+                    </button>
+                    {cancelResult && (
+                      <p className={`text-xs mt-2 text-center ${cancelResult.error ? 'text-error' : 'text-green-700'}`}>
+                        {cancelResult.error
+                          ? cancelResult.error
+                          : `Réservation annulée. ${cancelResult.notified} personne${(cancelResult.notified ?? 0) > 1 ? 's' : ''} notifiée${(cancelResult.notified ?? 0) > 1 ? 's' : ''}.`
+                        }
+                      </p>
+                    )}
+                  </div>
+                )}
               </section>
             </>
           )}

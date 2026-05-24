@@ -6,9 +6,150 @@ import Step3Signature, { type SignatureData } from '@/components/booking/Step3Si
 
 const STEPS = ['Informations', 'Contrat', 'Signature', 'Paiement']
 
+// ── Waitlist modal ────────────────────────────────────────────
+function WaitlistModal({
+  sessionId,
+  onClose,
+}: {
+  sessionId: string
+  onClose: () => void
+}) {
+  const [form, setForm] = useState({ prenom: '', nom: '', email: '' })
+  const [loading, setLoading] = useState(false)
+  const [done, setDone] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId, ...form }),
+      })
+      const json = await res.json()
+      if (!res.ok) { setError(json.error ?? 'Erreur.'); return }
+      setDone(true)
+    } catch {
+      setError('Erreur réseau. Réessayez.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-backdrop-in"
+      style={{ background: 'rgba(27,28,28,0.55)', backdropFilter: 'blur(2px)' }}
+      onClick={onClose}
+    >
+      <div
+        className="animate-modal-in bg-surface w-full sm:max-w-md max-h-[90vh] overflow-y-auto flex flex-col"
+        style={{ boxShadow: '0 32px 80px rgba(27,28,28,0.3)' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="relative bg-on-surface text-surface px-7 py-6 shrink-0">
+          <button
+            onClick={onClose}
+            aria-label="Fermer"
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity"
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          </button>
+          <p className="text-[9px] uppercase tracking-[0.3em] opacity-60 mb-2" style={{ fontFamily: 'var(--font-hanken)' }}>
+            Session complète
+          </p>
+          <h2 className="text-xl font-normal leading-snug" style={{ fontFamily: 'var(--font-playfair)' }}>
+            Rejoindre la liste d'attente
+          </h2>
+        </div>
+
+        <div className="px-7 py-6 flex-1">
+          {done ? (
+            <div className="py-8 text-center space-y-4">
+              <div className="w-10 h-10 mx-auto border border-primary/30 flex items-center justify-center">
+                <svg width="16" height="13" viewBox="0 0 16 13" fill="none">
+                  <path d="M1 6.5L6 11.5L15 1.5" stroke="#755a2d" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <p className="font-playfair text-xl text-on-surface">Vous êtes inscrite !</p>
+              <p className="text-sm text-on-surface-variant leading-relaxed" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 300 }}>
+                Vous recevrez un email dès qu'une place se libère. Les notifications sont envoyées dans l'ordre d'inscription.
+              </p>
+              <button
+                onClick={onClose}
+                className="mt-4 border border-outline-variant text-on-surface-variant px-6 py-3 text-xs uppercase tracking-widest hover:border-outline transition-colors"
+                style={{ fontFamily: 'var(--font-hanken)' }}
+              >
+                Fermer
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <p className="text-sm text-on-surface-variant leading-relaxed" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 300 }}>
+                Laissez vos coordonnées. Vous serez automatiquement prévenue par email si une place se libère.
+              </p>
+
+              <div className="grid grid-cols-2 gap-4">
+                {(['prenom', 'nom'] as const).map((field) => (
+                  <div key={field}>
+                    <label className="block text-[10px] uppercase tracking-[0.14em] text-on-surface-variant mb-1.5" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}>
+                      {field === 'prenom' ? 'Prénom' : 'Nom'} <span className="text-primary">*</span>
+                    </label>
+                    <input
+                      value={form[field]}
+                      onChange={(e) => setForm((f) => ({ ...f, [field]: e.target.value }))}
+                      required
+                      className="w-full border border-outline-variant px-4 py-3 text-sm text-on-surface bg-surface-container-lowest placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors"
+                      style={{ fontFamily: 'var(--font-hanken)' }}
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase tracking-[0.14em] text-on-surface-variant mb-1.5" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}>
+                  Email <span className="text-primary">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                  required
+                  className="w-full border border-outline-variant px-4 py-3 text-sm text-on-surface bg-surface-container-lowest placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors"
+                  style={{ fontFamily: 'var(--font-hanken)' }}
+                />
+              </div>
+
+              {error && (
+                <p className="text-xs text-error" style={{ fontFamily: 'var(--font-hanken)' }}>{error}</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-on-surface text-surface py-4 text-xs uppercase tracking-widest hover:opacity-90 active:opacity-80 transition-opacity min-h-[44px] disabled:opacity-50"
+                style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}
+              >
+                {loading ? '…' : "M'inscrire sur la liste d'attente"}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Main component ────────────────────────────────────────────
 export default function SessionBooking({ formation, sessions }: { formation: any; sessions: any[] }) {
   const [step, setStep]             = useState<1 | 2 | 3 | 4>(1)
   const [selectedSessionId, setSel] = useState<string | null>(null)
+  const [waitlistSessionId, setWaitlist] = useState<string | null>(null)
   const [formData, setFormData]     = useState<ClientFormData>({} as ClientFormData)
   const [contractHtml, setHtml]     = useState('')
   const [templateVersion, setTv]    = useState(0)
@@ -92,23 +233,42 @@ export default function SessionBooking({ formation, sessions }: { formation: any
             const debut = new Date(s.date_debut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
             const fin   = new Date(s.date_fin).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
             const sameDay = debut === fin
+            const isFull  = s.places_disponibles <= 0
+
             return (
               <div key={s.id} className="px-8 py-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5 hover:bg-surface-container-lowest transition-colors">
                 <div className="space-y-1">
                   <p className="text-on-surface font-medium text-sm" style={{ fontFamily: 'var(--font-hanken)' }}>
                     {sameDay ? `Le ${debut}` : `Du ${debut} au ${fin}`}
                   </p>
-                  <p className="text-xs uppercase tracking-widest" style={{ color: '#755a2d', fontFamily: 'var(--font-hanken)' }}>
-                    {s.places_disponibles} place{s.places_disponibles > 1 ? 's' : ''} restante{s.places_disponibles > 1 ? 's' : ''}
-                  </p>
+                  {isFull ? (
+                    <p className="text-xs uppercase tracking-widest text-on-surface-variant/60" style={{ fontFamily: 'var(--font-hanken)' }}>
+                      Session complète
+                    </p>
+                  ) : (
+                    <p className="text-xs uppercase tracking-widest" style={{ color: '#755a2d', fontFamily: 'var(--font-hanken)' }}>
+                      {s.places_disponibles} place{s.places_disponibles > 1 ? 's' : ''} restante{s.places_disponibles > 1 ? 's' : ''}
+                    </p>
+                  )}
                 </div>
-                <button
-                  onClick={() => openFlow(s.id)}
-                  className="shrink-0 border border-primary text-primary px-6 py-3 text-xs uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-colors whitespace-nowrap min-h-[44px]"
-                  style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}
-                >
-                  Réserver — acompte {acompte} €
-                </button>
+
+                {isFull ? (
+                  <button
+                    onClick={() => setWaitlist(s.id)}
+                    className="shrink-0 border border-outline-variant text-on-surface-variant px-6 py-3 text-xs uppercase tracking-widest hover:border-on-surface hover:text-on-surface transition-colors whitespace-nowrap min-h-[44px]"
+                    style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}
+                  >
+                    Liste d'attente
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => openFlow(s.id)}
+                    className="shrink-0 border border-primary text-primary px-6 py-3 text-xs uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-colors whitespace-nowrap min-h-[44px]"
+                    style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}
+                  >
+                    Réserver — acompte {acompte} €
+                  </button>
+                )}
               </div>
             )
           }) : (
@@ -133,6 +293,14 @@ export default function SessionBooking({ formation, sessions }: { formation: any
         </div>
       </div>
 
+      {/* ── Waitlist modal ─────────────────────────────────────── */}
+      {waitlistSessionId && (
+        <WaitlistModal
+          sessionId={waitlistSessionId}
+          onClose={() => setWaitlist(null)}
+        />
+      )}
+
       {/* ── 4-step booking modal ───────────────────────────────── */}
       {selectedSessionId && (
         <div
@@ -145,9 +313,8 @@ export default function SessionBooking({ formation, sessions }: { formation: any
             style={{ boxShadow: '0 32px 80px rgba(27,28,28,0.3)' }}
             onClick={e => e.stopPropagation()}
           >
-            {/* Modal header — relative so close button stays inside */}
+            {/* Modal header */}
             <div className="relative bg-primary text-on-primary px-7 py-6 shrink-0">
-              {/* Close button — lives inside the header */}
               {step < 4 && (
                 <button
                   onClick={closeFlow}
@@ -164,16 +331,14 @@ export default function SessionBooking({ formation, sessions }: { formation: any
               <div className="flex items-center gap-1.5 mb-5 pr-8">
                 {STEPS.map((label, i) => {
                   const n = i + 1
-                  const done = step > n
+                  const done   = step > n
                   const active = step === n
                   return (
                     <div key={label} className="flex items-center gap-1.5">
                       <div className={`flex items-center justify-center w-5 h-5 text-[9px] transition-all ${
-                        done
-                          ? 'bg-on-primary/25 text-on-primary'
-                          : active
-                          ? 'bg-on-primary text-primary'
-                          : 'bg-on-primary/10 text-on-primary/40'
+                        done   ? 'bg-on-primary/25 text-on-primary'
+                        : active ? 'bg-on-primary text-primary'
+                        : 'bg-on-primary/10 text-on-primary/40'
                       }`} style={{ fontFamily: 'var(--font-hanken)', fontWeight: 600 }}>
                         {done ? '✓' : n}
                       </div>
@@ -198,7 +363,6 @@ export default function SessionBooking({ formation, sessions }: { formation: any
 
             {/* Step content */}
             <div className="px-7 py-6 flex-1">
-              {/* Loading overlay (step 1 fetch) */}
               {loading && step === 1 && (
                 <div className="flex flex-col items-center justify-center py-12 gap-4">
                   <div className="w-6 h-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />

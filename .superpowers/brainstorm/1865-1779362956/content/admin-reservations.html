@@ -1,0 +1,142 @@
+<style>
+  .q-label { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #755a2d; font-family: sans-serif; margin-bottom: 6px; }
+  .q-title { font-size: 22px; font-family: Georgia, serif; color: #1b1c1c; margin-bottom: 6px; font-weight: 400; }
+  .q-sub  { font-size: 13px; color: #4e463a; margin-bottom: 28px; font-family: sans-serif; }
+
+  /* Admin mock shared styles */
+  .adm { background: #faf9f9; border: 1px solid #e3e2e2; border-radius: 3px; padding: 16px; font-family: sans-serif; }
+  .adm-nav { display: flex; gap: 16px; border-bottom: 1px solid #e3e2e2; padding-bottom: 10px; margin-bottom: 14px; }
+  .adm-nav-item { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #7f7669; padding: 4px 0; border-bottom: 2px solid transparent; }
+  .adm-nav-item.active { color: #755a2d; border-bottom-color: #755a2d; }
+  .adm-title { font-size: 15px; font-family: Georgia, serif; color: #1b1c1c; margin-bottom: 12px; font-weight: 400; }
+  .adm-badge { display: inline-block; font-size: 8px; letter-spacing: .15em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; }
+  .badge-ok  { background: #e8f5e9; color: #2e7d32; }
+  .badge-pend { background: #fff3e0; color: #e65100; }
+  .badge-ann { background: #fce4ec; color: #c62828; }
+  .adm-row { display: flex; gap: 8px; align-items: center; padding: 8px 0; border-bottom: 1px solid #f0eeec; font-size: 10px; color: #1b1c1c; }
+  .adm-row:last-child { border-bottom: none; }
+  .adm-cell { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .adm-cell-sm { width: 70px; flex-shrink: 0; text-align: right; color: #7f7669; font-size: 9px; }
+  .adm-cell-lg { flex: 1.5; }
+  .adm-action { color: #755a2d; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; flex-shrink: 0; }
+  .adm-col { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: #7f7669; display: flex; gap: 8px; padding-bottom: 6px; margin-bottom: 6px; border-bottom: 1px solid #e3e2e2; }
+  .adm-stat { text-align: center; }
+  .adm-stat-n { font-family: Georgia, serif; font-size: 22px; color: #755a2d; line-height: 1; }
+  .adm-stat-l { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: #7f7669; margin-top: 3px; }
+  .adm-stats { display: flex; gap: 20px; padding: 10px 0 14px; border-bottom: 1px solid #e3e2e2; margin-bottom: 14px; }
+  .adm-filter { display: flex; gap: 6px; margin-bottom: 12px; }
+  .adm-filter-btn { font-size: 8px; letter-spacing: .15em; text-transform: uppercase; padding: 4px 10px; border: 1px solid #d1c5b6; color: #7f7669; border-radius: 1px; }
+  .adm-filter-btn.active { border-color: #755a2d; color: #755a2d; background: rgba(117,90,45,.05); }
+  .adm-section-label { font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: #755a2d; margin-bottom: 8px; }
+  .adm-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .adm-field { background: #f4f3f3; padding: 8px; }
+  .adm-field-l { font-size: 8px; color: #7f7669; margin-bottom: 2px; letter-spacing: .1em; text-transform: uppercase; }
+  .adm-field-v { font-size: 10px; color: #1b1c1c; }
+  .adm-actions-row { display: flex; gap: 6px; margin-top: 10px; }
+  .adm-btn-primary { font-size: 8px; letter-spacing: .15em; text-transform: uppercase; padding: 6px 12px; background: #755a2d; color: #fff; border-radius: 1px; }
+  .adm-btn-ghost { font-size: 8px; letter-spacing: .15em; text-transform: uppercase; padding: 6px 12px; border: 1px solid #d1c5b6; color: #1b1c1c; border-radius: 1px; }
+  .adm-check { color: #2e7d32; font-size: 11px; margin-right: 4px; }
+</style>
+
+<p class="q-label">Admin · Réservations</p>
+<h2 class="q-title">Comment veux-tu voir les réservations dans l'admin ?</h2>
+<p class="q-sub">Deux approches pour la page /admin/réservations</p>
+
+<div class="cards">
+
+  <!-- Option A: Vue par session (comme maintenant mais améliorée) -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="adm">
+        <div class="adm-nav">
+          <div class="adm-nav-item">Dashboard</div>
+          <div class="adm-nav-item active">Réservations</div>
+          <div class="adm-nav-item">Formations</div>
+          <div class="adm-nav-item">Sessions</div>
+        </div>
+        <div class="adm-title">Réservations</div>
+        <div class="adm-stats">
+          <div class="adm-stat"><div class="adm-stat-n">4</div><div class="adm-stat-l">Inscrites</div></div>
+          <div class="adm-stat"><div class="adm-stat-n">3</div><div class="adm-stat-l">Confirmées</div></div>
+          <div class="adm-stat"><div class="adm-stat-n">1</div><div class="adm-stat-l">En attente</div></div>
+        </div>
+        <!-- Session 1 -->
+        <div class="adm-section-label">Manucure Russe Pro · 14 juin 2026</div>
+        <div class="adm-col">
+          <div class="adm-cell adm-cell-lg">Élève</div>
+          <div class="adm-cell">Contact</div>
+          <div class="adm-cell-sm">Statut</div>
+        </div>
+        <div class="adm-row">
+          <div class="adm-cell adm-cell-lg">Sarah L.</div>
+          <div class="adm-cell" style="color:#7f7669;">sarah@...</div>
+          <div class="adm-cell-sm"><span class="adm-badge badge-ok">✓ Confirmée</span></div>
+          <div class="adm-action">Dossier →</div>
+        </div>
+        <div class="adm-row">
+          <div class="adm-cell adm-cell-lg">Amandine R.</div>
+          <div class="adm-cell" style="color:#7f7669;">aman@...</div>
+          <div class="adm-cell-sm"><span class="adm-badge badge-pend">En attente</span></div>
+          <div class="adm-action">Dossier →</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Vue par session (groupée)</h3>
+      <p>Les réservations sont regroupées sous chaque session. Tu vois directement "qui vient à quelle date". Proche de ce qui existe déjà, avec statuts et actions en plus.</p>
+    </div>
+  </div>
+
+  <!-- Option B: Tableau global avec détail slide-in -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="adm">
+        <div class="adm-nav">
+          <div class="adm-nav-item">Dashboard</div>
+          <div class="adm-nav-item active">Réservations</div>
+          <div class="adm-nav-item">Formations</div>
+          <div class="adm-nav-item">Sessions</div>
+        </div>
+        <div class="adm-title">Réservations</div>
+        <div class="adm-filter">
+          <div class="adm-filter-btn active">Toutes</div>
+          <div class="adm-filter-btn">Confirmées</div>
+          <div class="adm-filter-btn">En attente</div>
+          <div class="adm-filter-btn">Par session ▾</div>
+        </div>
+        <div class="adm-col">
+          <div class="adm-cell adm-cell-lg">Élève</div>
+          <div class="adm-cell">Formation</div>
+          <div class="adm-cell">Date</div>
+          <div class="adm-cell-sm">Statut</div>
+        </div>
+        <div class="adm-row" style="background:rgba(117,90,45,.04);">
+          <div class="adm-cell adm-cell-lg"><strong>Sarah L.</strong></div>
+          <div class="adm-cell" style="color:#7f7669;font-size:9px;">Manucure Russe</div>
+          <div class="adm-cell" style="color:#7f7669;font-size:9px;">14 juin</div>
+          <div class="adm-cell-sm"><span class="adm-badge badge-ok">Confirmée</span></div>
+          <div class="adm-action">▶ Voir</div>
+        </div>
+        <div class="adm-row">
+          <div class="adm-cell adm-cell-lg">Amandine R.</div>
+          <div class="adm-cell" style="color:#7f7669;font-size:9px;">Art &amp; Esthétique</div>
+          <div class="adm-cell" style="color:#7f7669;font-size:9px;">21 juin</div>
+          <div class="adm-cell-sm"><span class="adm-badge badge-pend">Attente</span></div>
+          <div class="adm-action">▶ Voir</div>
+        </div>
+        <div class="adm-row">
+          <div class="adm-cell adm-cell-lg">Julie M.</div>
+          <div class="adm-cell" style="color:#7f7669;font-size:9px;">Manucure Russe</div>
+          <div class="adm-cell" style="color:#7f7669;font-size:9px;">14 juin</div>
+          <div class="adm-cell-sm"><span class="adm-badge badge-ok">Confirmée</span></div>
+          <div class="adm-action">▶ Voir</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Tableau global + détail (Recommandé)</h3>
+      <p>Toutes les réservations dans un tableau filtrable. Clic sur une ligne → panneau de détail : dossier complet, consentements, actions (re-envoyer email, marquer présente, annuler). Plus puissant pour gérer beaucoup d'élèves.</p>
+    </div>
+  </div>
+
+</div>

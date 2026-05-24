@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(superpowers:brainstorming)",
+      "Skill(superpowers:brainstorming:*)",
+      "Bash(git -C \"C:\\\\Users\\\\Administrateur\\\\Documents\\\\beauty home concept site web one page\" log --oneline -10)",
+      "Skill(ui-ux-pro-max)",
+      "Skill(ui-ux-pro-max:*)",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/)",
+      "Skill(impeccable)",
+      "Skill(impeccable:*)",
+      "Bash(npx next *)",
+      "Skill(brainstorming)",
+      "Skill(brainstorming:*)",
+      "Bash(git add *)",
+      "Bash(git commit -m 'spec: témoignages vidéo + admin — design approuvé *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
+    ]
+  }
+}

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Beauty Home Concept — Prototype v3</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        "primary":                   "#755a2d",
+        "on-primary":                "#ffffff",
+        "primary-container":         "#b59562",
+        "on-primary-container":      "#432e04",
+        "background":                "#faf9f9",
+        "on-background":             "#1b1c1c",
+        "surface":                   "#faf9f9",
+        "on-surface":                "#1b1c1c",
+        "on-surface-variant":        "#4e463a",
+        "surface-container-lowest":  "#ffffff",
+        "surface-container-low":     "#f4f3f3",
+        "surface-container":         "#efeded",
+        "surface-container-high":    "#e9e8e8",
+        "inverse-surface":           "#2f3031",
+        "inverse-on-surface":        "#f2f0f0",
+        "outline":                   "#7f7669",
+        "outline-variant":           "#d1c5b6",
+      },
+      spacing: {
+        "section-gap":      "120px",
+        "margin-mobile":    "24px",
+        "margin-desktop":   "80px",
+        "gutter":           "24px",
+        "container-max":    "1440px",
+      },
+      fontFamily: {
+        "display": ["Playfair Display", "serif"],
+        "body":    ["Hanken Grotesk", "sans-serif"],
+      },
+    }
+  }
+}
+</script>
+<style>
+  /* Icônes Material */
+  .ms { font-family: 'Material Symbols Outlined'; font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; font-style: normal; line-height: 1; display: inline-block; }
+  .ms-fill { font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+
+  /* Carousel scroll discret */
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  body { min-height: max(884px, 100dvh); }
+
+  /* ── FAB Contact ────────────────────────────── */
+  .contact-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 200;
+    background: #755a2d;
+    color: #fff;
+    border-radius: 50px;
+    padding: 13px 22px;
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    box-shadow: 0 4px 28px rgba(117, 90, 45, 0.28);
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: background .2s ease, transform .15s ease, box-shadow .2s ease;
+  }
+  .contact-fab:hover {
+    background: #5d4623;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 36px rgba(117, 90, 45, 0.38);
+  }
+
+  /* ── Badge session (dans les cartes) ───────── */
+  .session-block {
+    width: 100%;
+    padding-top: 16px;
+    margin-top: 16px;
+    border-top: 1px solid rgba(209, 197, 182, 0.6); /* outline-variant */
+  }
+  .session-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+  .session-date {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-weight: 400;
+    line-height: 1.2;
+    color: #755a2d; /* primary */
+  }
+  .session-date.complet {
+    color: #1b1c1c; /* on-surface — la date reste lisible, c'est le tag qui indique le statut */
+  }
+  .session-places {
+    font-size: 11px;
+    font-weight: 300;
+    color: #4e463a; /* on-surface-variant */
+    margin-top: 4px;
+  }
+  .tag-complet {
+    display: inline-block;
+    margin-top: 8px;
+    border: 1px solid #7f7669; /* outline */
+    color: #4e463a;
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+  }
+
+  /* ── Formulaire waitlist ────────────────────── */
+  .wl-label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #4e463a;
+    margin-bottom: 5px;
+    font-weight: 400;
+  }
+  .wl-input {
+    width: 100%;
+    border: 1px solid #d1c5b6;
+    padding: 10px 12px;
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    color: #1b1c1c;
+    background: #fff;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .wl-input:focus { border-color: #755a2d; }
+
+  /* ── Newsletter input ────────────────────────── */
+  .nl-input {
+    width: 100%;
+    border: 1px solid #d1c5b6;
+    background: #fff;
+    color: #1b1c1c;
+    padding: 14px 16px;
+    font-family: 'Hanken Grotesk', sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .nl-input:focus { border-color: #755a2d; }
+
+  /* ── Animations d'entrée ────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up          { animation: fadeUp .6s ease both; }
+  .fade-up.delay-1  { animation-delay: .1s; }
+  .fade-up.delay-2  { animation-delay: .2s; }
+
+  /* ── Modal ──────────────────────────────────── */
+  #waitlist-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(27, 28, 28, 0.5);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+</style>
+</head>
+
+<body class="bg-background text-on-background antialiased" style="font-family:'Hanken Grotesk',sans-serif;font-size:16px;font-weight:300;line-height:1.6;">
+
+<!-- ═══════════════════════════════════════
+     HEADER — identique au site
+════════════════════════════════════════ -->
+<header class="fixed top-0 w-full bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 z-50">
+  <div class="flex items-center justify-between w-full px-4 md:px-margin-desktop py-5 max-w-container-max mx-auto">
+    <div class="flex items-center w-[80px] md:w-[120px]">
+      <button class="text-primary hover:opacity-70 transition-opacity p-2 -ml-2" aria-label="Menu">
+        <span class="ms text-[26px]">menu</span>
+      </button>
+    </div>
+    <div class="flex-1 flex justify-center">
+      <span style="font-family:'Playfair Display',serif;font-size:clamp(12px,2vw,20px);letter-spacing:0.2em;text-transform:uppercase;" class="text-on-surface whitespace-nowrap">Beauty Home Concept</span>
+    </div>
+    <div class="flex items-center justify-end w-[80px] md:w-[120px]">
+      <button class="text-primary font-medium hover:opacity-70 transition-opacity whitespace-nowrap" style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;">
+        S'inscrire
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="pt-[88px] pb-24 md:pb-0">
+
+<!-- ═══════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-24">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+    <div class="md:col-span-5 md:col-start-1 flex flex-col justify-center order-2 md:order-1 mt-12 md:mt-0">
+      <h1 class="fade-up text-on-surface mb-8" style="font-family:'Playfair Display',serif;font-size:clamp(40px,5vw,64px);line-height:1.1;letter-spacing:-0.02em;font-weight:400;">
+        Élevez votre expertise. Formations professionnelles en prothésie ongulaire.
+      </h1>
+      <p class="fade-up delay-1 text-on-surface-variant mb-10 max-w-md" style="font-size:18px;line-height:1.6;font-weight:300;">
+        Plongez dans l'univers de Beauty Home Concept. Une approche architecturale et minimaliste de l'ongle, conçue par Camille.
+      </p>
+      <div class="fade-up delay-2">
+        <a href="#formations" class="inline-block border border-on-surface text-on-surface px-8 py-4 uppercase hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300" style="font-size:12px;letter-spacing:0.2em;">
+          Découvrir les Formations
+        </a>
+      </div>
+    </div>
+    <div class="md:col-span-6 md:col-start-7 order-1 md:order-2 h-[530px] md:h-[707px] w-full overflow-hidden p-4 bg-surface-container-lowest">
+      <img alt="Prothésie ongulaire par Camille" class="w-full h-full object-cover object-center"
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnpPIu5PNiqQWNpyQFNQ4UiBYNhdVVsS96X8TljpqPG1__mH3lqHa37VdsoikxKybUZJKrp9rMdCOQvfFdjlJryLfXuCBWDLGs9pW3X4y8jMN0JbIbxCU7_9G7IYsuH_WZRs1NbIsxm_KIZknW53004GUNQRTYGISGqcIsKnElpLMrf8jH1wAfj80EWaKHZBw_sIjiR7RpVo7pXYG1ae7MnW0FpIzyLPGp-wROwyzE_yAaU-DdGwPHgqiPkQPVp1VOe827dwhVQOyr"/>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FORMATIONS — sessions redessinées 🆕
+════════════════════════════════════════ -->
+<section id="formations" class="bg-surface-container-lowest py-section-gap">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="flex justify-between items-end mb-16">
+      <h2 class="text-on-surface" style="font-family:'Playfair Display',serif;font-size:32px;font-weight:400;">Formations</h2>
+      <a href="#" class="hidden md:inline-block text-on-surface-variant hover:text-primary transition-colors uppercase border-b border-transparent hover:border-primary pb-0.5" style="font-size:11px;letter-spacing:0.2em;">Toutes les sessions</a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+
+      <!-- Carte 1 — 2 places restantes -->
+      <div class="group bg-surface p-6 flex flex-col items-center text-center shadow-[0_8px_40px_rgba(181,149,98,0.05)]">
+        <div class="aspect-square mb-6 overflow-hidden bg-surface-container-low w-full p-2">
+          <img alt="Masterclass Perfectionnement" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp1PbLB8PAw6WwBvWr3OksuzJoKLmAsb5gjEJ8nHAa6-ZfsIKYXtrWIaK-YUBvaLVDsdm5xh2C7peJw6_EB2qoW4nc8DmEnbcS0bhWow5HYNL1Z2wfn6f2QVi-DWZC4MKqFpxowjTxwEAqK4zLk22iBq4waGeR5veeHcZ2PIvSCwEgQ6PkrPHNH-MGSD5j3qw9ts6C8l8T2Tfu-XxqhKl7eCcex5FtKPtms4cwPXAWnccwP_1ewcVYQKvA4clwMyoAEIhfmmA6Vuhp"/>
+        </div>
+        <h3 class="text-on-surface mb-2" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:400;">Masterclass Perfectionnement</h3>
+        <p class="text-on-surface-variant mb-3" style="font-size:15px;line-height:1.6;font-weight:300;">Maîtrisez les techniques avancées et la préparation parfaite de la manucure russe.</p>
+        <span class="text-primary uppercase" style="font-size:11px;letter-spacing:0.2em;font-weight:400;">2 Jours · Présentiel Amiens</span>
+
+        <!-- 🆕 Bloc session harmonisé -->
+        <div class="session-block">
+          <div class="session-label">
+            <span class="ms text-on-surface-variant" style="font-size:14px;">calendar_month</span>
+            <span class="text-on-surface-variant uppercase" style="font-size:9px;letter-spacing:0.2em;font-weight:400;">Prochaine session</span>
+          </div>
+          <p class="session-date">14 juin 2026</p>
+          <p class="session-places">2 places restantes</p>
+        </div>
+
+        <a href="#" class="w-full inline-block text-center border border-on-surface text-on-surface px-4 py-3.5 uppercase hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300 mt-6" style="font-size:11px;letter-spacing:0.2em;">
+          Découvrir le programme
+        </a>
+      </div>
+
+      <!-- Carte 2 — Session complète -->
+      <div class="group bg-surface p-6 flex flex-col items-center text-center shadow-[0_8px_40px_rgba(181,149,98,0.05)]">
+        <div class="aspect-square mb-6 overflow-hidden bg-surface-container-low w-full p-2">
+          <img alt="Art et Esthétique Minimaliste" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuATUmCuxJJzF9NQXSO41FZsJwgPsYS1KkTurDIZqkA76hdnvBUJlyDq0n82qfzSCETQ_glY0_0MUeTlfqgClFZwenCgO-fgVSehugvMi7S9BU-fPWmQAJe-K4tzcZwT_BqYgz2dsLm2HM_g1nBrFXdUTckAYsg0yOsdcabgkwa_weeGmw86g8vidQaQ05OcUhQFTTigthKsaySS1CuM6jvqw1lpBd_MPnVnm0f5r9BErCbz3M5GxuCq-bDzHzIaWZvmUx8gJ_5hMOi-"/>
+        </div>
+        <h3 class="text-on-surface mb-2" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:400;">Art &amp; Esthétique Minimaliste</h3>
+        <p class="text-on-surface-variant mb-3" style="font-size:15px;line-height:1.6;font-weight:300;">L'art du minimalisme et des lignes épurées pour sublimer l'ongle naturel.</p>
+        <span class="text-primary uppercase" style="font-size:11px;letter-spacing:0.2em;font-weight:400;">1 Jour · Présentiel Amiens</span>
+
+        <!-- 🆕 Bloc session — état COMPLET harmonisé -->
+        <div class="session-block">
+          <div class="session-label">
+            <span class="ms text-on-surface-variant" style="font-size:14px;">calendar_month</span>
+            <span class="text-on-surface-variant uppercase" style="font-size:9px;letter-spacing:0.2em;font-weight:400;">Prochaine session</span>
+          </div>
+          <p class="session-date complet">28 juin 2026</p>
+          <span class="tag-complet">Session complète</span>
+        </div>
+
+        <!-- Bouton liste d'attente -->
+        <button onclick="openWaitlist()" class="w-full border border-on-surface text-on-surface px-4 py-3.5 uppercase hover:bg-on-surface hover:text-surface-container-lowest transition-all duration-300 mt-6" style="font-size:11px;letter-spacing:0.2em;background:none;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;">
+          Liste d'attente
+        </button>
+      </div>
+
+      <!-- Carte 3 — 1 place restante -->
+      <div class="group bg-surface p-6 flex flex-col items-center text-center shadow-[0_8px_40px_rgba(181,149,98,0.05)]">
+        <div class="aspect-square mb-6 overflow-hidden bg-surface-container-low w-full p-2">
+          <img alt="Création de Salon Haut de Gamme" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXWiv8EoIuFKzKkswIBuK-r2sdF7N-YjdEBz-f_G1OYHJAtSqQGYPV60M0nk4U_Wyy_HwBA0PgzWS3z7bruhGKJEm8UZAYroDjOAm7AoDH7-le_jm1pQ990j5220-5akf2_u66YJv5kg1QjSThUXYk---Bv-uNsOLfzNCjeSjML5syXGCsLpRu5lm1idlJnkGvpUBdys3h2Febr-vn70tXJRps9lnftD-65Aa4YsqwT7LSv6zr690Bl0GpTYP-x9Sp0KfcV8hZQ_9m"/>
+        </div>
+        <h3 class="text-on-surface mb-2" style="font-family:'Playfair Display',serif;font-size:22px;font-weight:400;">Création de Salon Haut de Gamme</h3>
+        <p class="text-on-surface-variant mb-3" style="font-size:15px;line-height:1.6;font-weight:300;">Développez une identité visuelle forte et fidélisez une clientèle premium.</p>
+        <span class="text-primary uppercase" style="font-size:11px;letter-spacing:0.2em;font-weight:400;">Mentorat · Sur mesure</span>
+
+        <div class="session-block">
+          <div class="session-label">
+            <span class="ms text-on-surface-variant" style="font-size:14px;">calendar_month</span>
+            <span class="text-on-surface-variant uppercase" style="font-size:9px;letter-spacing:0.2em;font-weight:400;">Prochaine session</span>
+          </div>
+          <p class="session-date">5 juil. 2026</p>
+          <p class="session-places">1 place restante</p>
+        </div>
+
+        <a href="#" class="w-full inline-block text-center border border-on-surface text-on-surface px-4 py-3.5 uppercase hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300 mt-6" style="font-size:11px;letter-spacing:0.2em;">
+          Découvrir le programme
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     TÉMOIGNAGES
+════════════════════════════════════════ -->
+<section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-16">
+    <h2 class="text-on-surface" style="font-family:'Playfair Display',serif;font-size:32px;font-weight:400;">Ce qu'en disent les élèves.</h2>
+    <div class="flex items-center gap-1">
+      <span class="ms ms-fill text-primary" style="font-size:15px;">star</span>
+      <span class="ms ms-fill text-primary" style="font-size:15px;">star</span>
+      <span class="ms ms-fill text-primary" style="font-size:15px;">star</span>
+      <span class="ms ms-fill text-primary" style="font-size:15px;">star</span>
+      <span class="ms ms-fill text-primary" style="font-size:15px;">star</span>
+      <span class="ml-2 text-on-surface-variant" style="font-size:11px;">5/5 · Toutes les élèves</span>
+    </div>
+  </div>
+
+  <div class="flex overflow-x-auto hide-scrollbar snap-x snap-mandatory gap-5 pb-6 -mx-6 px-6 md:mx-0 md:px-0">
+    <article class="min-w-[min(88vw,380px)] md:min-w-[380px] snap-center flex flex-col bg-surface-container-low border border-outline-variant/40 p-8">
+      <span style="font-family:'Playfair Display',serif;font-size:64px;line-height:1;color:rgba(117,90,45,0.18);margin-top:-4px;margin-bottom:12px;display:block;">"</span>
+      <div class="flex gap-0.5 mb-5">
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+      </div>
+      <p class="text-on-surface-variant flex-1 mb-8" style="font-size:14px;line-height:1.75;font-style:italic;">Formation incroyable ! Camille est une pédagogue hors pair. En une journée, j'ai totalement revu ma technique de manucure russe. Mes clientes voient la différence immédiatement.</p>
+      <div class="border-t border-outline-variant/40 pt-5">
+        <p style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;" class="text-on-surface">Sarah L.</p>
+        <p class="text-on-surface-variant mt-0.5" style="font-size:11px;letter-spacing:0.08em;">Prothésiste ongulaire · Lille</p>
+      </div>
+    </article>
+    <article class="min-w-[min(88vw,380px)] md:min-w-[380px] snap-center flex flex-col bg-surface-container-low border border-outline-variant/40 p-8">
+      <span style="font-family:'Playfair Display',serif;font-size:64px;line-height:1;color:rgba(117,90,45,0.18);margin-top:-4px;margin-bottom:12px;display:block;">"</span>
+      <div class="flex gap-0.5 mb-5">
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+      </div>
+      <p class="text-on-surface-variant flex-1 mb-8" style="font-size:14px;line-height:1.75;font-style:italic;">La formation est certifiée Qualiopi, j'ai pu la faire financer par mon OPCO sans avancer d'argent. Le contenu est sérieux, le matériel fourni est top. Je recommande à 100%.</p>
+      <div class="border-t border-outline-variant/40 pt-5">
+        <p style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;" class="text-on-surface">Julie M.</p>
+        <p class="text-on-surface-variant mt-0.5" style="font-size:11px;letter-spacing:0.08em;">Auto-entrepreneuse · Amiens</p>
+      </div>
+    </article>
+    <article class="min-w-[min(88vw,380px)] md:min-w-[380px] snap-center flex flex-col bg-surface-container-low border border-outline-variant/40 p-8">
+      <span style="font-family:'Playfair Display',serif;font-size:64px;line-height:1;color:rgba(117,90,45,0.18);margin-top:-4px;margin-bottom:12px;display:block;">"</span>
+      <div class="flex gap-0.5 mb-5">
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+        <span class="ms ms-fill text-primary" style="font-size:13px;">star</span>
+      </div>
+      <p class="text-on-surface-variant flex-1 mb-8" style="font-size:14px;line-height:1.75;font-style:italic;">Camille partage vraiment sa méthode, ses secrets de pro. On ne repart pas les mains vides : livret pédagogique, attestation, et un suivi post-formation. Du sérieux !</p>
+      <div class="border-t border-outline-variant/40 pt-5">
+        <p style="font-family:'Playfair Display',serif;font-size:17px;font-weight:500;" class="text-on-surface">Laëtitia B.</p>
+        <p class="text-on-surface-variant mt-0.5" style="font-size:11px;letter-spacing:0.08em;">Prothésiste · Reims</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     NEWSLETTER 🆕 — fond clair harmonisé
+════════════════════════════════════════ -->
+<section class="py-section-gap" style="background:#f5efe6;">
+  <!-- f5efe6 = beige chaud très léger, dérivé du primary #755a2d — reste dans les tokens de marque -->
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
+
+      <!-- Texte gauche -->
+      <div class="md:col-span-5">
+        <p class="text-primary uppercase mb-5" style="font-size:10px;letter-spacing:0.24em;font-weight:400;">Restez informée</p>
+        <h2 class="text-on-surface mb-5" style="font-family:'Playfair Display',serif;font-size:clamp(26px,3vw,38px);line-height:1.25;font-weight:400;">
+          Être prévenue des prochaines sessions
+        </h2>
+        <p class="text-on-surface-variant" style="font-size:15px;line-height:1.65;font-weight:300;">
+          Recevez les nouvelles dates dès leur publication.<br>
+          Aucun spam — désabonnement en un clic.
+        </p>
+      </div>
+
+      <!-- Formulaire droite -->
+      <div class="md:col-span-5 md:col-start-8" id="nl-container">
+        <div class="flex flex-col gap-4">
+          <!-- Label visible (règle input-labels) -->
+          <div>
+            <label for="nl-email" class="wl-label">Votre adresse e-mail</label>
+            <input
+              id="nl-email"
+              type="email"
+              autocomplete="email"
+              placeholder="camille@example.fr"
+              class="nl-input"
+            />
+          </div>
+          <button
+            onclick="submitNewsletter()"
+            class="border border-on-surface text-on-surface px-8 py-4 uppercase hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-all duration-300"
+            style="font-size:11px;letter-spacing:0.2em;background:none;cursor:pointer;font-family:'Hanken Grotesk',sans-serif;font-weight:400;"
+          >
+            M'inscrire
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ═══════════════════════════════════════
+     FOOTER — identique au site
+════════════════════════════════════════ -->
+<footer style="background:#2f3031;">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-14 pb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 pb-12 border-b" style="border-color:rgba(242,240,240,0.1);">
+      <div>
+        <span style="font-family:'Playfair Display',serif;font-size:16px;letter-spacing:0.2em;text-transform:uppercase;color:#f2f0f0;display:block;margin-bottom:16px;">Beauty Home Concept</span>
+        <p style="font-size:13px;color:rgba(242,240,240,0.45);line-height:1.65;max-width:260px;font-weight:300;">Institut de formation professionnelle en prothésie ongulaire. Certifié Qualiopi. Situé à Amiens (80).</p>
+      </div>
+      <div>
+        <p style="font-size:10px;font-weight:400;letter-spacing:0.18em;text-transform:uppercase;color:rgba(242,240,240,0.4);margin-bottom:20px;">Navigation</p>
+        <nav class="flex flex-col gap-3">
+          <a href="#" style="font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;font-weight:300;" class="hover:text-primary transition-colors">Accueil</a>
+          <a href="#" style="font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;font-weight:300;" class="hover:text-primary transition-colors">La Méthode Camille</a>
+          <a href="#formations" style="font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;font-weight:300;" class="hover:text-primary transition-colors">Formations</a>
+          <a href="#" style="font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;font-weight:300;" class="hover:text-primary transition-colors">FAQ</a>
+        </nav>
+      </div>
+      <div>
+        <p style="font-size:10px;font-weight:400;letter-spacing:0.18em;text-transform:uppercase;color:rgba(242,240,240,0.4);margin-bottom:20px;">Nous retrouver</p>
+        <div class="flex flex-col gap-3">
+          <a href="https://www.instagram.com/beauty_home.concept" target="_blank" style="font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;display:flex;align-items:center;gap:10px;font-weight:300;" class="hover:text-primary transition-colors">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @beauty_home.concept
+          </a>
+          <a href="https://www.tiktok.com/@beautyhomeconcept" target="_blank" style="font-size:13px;color:rgba(242,240,240,0.55);text-decoration:none;display:flex;align-items:center;gap:10px;font-weight:300;" class="hover:text-primary transition-colors">
+            <svg class="w-3.5 h-3.5 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.31 6.31 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.18 8.18 0 004.79 1.54V7.01a4.84 4.84 0 01-1.02-.32z"/></svg>
+            @beautyhomeconcept
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col md:flex-row justify-between items-center pt-7 gap-4">
+      <p style="font-size:11px;color:rgba(242,240,240,0.3);font-weight:300;">© 2026 Beauty Home Concept · Amiens, France</p>
+      <div class="flex gap-6">
+        <a href="#" style="font-size:11px;color:rgba(242,240,240,0.3);text-decoration:none;" class="hover:text-primary transition-colors">Mentions légales</a>
+        <a href="#" style="font-size:11px;color:rgba(242,240,240,0.3);text-decoration:none;" class="hover:text-primary transition-colors">CGV</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════
+     FAB CONTACT 🆕 — harmonisé avec le site
+     (remplace WhatsApp — à adapter selon
+     votre moyen de contact : email, Instagram…)
+════════════════════════════════════════ -->
+<a href="mailto:contact@beautyhomeconcept.fr" class="contact-fab" aria-label="Nous écrire par email">
+  <span class="ms" style="font-size:18px;">mail</span>
+  Nous écrire
+</a>
+
+<!-- ═══════════════════════════════════════
+     MODAL LISTE D'ATTENTE
+════════════════════════════════════════ -->
+<div id="waitlist-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div style="background:#fff;max-width:440px;width:100%;padding:40px 40px 36px;position:relative;">
+
+    <!-- Fermer -->
+    <button onclick="closeWaitlist()"
+      aria-label="Fermer"
+      style="position:absolute;top:16px;right:16px;background:none;border:none;cursor:pointer;color:#7f7669;display:flex;align-items:center;justify-content:center;padding:8px;">
+      <span class="ms" style="font-size:22px;">close</span>
+    </button>
+
+    <h3 id="modal-title" class="text-on-surface mb-2" style="font-family:'Playfair Display',serif;font-size:24px;font-weight:400;">Liste d'attente</h3>
+    <p class="text-on-surface-variant mb-7" style="font-size:14px;font-weight:300;line-height:1.6;">
+      Session du <strong class="font-medium text-on-surface">28 juin 2026</strong> — complète.<br>
+      Laissez votre contact, on vous prévient en priorité si une place se libère.
+    </p>
+
+    <div id="wl-form" class="flex flex-col gap-4">
+      <div>
+        <label for="wl-prenom" class="wl-label">Prénom *</label>
+        <input id="wl-prenom" type="text" autocomplete="given-name" placeholder="Votre prénom" class="wl-input"/>
+      </div>
+      <div>
+        <label for="wl-email" class="wl-label">Adresse e-mail *</label>
+        <input id="wl-email" type="email" autocomplete="email" placeholder="votre@email.fr" class="wl-input"/>
+      </div>
+      <button onclick="submitWaitlist()"
+        style="width:100%;background:#755a2d;color:white;border:none;font-size:11px;letter-spacing:0.2em;text-transform:uppercase;padding:15px;font-family:'Hanken Grotesk',sans-serif;font-weight:400;cursor:pointer;transition:background .2s;"
+        onmouseover="this.style.background='#5d4623'" onmouseout="this.style.background='#755a2d'">
+        M'inscrire sur liste d'attente
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SCRIPTS
+════════════════════════════════════════ -->
+<script>
+  function openWaitlist() {
+    const modal = document.getElementById('waitlist-modal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('wl-prenom')?.focus(), 50);
+  }
+
+  function closeWaitlist() {
+    document.getElementById('waitlist-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function submitWaitlist() {
+    const prenom = document.getElementById('wl-prenom').value.trim();
+    const email  = document.getElementById('wl-email').value.trim();
+    if (!prenom || !email) return;
+    document.getElementById('wl-form').innerHTML =
+      '<div style="border:1px solid rgba(117,90,45,0.3);background:rgba(117,90,45,0.04);padding:20px 24px;text-align:center;">' +
+        '<p style="font-family:\'Playfair Display\',serif;font-size:18px;color:#1b1c1c;margin-bottom:6px;">Inscription confirmée</p>' +
+        '<p style="font-size:13px;color:#4e463a;font-weight:300;line-height:1.6;">Vous serez prévenu·e en priorité<br>dès qu\'une place se libère.</p>' +
+      '</div>';
+  }
+
+  function submitNewsletter() {
+    const email = document.getElementById('nl-email').value.trim();
+    if (!email) return;
+    document.getElementById('nl-container').innerHTML =
+      '<div>' +
+        '<p style="font-family:\'Playfair Display\',serif;font-size:22px;font-weight:400;color:#1b1c1c;margin-bottom:8px;">Parfait.</p>' +
+        '<p style="font-size:15px;color:#4e463a;font-weight:300;line-height:1.6;">Vous serez prévenue dès que de nouvelles sessions sont publiées.</p>' +
+      '</div>';
+  }
+
+  // Fermer la modale en cliquant sur le fond
+  document.getElementById('waitlist-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeWaitlist();
+  });
+
+  // Fermer avec Échap
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeWaitlist();
+  });
+</script>
+
+</body>
+</html>

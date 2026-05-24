@@ -1,0 +1,96 @@
+<style>
+  .q-label { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #755a2d; font-family: sans-serif; margin-bottom: 6px; }
+  .q-title { font-size: 22px; font-family: Georgia, serif; color: #1b1c1c; margin-bottom: 6px; font-weight: 400; }
+  .q-sub  { font-size: 13px; color: #4e463a; margin-bottom: 28px; font-family: sans-serif; line-height: 1.6; }
+
+  .adm { background: #faf9f9; border: 1px solid #e3e2e2; border-radius: 3px; padding: 14px; font-family: sans-serif; font-size: 10px; color: #1b1c1c; }
+  .adm-title { font-size: 13px; font-family: Georgia, serif; color: #1b1c1c; margin-bottom: 10px; font-weight: 400; }
+  .adm-label { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: #755a2d; margin-bottom: 5px; }
+  .adm-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid #f0eeec; }
+  .adm-row:last-child { border-bottom: none; }
+  .adm-badge { font-size: 8px; padding: 2px 7px; border-radius: 10px; background: #e8f5e9; color: #2e7d32; letter-spacing: .1em; }
+  .adm-badge-orange { background: #fff3e0; color: #e65100; }
+  .upload-zone { border: 1px dashed #d1c5b6; border-radius: 3px; padding: 14px; text-align: center; font-size: 9px; color: #7f7669; margin-top: 10px; }
+  .upload-icon { font-size: 20px; margin-bottom: 4px; }
+  .adm-btn { font-size: 8px; letter-spacing: .15em; text-transform: uppercase; padding: 5px 10px; background: #755a2d; color: #fff; border-radius: 1px; display: inline-block; }
+  .adm-btn-ghost { background: transparent; color: #755a2d; border: 1px solid #755a2d; }
+
+  .editor-toolbar { display: flex; gap: 6px; padding: 6px; background: #f0eeec; border-radius: 2px 2px 0 0; border: 1px solid #e3e2e2; border-bottom: none; }
+  .editor-tool { font-size: 9px; color: #4e463a; padding: 2px 5px; background: #fff; border: 1px solid #e3e2e2; border-radius: 1px; }
+  .editor-body { background: #fff; border: 1px solid #e3e2e2; border-radius: 0 0 2px 2px; padding: 10px; font-size: 9px; line-height: 1.6; color: #1b1c1c; min-height: 80px; }
+  .editor-var { display: inline-block; background: #fdf9f4; border: 1px solid #d1c5b6; color: #755a2d; font-size: 8px; padding: 1px 5px; border-radius: 2px; }
+  .editor-vars { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+</style>
+
+<p class="q-label">Contrat · Admin</p>
+<h2 class="q-title">Comment tu veux gérer les templates de contrat par formation ?</h2>
+<p class="q-sub">Chaque formation a son propre contrat/convention. Comment tu veux les créer et les modifier depuis l'admin ?</p>
+
+<div class="cards">
+
+  <!-- Option A: Upload PDF template par formation -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="adm">
+        <div class="adm-title">Formation · Manucure Russe Pro</div>
+        <div class="adm-label">Documents contractuels</div>
+        <div class="adm-row">
+          <span style="flex:1">Contrat particulier</span>
+          <span class="adm-badge">✓ Template v2.pdf</span>
+          <span style="color:#755a2d;font-size:8px;cursor:pointer">Remplacer</span>
+        </div>
+        <div class="adm-row">
+          <span style="flex:1">Convention pro</span>
+          <span class="adm-badge adm-badge-orange">⚠ Manquant</span>
+          <span style="color:#755a2d;font-size:8px;cursor:pointer">Uploader</span>
+        </div>
+        <div class="upload-zone">
+          <div class="upload-icon">📄</div>
+          <div>Glisser un PDF ici</div>
+          <div style="margin-top:4px;font-size:8px;color:#b0a898;">Les champs remplissables seront détectés automatiquement</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Upload PDF par formation</h3>
+      <p>Tu crées le PDF avec Word/Canva, tu ajoutes les champs de formulaire (nom, date…), et tu l'uploades dans l'admin pour chaque formation. Même système qu'aujourd'hui, mais par formation au lieu d'être global.</p>
+    </div>
+  </div>
+
+  <!-- Option B: Éditeur riche in-app -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div class="adm">
+        <div class="adm-title">Formation · Art & Esthétique · Contrat</div>
+        <div class="editor-toolbar">
+          <div class="editor-tool"><strong>G</strong></div>
+          <div class="editor-tool"><em>I</em></div>
+          <div class="editor-tool" style="text-decoration:underline">S</div>
+          <div class="editor-tool">¶</div>
+          <div style="flex:1"></div>
+          <div class="editor-tool" style="color:#755a2d">Aperçu PDF</div>
+        </div>
+        <div class="editor-body">
+          CONTRAT DE FORMATION PROFESSIONNELLE<br><br>
+          Entre <span class="editor-var">{{nom_prenom}}</span>, demeurant à <span class="editor-var">{{adresse}}</span>,<br>
+          et Beauty Home Concept, organisme de formation…<br><br>
+          <strong>Formation :</strong> <span class="editor-var">{{nom_formation}}</span><br>
+          <strong>Date :</strong> <span class="editor-var">{{date_session}}</span><br>
+          <strong>Tarif :</strong> <span class="editor-var">{{prix}}</span> €
+        </div>
+        <div class="editor-vars">
+          <span style="font-size:8px;color:#7f7669;margin-right:4px;">Insérer :</span>
+          <span class="editor-var">{{nom_prenom}}</span>
+          <span class="editor-var">{{date_session}}</span>
+          <span class="editor-var">{{prix}}</span>
+          <span class="editor-var">{{formation}}</span>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Éditeur de texte dans l'admin (Recommandé)</h3>
+      <p>Tu écris/édites le contrat directement dans l'admin avec un éditeur riche. Tu insères des variables automatiques (nom, date, prix…). L'app génère le PDF à la volée. Plus flexible, pas besoin de Word.</p>
+    </div>
+  </div>
+
+</div>

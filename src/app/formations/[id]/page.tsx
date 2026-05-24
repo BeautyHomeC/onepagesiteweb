@@ -20,12 +20,12 @@ export default async function FormationDetailPage({ params }: { params: Promise<
     notFound();
   }
 
-  // Fetch upcoming sessions
+  // Fetch upcoming sessions (including full ones for waitlist display)
   const { data: sessions } = await supabase
     .from('sessions')
     .select('*')
     .eq('formation_id', formation.id)
-    .gt('places_disponibles', 0)
+    .gte('places_disponibles', 0)
     .order('date_debut', { ascending: true });
 
   return (

@@ -1,0 +1,113 @@
+<style>
+  .q-label { font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: #755a2d; font-family: sans-serif; margin-bottom: 6px; }
+  .q-title { font-size: 22px; font-family: Georgia, serif; color: #1b1c1c; margin-bottom: 6px; font-weight: 400; }
+  .q-sub  { font-size: 13px; color: #4e463a; margin-bottom: 28px; font-family: sans-serif; line-height: 1.6; }
+
+  /* Flow diagram */
+  .flow { display: flex; flex-direction: column; gap: 0; }
+  .flow-step { display: flex; gap: 12px; align-items: flex-start; }
+  .flow-left { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .flow-num { width: 28px; height: 28px; border-radius: 50%; background: #755a2d; color: #fff; font-size: 11px; font-family: Georgia, serif; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .flow-line { width: 1px; background: #d1c5b6; flex: 1; min-height: 20px; margin: 2px 0; }
+  .flow-body { padding-bottom: 18px; flex: 1; }
+  .flow-title { font-family: Georgia, serif; font-size: 14px; color: #1b1c1c; margin-bottom: 3px; font-weight: 400; }
+  .flow-desc { font-size: 11px; color: #4e463a; line-height: 1.55; font-family: sans-serif; }
+  .flow-tag { display: inline-block; font-size: 8px; letter-spacing: .12em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; background: #fdf9f4; border: 1px solid #d1c5b6; color: #755a2d; margin-top: 5px; }
+  .flow-tag-stripe { background: #635bff18; border-color: #635bff44; color: #635bff; }
+  .flow-tag-supabase { background: #3ecf8e18; border-color: #3ecf8e44; color: #3ecf8e; }
+
+  /* Mock screens */
+  .screens { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+  .screen { background: #faf9f9; border: 1px solid #e3e2e2; border-radius: 3px; padding: 12px; font-family: sans-serif; }
+  .screen-label { font-size: 8px; letter-spacing: .2em; text-transform: uppercase; color: #755a2d; margin-bottom: 8px; }
+  .screen-field { background: #fff; border: 1px solid #e3e2e2; border-radius: 1px; padding: 6px 8px; font-size: 9px; color: #7f7669; margin-bottom: 6px; }
+  .screen-field.filled { color: #1b1c1c; }
+  .screen-select { display: flex; gap: 6px; margin-bottom: 6px; }
+  .screen-opt { flex: 1; border: 1px solid #e3e2e2; border-radius: 1px; padding: 5px; text-align: center; font-size: 8px; color: #7f7669; }
+  .screen-opt.sel { border-color: #755a2d; color: #755a2d; background: rgba(117,90,45,.04); }
+  .screen-btn { font-size: 8px; letter-spacing: .15em; text-transform: uppercase; padding: 7px; background: #755a2d; color: #fff; border-radius: 1px; text-align: center; }
+
+  .contract-preview { background: #fff; border: 1px solid #e3e2e2; padding: 10px; font-size: 8px; color: #4e463a; line-height: 1.6; max-height: 72px; overflow: hidden; position: relative; margin-bottom: 8px; }
+  .contract-preview::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 20px; background: linear-gradient(transparent, #fff); }
+  .scroll-hint { font-size: 8px; color: #7f7669; text-align: center; margin-bottom: 8px; }
+
+  .sig-tabs { display: flex; gap: 0; margin-bottom: 6px; }
+  .sig-tab { font-size: 8px; letter-spacing: .1em; text-transform: uppercase; padding: 4px 8px; border: 1px solid #e3e2e2; color: #7f7669; flex: 1; text-align: center; }
+  .sig-tab.active { color: #755a2d; border-color: #755a2d; background: rgba(117,90,45,.04); }
+  .sig-canvas { border: 1px solid #d1c5b6; padding: 8px; text-align: center; font-family: Georgia, cursive; font-size: 13px; color: #1b1c1c; margin-bottom: 6px; }
+</style>
+
+<p class="q-label">Design · Contrat & Réservation</p>
+<h2 class="q-title">Flow complet — du clic « Réserver » au paiement</h2>
+<p class="q-sub">Voilà comment les 4 étapes s'enchaînent, et ce qui se passe côté serveur à chaque étape.</p>
+
+<div class="flow">
+
+  <div class="flow-step">
+    <div class="flow-left"><div class="flow-num">1</div><div class="flow-line"></div></div>
+    <div class="flow-body">
+      <div class="flow-title">Infos de base + type de client</div>
+      <div class="flow-desc">L'élève saisit : prénom, nom, email, téléphone. Elle choisit "Particulier" ou "Professionnel" (pro = champs SIRET + raison sociale s'affichent). L'ensemble est validé avant de continuer.</div>
+      <span class="flow-tag">Client</span> <span class="flow-tag flow-tag-supabase">Pas encore en base</span>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-left"><div class="flow-num">2</div><div class="flow-line"></div></div>
+    <div class="flow-body">
+      <div class="flow-title">Contrat personnalisé — lecture obligatoire</div>
+      <div class="flow-desc">Le contrat (particulier) ou la convention (pro) est généré à la volée avec les variables remplies : nom, formation, date, prix. Affiché dans une zone scrollable. Le bouton "Signer" n'apparaît qu'après avoir scrollé jusqu'en bas — l'élève ne peut pas sauter la lecture.</div>
+      <span class="flow-tag">PDF généré côté serveur via API</span>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-left"><div class="flow-num">3</div><div class="flow-line"></div></div>
+    <div class="flow-body">
+      <div class="flow-title">Signature électronique</div>
+      <div class="flow-desc">Deux onglets : "Taper mon nom" (champ texte) ou "Dessiner" (canvas). La signature + horodatage + IP + user-agent sont capturés. Le PDF est scellé avec ces données dans la page d'audit trail. Stocké dans Supabase Storage.</div>
+      <span class="flow-tag flow-tag-supabase">Supabase Storage</span>
+    </div>
+  </div>
+
+  <div class="flow-step">
+    <div class="flow-left"><div class="flow-num">4</div></div>
+    <div class="flow-body">
+      <div class="flow-title">Paiement de l'acompte (30%) — Stripe</div>
+      <div class="flow-desc">Redirect vers Stripe Checkout. L'ID du contrat signé est passé en metadata. Webhook Stripe → insert reservation en base (statut "confirmée") → emails envoyés : confirmation + contrat signé + programme PDF + livret d'accueil + facture d'acompte.</div>
+      <span class="flow-tag flow-tag-stripe">Stripe Checkout</span> <span class="flow-tag flow-tag-supabase">Insert Supabase</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="screens">
+  <div class="screen">
+    <div class="screen-label">Étape 1 · Infos</div>
+    <div class="screen-field filled">Sarah</div>
+    <div class="screen-field filled">Laurent</div>
+    <div class="screen-field filled">sarah@exemple.fr</div>
+    <div class="screen-select">
+      <div class="screen-opt sel">Particulier</div>
+      <div class="screen-opt">Professionnel</div>
+    </div>
+    <div class="screen-btn">Voir mon contrat →</div>
+  </div>
+
+  <div class="screen">
+    <div class="screen-label">Étape 2–3 · Contrat + Signature</div>
+    <div class="contract-preview">
+      <strong>CONTRAT DE FORMATION PROFESSIONNELLE</strong><br>
+      Entre Sarah Laurent, demeurant à…<br>
+      et Beauty Home Concept, organisme de formation enregistré sous le n° 32 59 09189 59…<br>
+      Article 1 — Objet : La présente convention a pour objet la formation "Manucure Russe Pro"…
+    </div>
+    <div class="scroll-hint">↓ Lisez le contrat en entier pour signer</div>
+    <div class="sig-tabs">
+      <div class="sig-tab active">Taper mon nom</div>
+      <div class="sig-tab">Dessiner</div>
+    </div>
+    <div class="sig-canvas">Sarah Laurent</div>
+    <div class="screen-btn">Signer et payer l'acompte →</div>
+  </div>
+</div>
