@@ -2,6 +2,7 @@ export const RGPD_CLAUSE = `Conformément au Règlement (UE) 2016/679 (RGPD), le
 
 export interface TemplateVars {
   nom_prenom: string
+  nom: string        // alias: last name only (for {{nom}})
   prenom: string
   adresse: string
   email: string
@@ -10,9 +11,11 @@ export interface TemplateVars {
   siret?: string
   instagram?: string
   formation: string
+  formation_titre: string  // alias for {{formation_titre}}
   date_session: string
   duree: string
   prix_total: string
+  prix: string             // alias for {{prix}}
   acompte: string
   solde: string
   date_signature: string
@@ -22,22 +25,31 @@ export interface TemplateVars {
 export function renderTemplate(contenu: string, vars: TemplateVars): string {
   let result = contenu
   const entries: [string, string][] = [
-    ['nom_prenom',     vars.nom_prenom],
-    ['prenom',         vars.prenom],
-    ['adresse',        vars.adresse],
-    ['email',          vars.email],
-    ['telephone',      vars.telephone],
-    ['raison_sociale', vars.raison_sociale ?? ''],
-    ['siret',          vars.siret ?? ''],
-    ['instagram',      vars.instagram ?? ''],
-    ['formation',      vars.formation],
-    ['date_session',   vars.date_session],
-    ['duree',          vars.duree],
-    ['prix_total',     vars.prix_total],
-    ['acompte',        vars.acompte],
-    ['solde',          vars.solde],
-    ['date_signature', vars.date_signature],
-    ['clause_rgpd',    RGPD_CLAUSE],
+    // Primary keys
+    ['nom_prenom',      vars.nom_prenom],
+    ['prenom',          vars.prenom],
+    ['nom',             vars.nom],
+    ['adresse',         vars.adresse],
+    ['email',           vars.email],
+    ['telephone',       vars.telephone],
+    ['raison_sociale',  vars.raison_sociale ?? ''],
+    ['siret',           vars.siret ?? ''],
+    ['instagram',       vars.instagram ?? ''],
+    // Formation info — both key forms accepted
+    ['formation_titre', vars.formation_titre],
+    ['formation',       vars.formation],
+    // Date & duration
+    ['date_session',    vars.date_session],
+    ['duree',           vars.duree],
+    // Prices — both key forms accepted
+    ['prix_total',      vars.prix_total],
+    ['prix',            vars.prix],
+    ['acompte',         vars.acompte],
+    ['solde',           vars.solde],
+    // Signature
+    ['date_signature',  vars.date_signature],
+    // RGPD
+    ['clause_rgpd',     RGPD_CLAUSE],
   ]
   for (const [key, value] of entries) {
     result = result.replaceAll(`{{${key}}}`, value)
@@ -67,20 +79,23 @@ export function buildTemplateVars(params: {
     : `du ${params.date_debut} au ${params.date_fin}`
 
   return {
-    nom_prenom:     `${params.prenom} ${params.nom}`,
-    prenom:         params.prenom,
-    adresse:        params.adresse,
-    email:          params.email,
-    telephone:      params.telephone,
-    raison_sociale: params.raison_sociale,
-    siret:          params.siret,
-    instagram:      params.instagram,
-    formation:      params.formation_titre,
-    date_session:   dateSession,
-    duree:          params.duree_formation,
-    prix_total:     `${params.prix} €`,
-    acompte:        `${acompte} €`,
-    solde:          `${solde} €`,
-    date_signature: new Date().toLocaleDateString('fr-FR'),
+    nom_prenom:      `${params.prenom} ${params.nom}`,
+    nom:             params.nom,
+    prenom:          params.prenom,
+    adresse:         params.adresse,
+    email:           params.email,
+    telephone:       params.telephone,
+    raison_sociale:  params.raison_sociale,
+    siret:           params.siret,
+    instagram:       params.instagram,
+    formation:       params.formation_titre,
+    formation_titre: params.formation_titre,
+    date_session:    dateSession,
+    duree:           params.duree_formation,
+    prix_total:      `${params.prix} €`,
+    prix:            `${params.prix} €`,
+    acompte:         `${acompte} €`,
+    solde:           `${solde} €`,
+    date_signature:  new Date().toLocaleDateString('fr-FR'),
   }
 }

@@ -76,6 +76,11 @@ export default function Step1Form({ initial, onNext }: Props) {
 
   return (
     <form onSubmit={e => { e.preventDefault(); if (validate()) onNext(data) }} className="space-y-5">
+      {/* Intro */}
+      <p className="text-sm text-on-surface-variant leading-relaxed" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 300 }}>
+        Ces informations figureront sur votre contrat de formation. Merci de les renseigner avec soin.
+      </p>
+
       {/* Name row */}
       <div className="grid grid-cols-2 gap-4">
         <Field id="prenom" label="Prénom" value={data.prenom} error={errors.prenom} onChange={v => set('prenom', v)} />

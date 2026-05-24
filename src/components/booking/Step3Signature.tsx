@@ -102,19 +102,12 @@ export default function Step3Signature({ defaultName, loading, error, onConfirm,
           )}
         </div>
       ) : (
-        <div className="space-y-2">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.14em] text-on-surface-variant mb-1.5"
-              style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}>
-              Dessinez votre signature
-            </p>
-            <SignatureCanvas onChange={setDrawVal} />
-          </div>
-          {!drawVal && (
-            <p className="text-[10px] text-on-surface-variant/60 tracking-wide text-center" style={{ fontFamily: 'var(--font-hanken)' }}>
-              Utilisez votre souris ou votre doigt
-            </p>
-          )}
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.14em] text-on-surface-variant mb-1.5"
+            style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}>
+            Dessinez votre signature
+          </p>
+          <SignatureCanvas onChange={setDrawVal} />
         </div>
       )}
 

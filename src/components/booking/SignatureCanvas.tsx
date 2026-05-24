@@ -12,7 +12,13 @@ export default function SignatureCanvas({ onChange }: Props) {
   const getPos = (e: MouseEvent | TouchEvent, canvas: HTMLCanvasElement) => {
     const rect = canvas.getBoundingClientRect()
     const source = 'touches' in e ? e.touches[0] : e
-    return { x: source.clientX - rect.left, y: source.clientY - rect.top }
+    // Scale CSS coordinates to canvas coordinate space (canvas.width may differ from CSS width)
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+    return {
+      x: (source.clientX - rect.left) * scaleX,
+      y: (source.clientY - rect.top) * scaleY,
+    }
   }
 
   const startDraw = useCallback((e: MouseEvent | TouchEvent) => {
@@ -49,8 +55,9 @@ export default function SignatureCanvas({ onChange }: Props) {
     if (!canvas) return
     const ctx = canvas.getContext('2d')!
     ctx.strokeStyle = '#1b1c1c'
-    ctx.lineWidth = 2
+    ctx.lineWidth = 2.5
     ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
 
     canvas.addEventListener('mousedown', startDraw)
     canvas.addEventListener('mousemove', draw)
@@ -80,18 +87,25 @@ export default function SignatureCanvas({ onChange }: Props) {
     <div>
       <canvas
         ref={canvasRef}
-        width={400}
-        height={120}
-        className="w-full border border-outline-variant bg-white touch-none"
-        style={{ cursor: 'crosshair' }}
+        width={560}
+        height={140}
+        className="w-full border border-outline-variant bg-surface-container-lowest touch-none"
+        style={{ cursor: 'crosshair', display: 'block' }}
       />
-      <button
-        type="button"
-        onClick={clear}
-        className="mt-2 text-xs text-on-surface-variant hover:text-error underline font-label-caps uppercase tracking-widest"
-      >
-        Effacer
-      </button>
+      <div className="flex items-center justify-between mt-2">
+        <p className="text-[9px] text-on-surface-variant/50 uppercase tracking-widest"
+          style={{ fontFamily: 'var(--font-hanken)' }}>
+          Dessinez votre signature ci-dessus
+        </p>
+        <button
+          type="button"
+          onClick={clear}
+          className="text-[10px] text-on-surface-variant/60 hover:text-error transition-colors uppercase tracking-widest"
+          style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}
+        >
+          Effacer
+        </button>
+      </div>
     </div>
   )
 }

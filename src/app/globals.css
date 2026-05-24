@@ -126,3 +126,139 @@
 body {
   min-height: max(884px, 100dvh);
 }
+
+/* ═══════════════════════════════════════════════
+   Emil Kowalski — easing curves
+═══════════════════════════════════════════════ */
+:root {
+  --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* ── Hero entry ─────────────────────────────── */
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(14px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes heroImageIn {
+  from { transform: scale(1.06); }
+  to   { transform: scale(1.03); }
+}
+.animate-hero-in { animation: heroIn 500ms var(--ease-out) both; }
+.anim-delay-80  { animation-delay: 80ms; }
+.anim-delay-160 { animation-delay: 160ms; }
+.anim-delay-240 { animation-delay: 240ms; }
+.anim-delay-320 { animation-delay: 320ms; }
+
+/* ── Scroll reveal (IntersectionObserver) ───── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px) scale(0.98);
+  transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
+}
+.reveal.in-view {
+  opacity: 1;
+  transform: none;
+}
+.reveal-delay-1 { transition-delay: 70ms; }
+.reveal-delay-2 { transition-delay: 140ms; }
+
+/* ── FAQ : grid-template-rows trick ─────────── */
+.faq-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 350ms var(--ease-out);
+}
+.faq-body.faq-open { grid-template-rows: 1fr; }
+
+/* ── Session badge — luxe ───────────────────── */
+.session-block {
+  width: 100%;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(209,197,182,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.session-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 8px;
+}
+.session-rule {
+  height: 1px;
+  flex: 1;
+  background: rgba(209,197,182,0.5);
+}
+.session-eyebrow-label {
+  font-size: 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #7f7669;
+  font-weight: 400;
+  white-space: nowrap;
+}
+.session-date-display {
+  font-family: var(--font-playfair);
+  font-size: 22px;
+  font-weight: 400;
+  color: #755a2d;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.session-date-display.is-full { color: #1b1c1c; }
+.session-places-display {
+  font-size: 11px;
+  color: #7f7669;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+.session-full-tag {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 4px;
+}
+.session-full-label {
+  font-size: 8px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #7f7669;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+/* ── Booking modal enter ────────────────────── */
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes backdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-modal-in    { animation: modalSlideUp 280ms var(--ease-out) both; }
+.animate-backdrop-in { animation: backdropIn 200ms ease-out both; }
+
+/* ── Focus visible ──────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* ── prefers-reduced-motion ─────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-in    { animation: none !important; opacity: 1 !important; }
+  .animate-modal-in   { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .animate-backdrop-in { animation: none !important; opacity: 1 !important; }
+  .reveal { transition-duration: 0.01ms !important; opacity: 1 !important; transform: none !important; }
+  .faq-body { transition-duration: 0.01ms !important; }
+  img { animation: none !important; transform: none !important; }
+}

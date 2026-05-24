@@ -136,63 +136,65 @@ export default function SessionBooking({ formation, sessions }: { formation: any
       {/* ── 4-step booking modal ───────────────────────────────── */}
       {selectedSessionId && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center"
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-backdrop-in"
           style={{ background: 'rgba(27,28,28,0.55)', backdropFilter: 'blur(2px)' }}
           onClick={step < 4 ? closeFlow : undefined}
         >
           <div
-            className="bg-surface w-full sm:max-w-xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto flex flex-col"
+            className="animate-modal-in bg-surface w-full sm:max-w-xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto flex flex-col"
             style={{ boxShadow: '0 32px 80px rgba(27,28,28,0.3)' }}
             onClick={e => e.stopPropagation()}
           >
-            {/* Modal header */}
-            <div className="bg-primary text-on-primary px-7 py-6 shrink-0">
+            {/* Modal header — relative so close button stays inside */}
+            <div className="relative bg-primary text-on-primary px-7 py-6 shrink-0">
+              {/* Close button — lives inside the header */}
+              {step < 4 && (
+                <button
+                  onClick={closeFlow}
+                  aria-label="Fermer"
+                  className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-on-primary/50 hover:text-on-primary transition-colors"
+                >
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              )}
+
               {/* Step progress */}
-              <div className="flex items-center gap-2 mb-5">
+              <div className="flex items-center gap-1.5 mb-5 pr-8">
                 {STEPS.map((label, i) => {
                   const n = i + 1
                   const done = step > n
                   const active = step === n
                   return (
-                    <div key={label} className="flex items-center gap-2">
-                      <div className={`flex items-center justify-center w-5 h-5 rounded-full text-[10px] transition-all ${
-                        done ? 'bg-on-primary/30 text-on-primary' :
-                        active ? 'bg-on-primary text-primary' :
-                        'bg-on-primary/15 text-on-primary/50'
+                    <div key={label} className="flex items-center gap-1.5">
+                      <div className={`flex items-center justify-center w-5 h-5 text-[9px] transition-all ${
+                        done
+                          ? 'bg-on-primary/25 text-on-primary'
+                          : active
+                          ? 'bg-on-primary text-primary'
+                          : 'bg-on-primary/10 text-on-primary/40'
                       }`} style={{ fontFamily: 'var(--font-hanken)', fontWeight: 600 }}>
                         {done ? '✓' : n}
                       </div>
-                      <span className={`text-[10px] uppercase tracking-widest hidden sm:block transition-opacity ${
-                        active ? 'opacity-100' : done ? 'opacity-60' : 'opacity-30'
+                      <span className={`text-[9px] uppercase tracking-widest hidden sm:block transition-opacity ${
+                        active ? 'opacity-100' : done ? 'opacity-50' : 'opacity-25'
                       }`} style={{ fontFamily: 'var(--font-hanken)' }}>{label}</span>
                       {i < STEPS.length - 1 && (
-                        <div className={`w-5 sm:w-8 h-px transition-colors ${done ? 'bg-on-primary/40' : 'bg-on-primary/15'}`} />
+                        <div className={`w-4 sm:w-6 h-px transition-colors ${done ? 'bg-on-primary/35' : 'bg-on-primary/12'}`} />
                       )}
                     </div>
                   )
                 })}
               </div>
+
               <h2 className="text-xl font-normal mb-1 leading-snug" style={{ fontFamily: 'var(--font-playfair)' }}>
                 {formation.titre}
               </h2>
-              <p className="text-sm opacity-75" style={{ fontFamily: 'var(--font-hanken)' }}>
+              <p className="text-sm opacity-70" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 300 }}>
                 Acompte {acompte} € · Solde {solde} €
               </p>
             </div>
-
-            {/* Close button (steps 1-3) */}
-            {step < 4 && (
-              <button
-                onClick={closeFlow}
-                aria-label="Fermer"
-                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-on-primary/70 hover:text-on-primary transition-colors"
-                style={{ position: 'absolute', top: '1rem', right: '1rem' }}
-              >
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                  <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-              </button>
-            )}
 
             {/* Step content */}
             <div className="px-7 py-6 flex-1">

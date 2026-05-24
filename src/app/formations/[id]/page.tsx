@@ -35,8 +35,8 @@ export default async function FormationDetailPage({ params }: { params: Promise<
         
         {/* Hero Section of the Formation */}
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mb-16">
-          <Link href="/#formations" className="inline-flex items-center text-on-surface-variant hover:text-primary transition-colors font-label-caps text-xs uppercase tracking-widest mb-8">
-            <span className="material-symbols-outlined text-[18px] mr-2">arrow_back</span>
+          <Link href="/#formations" className="inline-flex items-center gap-2 min-h-[44px] text-on-surface-variant hover:text-primary transition-colors font-label-caps text-[10px] uppercase tracking-widest mb-8">
+            <span className="material-symbols-outlined text-[16px]" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>arrow_back</span>
             Retour aux formations
           </Link>
           
@@ -56,19 +56,30 @@ export default async function FormationDetailPage({ params }: { params: Promise<
             {/* Right Column: Title & Booking */}
             <div className="lg:col-span-7 flex flex-col justify-center">
               <span className="font-label-caps text-primary tracking-widest uppercase mb-4 block">Formation Professionnelle • {formation.duree}</span>
-              <h1 className="font-headline-lg text-4xl md:text-5xl text-on-surface mb-6 leading-tight">{formation.titre}</h1>
+              <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-6 leading-tight">{formation.titre}</h1>
               <p className="font-body-lg text-lg text-on-surface-variant mb-8 leading-relaxed">
                 {formation.description}
               </p>
               
-              <div className="flex gap-6 mb-12">
-                <div className="border-l-2 border-primary pl-4">
-                  <span className="block font-label-caps text-xs text-on-surface-variant uppercase tracking-widest mb-1">Prix total</span>
-                  <span className="font-headline-sm text-2xl text-on-surface">{formation.prix} €</span>
+              <div className="mb-8 pt-6 border-t border-outline-variant/30 space-y-4">
+                <div className="flex gap-8">
+                  <div>
+                    <span className="block font-label-caps text-[10px] text-on-surface-variant uppercase tracking-[0.25em] mb-1">Prix total</span>
+                    <span className="font-playfair text-3xl text-primary">{formation.prix} €</span>
+                  </div>
+                  <div>
+                    <span className="block font-label-caps text-[10px] text-on-surface-variant uppercase tracking-[0.25em] mb-1">Acompte</span>
+                    <span className="font-playfair text-2xl text-on-surface">{Math.round(formation.prix * 0.3)} €</span>
+                  </div>
+                  <div>
+                    <span className="block font-label-caps text-[10px] text-on-surface-variant uppercase tracking-[0.25em] mb-1">Lieu</span>
+                    <span className="font-playfair text-2xl text-on-surface">Amiens</span>
+                  </div>
                 </div>
-                <div className="border-l-2 border-primary pl-4">
-                  <span className="block font-label-caps text-xs text-on-surface-variant uppercase tracking-widest mb-1">Format</span>
-                  <span className="font-headline-sm text-xl text-on-surface">Présentiel</span>
+                {/* Financing note */}
+                <div className="flex items-center gap-2 text-[10px] text-on-surface-variant uppercase tracking-widest" style={{ fontFamily: 'var(--font-hanken)' }}>
+                  <span className="h-px w-4 bg-primary/40 shrink-0" />
+                  Éligible FAFCEA · OPCO · CPF
                 </div>
               </div>
 
@@ -82,9 +93,9 @@ export default async function FormationDetailPage({ params }: { params: Promise<
         <div className="bg-surface py-24 border-t border-surface-container-highest">
           <div className="max-w-[800px] mx-auto px-margin-mobile md:px-margin-desktop">
             
-            <div className="text-center mb-16">
-              <h2 className="font-headline-md text-3xl text-on-surface mb-4">Programme Détaillé</h2>
-              <div className="h-px w-24 bg-primary mx-auto"></div>
+            <div className="mb-16">
+              <p className="font-label-caps text-[11px] text-primary uppercase tracking-[0.3em] mb-4">Programme</p>
+              <h2 className="font-headline-md text-headline-md text-on-surface">Contenu de la formation</h2>
             </div>
 
             <div className="space-y-16 font-body-md text-on-surface-variant leading-relaxed">
@@ -113,7 +124,7 @@ export default async function FormationDetailPage({ params }: { params: Promise<
               {formation.deroule && (
                 <section>
                   <h3 className="font-headline-sm text-xl text-on-surface mb-6">Déroulé de la formation</h3>
-                  <div className="bg-surface-container-lowest p-6 border-l-4 border-primary shadow-sm whitespace-pre-wrap">
+                  <div className="bg-surface-container-lowest p-6 border border-primary/25 whitespace-pre-wrap">
                     {formation.deroule}
                   </div>
                 </section>

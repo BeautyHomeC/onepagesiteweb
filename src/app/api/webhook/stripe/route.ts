@@ -128,9 +128,14 @@ export async function POST(req: Request) {
       } catch (e) { console.error('Récup contrat signé:', e) }
     }
 
-    // Règlement intérieur (static file)
-    const reglementBuffer = readFileSync(join(process.cwd(), 'public', 'documents', 'reglement-interieur.pdf'))
-    const reglementBase64 = reglementBuffer.toString('base64')
+    // Règlement intérieur (static file — may not be present in serverless bundle)
+    let reglementBase64: string | null = null
+    try {
+      const reglementBuffer = readFileSync(join(process.cwd(), 'public', 'documents', 'reglement-interieur.pdf'))
+      reglementBase64 = reglementBuffer.toString('base64')
+    } catch (e) {
+      console.error('Règlement intérieur introuvable (ignoré):', e)
+    }
 
     // Livret d'accueil from parametres_admin
     let livretBase64: string | null = null
@@ -180,15 +185,14 @@ export async function POST(req: Request) {
       || reservation.nom_client) ?? ''
 
     // Client email attachments
-    const clientAttachments: Array<{ filename: string; content: string }> = [
-      { filename: 'Reglement_Interieur.pdf', content: reglementBase64 },
-    ]
+    const clientAttachments: Array<{ filename: string; content: string }> = []
     if (contratBase64) {
-      clientAttachments.unshift({
+      clientAttachments.push({
         filename: `${docLabel}_${formationTitre.replace(/\s+/g, '_')}.pdf`,
         content: contratBase64,
       })
     }
+    if (reglementBase64) clientAttachments.push({ filename: 'Reglement_Interieur.pdf', content: reglementBase64 })
     if (programmeBase64) {
       clientAttachments.push({
         filename: `Programme_${formationTitre.replace(/\s+/g, '_')}.pdf`,
@@ -198,7 +202,7 @@ export async function POST(req: Request) {
     if (livretBase64) clientAttachments.push({ filename: 'Livret_Accueil.pdf', content: livretBase64 })
     if (invoicePdfBase64) clientAttachments.push({ filename: 'Facture_acompte.pdf', content: invoicePdfBase64 })
 
-    await resend.emails.send({
+    const clientEmailResult = await resend.emails.send({
       from: 'Beauty Home Concept <contact@beautyhomeconcept.fr>',
       to: [reservation.email_client!],
       subject: `Votre inscription est confirmée — ${formationTitre}`,
@@ -214,6 +218,7 @@ export async function POST(req: Request) {
       }),
       attachments: clientAttachments,
     })
+    console.log('[stripe-webhook] email client:', JSON.stringify(clientEmailResult))
 
     // Admin email
     const adminAttachments: Array<{ filename: string; content: string }> = [
@@ -226,7 +231,7 @@ export async function POST(req: Request) {
       })
     }
 
-    await resend.emails.send({
+    const adminEmailResult = await resend.emails.send({
       from: 'Beauty Home Concept <contact@beautyhomeconcept.fr>',
       to: ['beautyhomeconcept@gmail.com'],
       subject: `Nouvelle inscription — ${nomComplet} · ${formationTitre}`,
@@ -247,8 +252,9 @@ export async function POST(req: Request) {
       }),
       attachments: adminAttachments,
     })
+    console.log('[stripe-webhook] email admin:', JSON.stringify(adminEmailResult))
   } catch (err) {
-    console.error('Erreur email/PDF:', err)
+    console.error('[stripe-webhook] Erreur email/PDF:', err)
   }
 
   return NextResponse.json({ received: true })
