@@ -93,7 +93,8 @@ export async function POST(req: Request) {
       .upload(storagePath, pdfBuffer, { contentType: 'application/pdf', upsert: false })
 
     if (uploadError) {
-      return NextResponse.json({ error: 'Erreur upload contrat' }, { status: 500 })
+      console.error('Storage upload error:', uploadError.message, uploadError)
+      return NextResponse.json({ error: `Erreur upload contrat: ${uploadError.message}` }, { status: 500 })
     }
 
     const prix = formation?.prix ?? 0

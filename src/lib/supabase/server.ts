@@ -1,4 +1,5 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
 export async function createClient() {
@@ -28,17 +29,20 @@ export async function createClient() {
   )
 }
 
-// Client spécial pour le webhook Stripe (contourne RLS)
+// Client admin — utilise le service role key SANS cookies.
+// createServerClient(@supabase/ssr) peut laisser les cookies de session
+// écraser le service role key pour les opérations Storage/RLS.
+// createClient(@supabase/supabase-js) est stateless et garantit que
+// le service role key est toujours utilisé.
 export async function createAdminClient() {
-  const cookieStore = await cookies()
-  return createServerClient(
+  return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
-      cookies: {
-        getAll() { return cookieStore.getAll() },
-        setAll() {}
-      }
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
     }
   )
 }
