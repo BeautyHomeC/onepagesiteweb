@@ -177,6 +177,18 @@ export default function Header() {
               </p>
             </div>
           </div>
+
+          {/* Admin link — discrete */}
+          <div className="pt-2 border-t border-outline-variant/15">
+            <Link
+              href="/admin"
+              onClick={() => setIsMenuOpen(false)}
+              className="text-[10px] uppercase tracking-[0.2em] text-on-surface-variant/50 hover:text-on-surface-variant transition-colors duration-300"
+              style={{ fontFamily: 'var(--font-hanken)' }}
+            >
+              Admin
+            </Link>
+          </div>
         </div>
       </div>
     </>

@@ -7,15 +7,45 @@ interface Props {
   onBack: () => void
 }
 
+// Injected into the iframe to fix layout + track scroll via postMessage
+const STYLE_OVERRIDES = `<style>
+.toolbar { display: none !important; }
+body { overflow-x: hidden !important; }
+html { overflow-y: scroll; }
+@media (max-width: 900px) {
+  .page {
+    transform-origin: top left !important;
+    margin-left: calc((100% - 437px) / 2) !important;
+  }
+}
+</style>`
+
+const SCROLL_SCRIPT = `<script>
+(function(){
+  function report() {
+    var sT = window.scrollY || document.documentElement.scrollTop;
+    var sH = document.documentElement.scrollHeight;
+    var cH = window.innerHeight;
+    var max = Math.max(1, sH - cH);
+    if (sH <= cH + 10) {
+      window.parent.postMessage({t:'c',p:100,f:true},'*');
+      return;
+    }
+    window.parent.postMessage({t:'c',p:Math.round(sT/max*100),f:false},'*');
+  }
+  window.addEventListener('scroll', report, {passive:true});
+  window.addEventListener('load', report);
+})();
+<\/script>`
+
 export default function Step2Contract({ html, onSign, onBack }: Props) {
-  const iframeRef = useRef<HTMLIFrameElement>(null)
   const [hasScrolled, setHasScrolled] = useState(false)
   const [scrollPct, setScrollPct] = useState(0)
 
-  // Hide the template's own print/download toolbar inside the iframe
-  const htmlWithOverrides = html.replace(
+  // Inject overrides before </head>
+  const processedHtml = html.replace(
     '</head>',
-    '<style>.toolbar { display: none !important; }</style></head>'
+    STYLE_OVERRIDES + SCROLL_SCRIPT + '</head>'
   )
 
   useEffect(() => {
@@ -23,41 +53,17 @@ export default function Step2Contract({ html, onSign, onBack }: Props) {
     setScrollPct(0)
   }, [html])
 
+  // Listen for scroll messages from the iframe
   useEffect(() => {
-    const iframe = iframeRef.current
-    if (!iframe) return
-
-    let scrollListener: (() => void) | null = null
-
-    const onLoad = () => {
-      const win = iframe.contentWindow
-      const doc = iframe.contentDocument
-      if (!win || !doc) return
-
-      // If content fits without scrolling, mark as read immediately
-      const totalH  = doc.documentElement.scrollHeight
-      const visible = win.innerHeight
-      if (totalH <= visible + 20) { setHasScrolled(true); setScrollPct(100); return }
-
-      scrollListener = () => {
-        const scrollTop = win.scrollY
-        const max = doc.documentElement.scrollHeight - win.innerHeight
-        const pct = Math.round((scrollTop / Math.max(1, max)) * 100)
-        setScrollPct(pct)
-        if (scrollTop + win.innerHeight >= doc.documentElement.scrollHeight - 20) {
-          setHasScrolled(true)
-        }
-      }
-
-      win.addEventListener('scroll', scrollListener, { passive: true })
+    function onMessage(e: MessageEvent) {
+      if (!e.data || e.data.t !== 'c') return
+      const pct = e.data.p as number
+      setScrollPct(pct)
+      if (pct >= 98 || e.data.f) setHasScrolled(true)
     }
-
-    iframe.addEventListener('load', onLoad)
-    return () => {
-      iframe.removeEventListener('load', onLoad)
-      if (scrollListener) iframe.contentWindow?.removeEventListener('scroll', scrollListener)
-    }
-  }, [html])
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [])
 
   return (
     <div className="space-y-4">
@@ -76,11 +82,13 @@ export default function Step2Contract({ html, onSign, onBack }: Props) {
         />
       </div>
 
-      {/* Contract iframe — full width, no inner padding */}
-      <div className="relative border border-outline-variant overflow-hidden" style={{ height: '58vh' }}>
+      {/* Contract iframe */}
+      <div
+        className="relative border border-outline-variant overflow-hidden"
+        style={{ height: '60vh' }}
+      >
         <iframe
-          ref={iframeRef}
-          srcDoc={htmlWithOverrides}
+          srcDoc={processedHtml}
           className="w-full h-full border-0"
           title="Votre contrat de formation"
           sandbox="allow-scripts allow-same-origin"

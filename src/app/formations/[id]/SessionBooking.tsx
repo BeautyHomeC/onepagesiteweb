@@ -367,7 +367,7 @@ export default function SessionBooking({ formation, sessions }: { formation: any
           onClick={step < 4 ? closeFlow : undefined}
         >
           <div
-            className={`animate-modal-in bg-surface w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto flex flex-col ${step === 2 ? 'sm:max-w-3xl' : 'sm:max-w-xl'}`}
+            className="animate-modal-in bg-surface w-full sm:max-w-xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto flex flex-col"
             style={{ boxShadow: '0 32px 80px rgba(27,28,28,0.3)' }}
             onClick={e => e.stopPropagation()}
           >
