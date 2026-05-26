@@ -55,22 +55,22 @@ export default function ConfirmationEmail({
           {/* Top accent */}
           <div style={{ height: 2, backgroundColor: C.gold, width: '100%' }} />
 
-          {/* ── Header ─────────────────────────────────────────── */}
-          <Section style={{ backgroundColor: C.white, padding: '48px 48px 36px', textAlign: 'center' }}>
+          {/* ── Header : fond or — résistant au dark mode email ── */}
+          <div style={{ backgroundColor: C.gold, padding: '36px 48px' }}>
             <Text style={{
               fontFamily: T.grotesk, fontSize: 9, letterSpacing: '0.32em',
-              textTransform: 'uppercase', color: C.gold, margin: '0 0 12px',
+              textTransform: 'uppercase', color: '#ffffff', margin: '0 0 10px',
             }}>
-              Beauty Home Concept Academy
+              Beauty Home Concept
             </Text>
             <Text style={{
-              fontFamily: T.playfair, fontSize: 36, fontWeight: 400,
-              color: C.dark, margin: 0, lineHeight: 1.2,
+              fontFamily: T.playfair, fontSize: 32, fontWeight: 400,
+              color: '#ffffff', margin: 0, lineHeight: 1.2,
             }}>
               Inscription Confirmée
             </Text>
-            <div style={{ width: 48, height: 1, backgroundColor: C.border, margin: '20px auto 0' }} />
-          </Section>
+            <div style={{ width: 48, height: 1, backgroundColor: 'rgba(255,255,255,0.3)', margin: '18px 0 0' }} />
+          </div>
 
           {/* ── Salutation ─────────────────────────────────────── */}
           <Section style={{ backgroundColor: C.white, padding: '0 48px 32px' }}>

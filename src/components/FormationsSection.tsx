@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
+import WaitlistModal from "@/components/WaitlistModal";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("fr-FR", {
@@ -60,6 +61,7 @@ export default function FormationsSection() {
   const [formations, setFormations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [nextSessions, setNextSessions] = useState<Record<string, any>>({});
+  const [waitlistSessionId, setWaitlistSessionId] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   const supabase = createClient();
@@ -163,15 +165,26 @@ export default function FormationsSection() {
                 <SessionBadge session={nextSessions[formation.id]} />
                 {(() => {
                   const s = nextSessions[formation.id];
-                  const isFull = !s || s.places_disponibles <= 0;
-                  if (isFull) {
+                  // Session complète → ouvrir le modal liste d'attente
+                  if (s && s.places_disponibles <= 0) {
                     return (
-                      <a
-                        href={`mailto:contact@beautyhomeconcept.fr?subject=Liste d'attente — ${formation.titre}`}
+                      <button
+                        onClick={() => setWaitlistSessionId(s.id)}
                         className="w-full mt-4 inline-flex items-center justify-center min-h-[44px] border border-outline text-on-surface-variant font-label-caps text-label-caps px-4 py-3 uppercase tracking-[0.2em] hover:border-on-surface hover:text-on-surface transition-[color,border-color,transform] duration-300 active:scale-[0.97]"
                       >
-                        Liste d'attente
-                      </a>
+                        Liste d&apos;attente
+                      </button>
+                    );
+                  }
+                  // Aucune session ou places disponibles → lien vers la page formation
+                  if (!s) {
+                    return (
+                      <Link
+                        href={`/formations/${formation.id}`}
+                        className="w-full mt-4 inline-flex items-center justify-center min-h-[44px] border border-outline text-on-surface-variant font-label-caps text-label-caps px-4 py-3 uppercase tracking-[0.2em] hover:border-on-surface hover:text-on-surface transition-[color,border-color,transform] duration-300 active:scale-[0.97]"
+                      >
+                        En savoir plus
+                      </Link>
                     );
                   }
                   return (
@@ -217,7 +230,7 @@ export default function FormationsSection() {
                 <p className="session-places-display">2 places disponibles</p>
               </div>
               <a
-                href="mailto:contact@beautyhomeconcept.fr?subject=Inscription — Masterclass Perfectionnement"
+                href="mailto:beautyhomeconcept@gmail.com?subject=Inscription — Masterclass Perfectionnement"
                 className="w-full mt-4 inline-flex items-center justify-center min-h-[44px] border border-on-surface text-on-surface font-label-caps text-label-caps px-4 py-3 uppercase tracking-[0.2em] hover:bg-primary-container hover:border-primary-container hover:text-on-primary-container transition-[color,background-color,border-color,transform] duration-300 active:scale-[0.97]"
               >
                 Réserver
@@ -257,7 +270,7 @@ export default function FormationsSection() {
                 </div>
               </div>
               <a
-                href="mailto:contact@beautyhomeconcept.fr?subject=Liste d'attente — Art %26 Esthétique"
+                href="mailto:beautyhomeconcept@gmail.com?subject=Liste d'attente — Art %26 Esthétique"
                 className="w-full mt-4 inline-flex items-center justify-center min-h-[44px] border border-outline text-on-surface-variant font-label-caps text-label-caps px-4 py-3 uppercase tracking-[0.2em] hover:border-on-surface hover:text-on-surface transition-[color,border-color,transform] duration-300 active:scale-[0.97]"
               >
                 Liste d'attente
@@ -292,7 +305,7 @@ export default function FormationsSection() {
                 <p className="session-places-display">Contactez-nous pour être informée</p>
               </div>
               <a
-                href="mailto:contact@beautyhomeconcept.fr?subject=Liste d'attente — Création de Salon"
+                href="mailto:beautyhomeconcept@gmail.com?subject=Liste d'attente — Création de Salon"
                 className="w-full mt-4 inline-flex items-center justify-center min-h-[44px] border border-outline text-on-surface-variant font-label-caps text-label-caps px-4 py-3 uppercase tracking-[0.2em] hover:border-on-surface hover:text-on-surface transition-[color,border-color,transform] duration-300 active:scale-[0.97]"
               >
                 Liste d'attente
@@ -302,6 +315,14 @@ export default function FormationsSection() {
         )}
 
       </div>
+
+      {/* Modal liste d'attente */}
+      {waitlistSessionId && (
+        <WaitlistModal
+          sessionId={waitlistSessionId}
+          onClose={() => setWaitlistSessionId(null)}
+        />
+      )}
     </section>
   );
 }
