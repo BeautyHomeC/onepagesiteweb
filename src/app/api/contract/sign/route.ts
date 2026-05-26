@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 import { createAdminClient } from '@/lib/supabase/server'
-import { renderTemplate, buildTemplateVars } from '@/lib/contract/template'
+import { renderTemplate, buildTemplateVarsV2, buildTemplateVars } from '@/lib/contract/template'
 import type { SignatureData } from '@/lib/contract/pdf'
 import { randomUUID } from 'crypto'
 
@@ -40,52 +42,105 @@ export async function POST(req: Request) {
 
     const supabase = await createAdminClient()
 
-    const { data: template } = await supabase
-      .from('contract_templates')
-      .select('contenu, version')
-      .eq('formation_id', formation_id)
-      .eq('type', client_type)
-      .single()
+    // Build signature HTML to inject (base64 image or typed name)
+    const signatureHtml = signature_data.type === 'draw'
+      ? `<img src="${signature_data.valeur}" alt="Signature" style="max-height:60px;max-width:200px;">`
+      : `<span style="font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:#1b1c1c;">${signature_data.valeur}</span>`
 
-    if (!template) {
-      return NextResponse.json({ error: 'Template introuvable' }, { status: 404 })
+    // ── 1. Try formation-specific DB override ────────────────────────────────
+    let renderedHtml: string | null = null
+    let usedVersion: number = template_version
+
+    if (formation_id) {
+      const { data: dbTemplate } = await supabase
+        .from('contract_templates')
+        .select('contenu, version')
+        .eq('formation_id', formation_id)
+        .eq('type', client_type)
+        .maybeSingle()
+
+      if (dbTemplate?.contenu) {
+        if (dbTemplate.version !== template_version) {
+          return NextResponse.json({
+            error: 'Le contrat a été mis à jour. Veuillez recharger la page.',
+          }, { status: 409 })
+        }
+
+        const { data: sessionData } = await supabase
+          .from('sessions')
+          .select('date_debut, date_fin, formations(titre, prix, duree_formation)')
+          .eq('id', session_id)
+          .maybeSingle()
+
+        const formation = (sessionData as any)?.formations
+        const dateDebut = new Date(sessionData?.date_debut ?? Date.now()).toLocaleDateString('fr-FR')
+        const dateFin   = new Date(sessionData?.date_fin   ?? Date.now()).toLocaleDateString('fr-FR')
+
+        const vars = buildTemplateVars({
+          prenom, nom, adresse, email, telephone,
+          siret, instagram,
+          formation_titre: formation?.titre ?? '',
+          date_debut: dateDebut,
+          date_fin:   dateFin,
+          duree_formation: formation?.duree_formation ?? '',
+          prix: formation?.prix ?? 0,
+        })
+
+        renderedHtml = renderTemplate(dbTemplate.contenu, vars)
+        usedVersion  = dbTemplate.version
+      }
     }
-    if (template.version !== template_version) {
-      return NextResponse.json({
-        error: 'Le contrat a été mis à jour. Veuillez recharger la page.',
-      }, { status: 409 })
+
+    // ── 2. Static HTML template (Claude Design) ──────────────────────────────
+    if (!renderedHtml) {
+      const filename = client_type === 'pro' ? 'convention-pro.html' : 'contrat-particulier.html'
+      const tplPath  = join(process.cwd(), 'public', 'templates', filename)
+
+      let rawHtml: string
+      try {
+        rawHtml = readFileSync(tplPath, 'utf-8')
+      } catch {
+        return NextResponse.json({ error: `Template "${filename}" introuvable.` }, { status: 404 })
+      }
+
+      const { data: sessionData } = await supabase
+        .from('sessions')
+        .select('date_debut, date_fin, formations(titre, prix, duree_formation, horaire)')
+        .eq('id', session_id)
+        .maybeSingle()
+
+      const formation = (sessionData as any)?.formations
+
+      const vars = buildTemplateVarsV2({
+        prenom, nom, adresse, email, telephone,
+        siret, instagram,
+        formation_titre:  formation?.titre ?? '',
+        date_debut:       sessionData?.date_debut ?? new Date().toISOString(),
+        date_fin:         sessionData?.date_fin   ?? new Date().toISOString(),
+        duree_formation:  formation?.duree_formation ?? '',
+        horaire:          formation?.horaire ?? '',
+        prix:             formation?.prix ?? 0,
+        signature_stagiaire: signatureHtml,
+        // Organisme signature: could be a pre-set image URL from admin settings
+        signature_organisme: '',
+      })
+
+      renderedHtml = renderTemplate(rawHtml, vars)
+      usedVersion  = 1
+    } else {
+      // Inject signature into legacy template ({{signature.stagiaire}} or nothing)
+      renderedHtml = renderedHtml.replaceAll('{{signature.stagiaire}}', signatureHtml)
     }
 
-    const { data: sessionData } = await supabase
-      .from('sessions')
-      .select('date_debut, date_fin, formations(titre, prix, duree_formation)')
-      .eq('id', session_id)
-      .single()
-
-    const formation = (sessionData as any)?.formations
-    const dateDebut = new Date(sessionData?.date_debut ?? Date.now()).toLocaleDateString('fr-FR')
-    const dateFin   = new Date(sessionData?.date_fin   ?? Date.now()).toLocaleDateString('fr-FR')
-
-    const vars = buildTemplateVars({
-      prenom, nom, adresse, email, telephone,
-      raison_sociale, siret, instagram,
-      formation_titre: formation?.titre ?? '',
-      date_debut: dateDebut,
-      date_fin:   dateFin,
-      duree_formation: formation?.duree_formation ?? '',
-      prix: formation?.prix ?? 0,
-    })
-
-    const contenuRendu = renderTemplate(template.contenu, vars)
-
+    // ── 3. Generate PDF audit copy ───────────────────────────────────────────
     const { generateContractPDF } = await import('@/lib/contract/pdf')
     const pdfBuffer = await generateContractPDF({
-      contenuHtml: contenuRendu,
-      formationTitre: formation?.titre ?? '',
+      contenuHtml: renderedHtml,
+      formationTitre: '',
       signature: signatureWithIp,
     })
 
-    const tempUuid = randomUUID()
+    const tempUuid   = randomUUID()
     const storagePath = `${tempUuid}/contrat-signe.pdf`
 
     const { error: uploadError } = await supabase.storage
@@ -93,31 +148,39 @@ export async function POST(req: Request) {
       .upload(storagePath, pdfBuffer, { contentType: 'application/pdf', upsert: false })
 
     if (uploadError) {
-      console.error('Storage upload error:', uploadError.message, uploadError)
+      console.error('Storage upload error:', uploadError.message)
       return NextResponse.json({ error: `Erreur upload contrat: ${uploadError.message}` }, { status: 500 })
     }
 
-    const prix = formation?.prix ?? 0
+    // ── 4. Create reservation ────────────────────────────────────────────────
+    const { data: sessionMeta } = await supabase
+      .from('sessions')
+      .select('formations(prix)')
+      .eq('id', session_id)
+      .maybeSingle()
+
+    const prix = (sessionMeta as any)?.formations?.prix ?? 0
+
     const { data: reservation, error: insertError } = await supabase
       .from('reservations')
       .insert({
         session_id,
         prenom,
         nom,
-        email_client: email,
-        nom_client: `${prenom} ${nom}`,
-        telephone_client: telephone,
+        email_client:        email,
+        nom_client:          `${prenom} ${nom}`,
+        telephone_client:    telephone,
         telephone,
         adresse,
         client_type,
-        raison_sociale: raison_sociale ?? null,
-        siret: siret ?? null,
-        instagram: instagram ?? null,
-        contrat_signe_url: storagePath,
-        contrat_version: template.version,
-        signature_data: signatureWithIp,
-        statut: 'en_attente_paiement',
-        rgpd_consent_at: new Date().toISOString(),
+        raison_sociale:      raison_sociale ?? null,
+        siret:               siret          ?? null,
+        instagram:           instagram      ?? null,
+        contrat_signe_url:   storagePath,
+        contrat_version:     usedVersion,
+        signature_data:      signatureWithIp,
+        statut:              'en_attente_paiement',
+        rgpd_consent_at:     new Date().toISOString(),
       })
       .select('id')
       .single()
@@ -129,8 +192,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       reservation_id: reservation.id,
-      temp_uuid: tempUuid,
-      contrat_url: storagePath,
+      temp_uuid:      tempUuid,
+      contrat_url:    storagePath,
     })
   } catch (err: any) {
     console.error('contract/sign error:', err)

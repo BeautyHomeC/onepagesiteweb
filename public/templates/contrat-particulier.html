@@ -1,0 +1,1084 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contrat de formation · EI Camille Grignon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ────────────────────────────────────────────────
+     Beauty Home Concept · Programme template
+     A4 paginated document — screen + print
+  ──────────────────────────────────────────────── */
+  :root{
+    --paper:        #faf9f9;
+    --paper-warm:   #f4f0e9;
+    --paper-soft:   #f7f3ec;
+    --ink:          #1b1c1c;
+    --ink-soft:     #2f2e2c;
+    --muted:        #7f7669;
+    --rule:         #d1c5b6;
+    --rule-soft:    #e7dfd1;
+    --gold:         #755a2d;
+    --gold-soft:    #b59562;
+    --gold-light:   #e5c18a;
+    --gold-cream:   #f3e5c4;
+    --on-gold:      #ffffff;
+    --shadow:       0 24px 80px -24px rgba(60, 45, 20, 0.18), 0 4px 14px -6px rgba(60,45,20,.08);
+
+    --serif:        "Playfair Display", "Times New Roman", serif;
+    --sans:         "Hanken Grotesk", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+    --page-w: 210mm;
+    --page-h: 297mm;
+    --pad-x: 20mm;
+    --pad-y: 22mm;
+  }
+
+  *{ box-sizing: border-box; margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact;}
+  html,body{ background: #e8e3d8; color: var(--ink); font-family: var(--sans); font-weight: 300; }
+  body{ padding: 28px 0 80px; }
+
+  /* ── Floating download/print bar (screen only) ── */
+  .toolbar{
+    position: fixed; top: 18px; right: 18px; z-index: 50;
+    display: flex; gap: 8px; align-items: center;
+    background: rgba(27,28,28,0.92);
+    color: #fff; padding: 8px 8px 8px 18px;
+    border-radius: 999px;
+    font-family: var(--sans); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.25);
+  }
+  .toolbar .dot{ width:7px; height:7px; border-radius:50%; background:var(--gold-light); margin-right: 2px;}
+  .toolbar button{
+    appearance: none; border: 0; background: var(--gold); color: #fff;
+    padding: 9px 16px; border-radius: 999px; cursor: pointer;
+    font: inherit; letter-spacing: 0.16em;
+    transition: background .18s ease;
+  }
+  .toolbar button:hover{ background: #8b6c39; }
+  .toolbar small{ opacity: .7; font-size: 10px; letter-spacing: .18em; }
+
+  /* ── Page chrome (screen) ── */
+  .page{
+    position: relative;
+    width: var(--page-w);
+    height: var(--page-h);
+    margin: 0 auto 24px;
+    background: var(--paper);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    color: var(--ink);
+    page-break-after: always;
+    break-after: page;
+  }
+  .page:last-of-type{ page-break-after: auto; }
+
+  /* Inner padding box used on most pages */
+  .frame{
+    position: absolute;
+    inset: var(--pad-y) var(--pad-x);
+    display: flex; flex-direction: column;
+  }
+
+  /* Running header & footer */
+  .runner{
+    position: absolute; left: var(--pad-x); right: var(--pad-x);
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--sans); font-size: 9.5px; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--muted);
+    font-weight: 400;
+  }
+  .runner.top   { top: 12mm; }
+  .runner.bot   { bottom: 12mm; }
+  .runner .mono{ font-family: var(--serif); font-style: italic; letter-spacing: 0; text-transform: none; color: var(--gold); font-size: 11px; }
+  .runner .num{ font-family: var(--serif); font-style: italic; letter-spacing: 0; text-transform: none; color: var(--ink); font-size: 13px; }
+  .runner .num::before{ content: "— "; color: var(--gold); }
+  .runner .num::after { content: " —"; color: var(--gold); }
+
+  /* ── Type system ──────────────────────────── */
+  .eyebrow{
+    font-family: var(--sans); font-weight: 400;
+    font-size: 9.5px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .eyebrow.muted{ color: var(--muted); }
+  h1,h2,h3,h4{ font-family: var(--serif); font-weight: 400; color: var(--ink); line-height: 1.1; }
+  h1.cover-title{ font-size: 56px; line-height: 1.02; letter-spacing: -0.01em; }
+  h2.chapter{ font-size: 36px; line-height: 1.08; letter-spacing: -0.005em; margin-top: 6px;}
+  h3.section{ font-size: 20px; line-height: 1.25; }
+  h4.subsection{ font-size: 14.5px; line-height: 1.3; font-family: var(--sans); font-weight: 500; letter-spacing: 0.01em;}
+
+  p{ font-size: 11.5px; line-height: 1.65; color: var(--ink-soft); font-weight: 300; }
+  p + p{ margin-top: 8px; }
+  .lead{ font-size: 13px; line-height: 1.6; color: var(--ink); font-weight: 300; }
+
+  .rule{ height: 1px; background: var(--rule); width: 100%; }
+  .rule.short{ width: 28px; height: 1px; background: var(--gold); }
+
+  /* small caps mono label */
+  .meta-label{
+    font-family: var(--sans); font-size: 8.5px;
+    letter-spacing: 0.32em; text-transform: uppercase; color: var(--muted); font-weight: 400;
+  }
+  .meta-value{
+    font-family: var(--serif); font-size: 15px; color: var(--ink); margin-top: 4px;
+  }
+
+  /* ────────────────────────────────────────────────
+     PAGE 1 · COVER
+  ──────────────────────────────────────────────── */
+  .cover{ background: var(--paper); }
+  .cover .frame{ inset: 0; padding: 0; }
+  .cover-grid{
+    display: grid; grid-template-columns: 1fr 0.62fr; height: 100%;
+  }
+  .cover-left{
+    padding: 22mm 14mm 22mm 22mm;
+    display: flex; flex-direction: column; justify-content: space-between;
+    position: relative;
+  }
+  .cover-left::before{
+    content: ""; position: absolute; top: 22mm; bottom: 22mm; left: 14mm;
+    width: 1px; background: var(--rule); opacity: 0;
+  }
+
+  .brandmark{
+    display: flex; align-items: center; gap: 10px;
+  }
+  .brandmark .bm-mark{
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--gold); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-style: italic; font-size: 16px; line-height: 1;
+  }
+  .brandmark .bm-text{
+    font-family: var(--sans); font-size: 10px; letter-spacing: 0.32em;
+    text-transform: uppercase; color: var(--ink); font-weight: 500;
+  }
+  .brandmark .bm-text small{ display: block; font-size: 8px; letter-spacing: 0.28em; color: var(--muted); font-weight: 400; margin-top: 2px;}
+
+  .cover-title-block .eyebrow{ display: inline-flex; align-items:center; gap: 12px; }
+  .cover-title-block .eyebrow::before{ content: ""; width: 24px; height: 1px; background: var(--gold); display: inline-block;}
+
+  .cover-meta{
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+    border-top: 1px solid var(--rule);
+    padding-top: 16px;
+  }
+  .cover-meta > div{ display: flex; flex-direction: column; }
+
+  .qualiopi-mark{
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 12px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: var(--paper);
+  }
+  .qualiopi-mark .seal{
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-style: italic; font-size: 14px;
+  }
+  .qualiopi-mark .qt{
+    font-family: var(--sans); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); font-weight: 500;
+  }
+  .qualiopi-mark .qt small{ display:block; font-size: 8px; letter-spacing: 0.18em; color: var(--muted); font-weight: 400; margin-top: 2px; text-transform: none; letter-spacing: 0.02em; font-style: italic; font-family: var(--serif);}
+
+  /* Right side : image placeholder + accent */
+  .cover-right{
+    position: relative;
+    background: linear-gradient(180deg, #e8d9b8 0%, #d8c195 40%, #b59562 100%);
+    overflow: hidden;
+  }
+  .cover-right::after{
+    content: "";
+    position: absolute; inset: 0;
+    background-image:
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.06) 0 2px, transparent 2px 9px);
+    mix-blend-mode: overlay;
+  }
+  .cover-right .placeholder-label{
+    position: absolute; bottom: 16mm; left: 14mm; right: 14mm;
+    color: rgba(255,255,255,.85);
+    font-family: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .cover-right .placeholder-label::before{
+    content: "";
+    width: 18px; height: 1px; background: rgba(255,255,255,.7); margin-bottom: 4px;
+  }
+  .cover-right .vstamp{
+    position: absolute; top: 22mm; right: 14mm;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--sans); font-size: 9px; letter-spacing: 0.32em;
+    text-transform: uppercase; color: rgba(255,255,255,.85); font-weight: 500;
+  }
+
+  /* ────────────────────────────────────────────────
+     SHARED SECTIONS
+  ──────────────────────────────────────────────── */
+  .chapter-header{
+    display: grid; grid-template-columns: auto 1fr; gap: 28px; align-items: baseline;
+    padding-bottom: 14px; border-bottom: 1px solid var(--rule);
+    margin-bottom: 22px;
+  }
+  .chapter-header .ch-no{
+    font-family: var(--serif); font-style: italic; font-size: 56px; color: var(--gold-light); line-height: 1;
+    align-self: end;
+  }
+  .chapter-header h2.chapter{
+    font-size: 30px; line-height: 1.1; letter-spacing: -0.005em; white-space: nowrap;
+  }
+  /* Ampersand : sober sans-serif */
+  .amp{
+    font-family: var(--sans); font-style: normal; font-weight: 300;
+    color: inherit; font-size: 0.78em;
+    margin: 0 0.06em;
+    letter-spacing: 0;
+    transform: translateY(-0.03em); display: inline-block;
+    vertical-align: baseline;
+  }
+  /* Card sober/warm (replaces .card.ink for tarif) */
+  .card.tarif{
+    background: linear-gradient(135deg, #e8e3d8 0%, #d6cfbf 100%);
+    border: 1px solid rgba(127,118,105,0.22);
+    color: var(--ink);
+    position: relative; overflow: hidden;
+  }
+  .card.tarif::after{
+    content: ""; position: absolute; right: -50px; bottom: -50px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(117,90,45,.10), transparent 60%);
+    pointer-events: none;
+  }
+  .card.tarif h2{ color: var(--gold) !important; }
+  .card.tarif .amount-meta{ color: var(--muted) !important; }
+  .card.tarif .b-li{ color: var(--ink-soft) !important; }
+  .chapter-header .ch-body{ display:flex; flex-direction: column; gap: 8px; }
+
+  /* Two column body */
+  .two-col{ display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .three-col{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+
+  /* Callout / cream card */
+  .card{
+    background: var(--paper-warm);
+    border: 1px solid var(--rule-soft);
+    border-radius: 3px;
+    padding: 14px 16px;
+  }
+  .card.gold{
+    background: var(--gold-cream);
+    border-color: rgba(117,90,45,0.18);
+  }
+  .card.ink{
+    background: var(--ink); color: var(--paper);
+    border-color: transparent;
+  }
+  .card.ink h3, .card.ink h4{ color: var(--paper); }
+  .card.ink p{ color: rgba(250,249,249,0.78); }
+
+  /* Section block with eyebrow */
+  .block{ display: flex; flex-direction: column; gap: 10px; margin-top: 18px;}
+  .block:first-child{ margin-top: 0; }
+  .block-head{ display: flex; align-items: baseline; gap: 14px; }
+  .block-head h3{ font-family: var(--serif); font-size: 22px; line-height: 1.1; }
+  .block-head .index{
+    font-family: var(--serif); font-style: italic; font-size: 13px; color: var(--gold);
+  }
+
+  /* Numbered objective list */
+  ol.objectifs{
+    list-style: none;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px 28px;
+    counter-reset: obj;
+  }
+  ol.objectifs li{
+    counter-increment: obj;
+    position: relative;
+    padding: 10px 8px 10px 32px;
+    border-top: 1px solid var(--rule-soft);
+    font-size: 11px; line-height: 1.55; color: var(--ink-soft);
+  }
+  ol.objectifs li::before{
+    content: counter(obj, decimal-leading-zero);
+    position: absolute; left: 0; top: 11px;
+    font-family: var(--serif); font-style: italic;
+    color: var(--gold); font-size: 12px;
+  }
+
+  /* Sommaire */
+  ul.toc{ list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  ul.toc li{
+    display: grid; grid-template-columns: 28px 1fr auto; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--rule-soft);
+    align-items: baseline;
+  }
+  ul.toc li:last-child{ border-bottom: 0; }
+  ul.toc .toc-num{ font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 13px; }
+  ul.toc .toc-title{ font-family: var(--serif); font-size: 15px; color: var(--ink); }
+  ul.toc .toc-title small{ display: block; font-family: var(--sans); font-size: 10px; color: var(--muted); font-weight: 300; margin-top: 2px; letter-spacing: 0.02em; }
+  ul.toc .toc-page{ font-family: var(--sans); font-size: 10px; letter-spacing: 0.18em; color: var(--muted); font-weight: 400;}
+
+  /* Stat blocks */
+  .stats{ display: grid; grid-template-columns: repeat(3,1fr); gap: 14px;}
+  .stat .v{ font-family: var(--serif); font-size: 30px; color: var(--gold); line-height: 1; }
+  .stat .v small{ font-size: 14px; }
+  .stat .l{ font-family: var(--sans); font-size: 8.5px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); margin-top: 6px; font-weight: 400; }
+
+  /* Cover meta — 2x2 aéré */
+  .cover-meta-grid{
+    display: grid; grid-template-columns: 1fr 1fr;
+    column-gap: 36px; row-gap: 22px;
+    padding-top: 22px;
+    border-top: 1px solid var(--rule);
+  }
+  .cover-meta-grid > div{ display: flex; flex-direction: column; gap: 4px;}
+  .cover-meta-grid .meta-label{ font-size: 9px; letter-spacing: 0.32em; }
+  .cover-meta-grid .meta-value{ font-family: var(--serif); font-size: 19px; color: var(--ink); line-height: 1.15; font-weight: 400; margin-top: 2px;}
+
+  /* Refined info-list (page Modalités) */
+  .info-list{
+    margin-top: 12px;
+    border-top: 1px solid var(--rule);
+  }
+  .info-list > .row{
+    display: grid; grid-template-columns: 0.85fr 1.15fr;
+    align-items: baseline; gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .info-list .il-label{
+    font-family: var(--sans); font-size: 9px; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--muted); font-weight: 400;
+  }
+  .info-list .il-value{
+    font-family: var(--sans); font-size: 13px; color: var(--ink); font-weight: 400;
+    letter-spacing: 0;
+  }
+  .info-list .il-value em{
+    display: block;
+    font-family: var(--serif); font-style: italic;
+    font-size: 11.5px; color: var(--gold); margin-top: 2px;
+  }
+
+  /* Refined address block (sans-serif, lisible) */
+  .address-block .a-street{
+    font-family: var(--sans); font-weight: 500; font-size: 17px;
+    color: var(--ink); line-height: 1.3; letter-spacing: -0.005em;
+  }
+  .address-block .a-line{
+    font-family: var(--sans); font-weight: 400; font-size: 13px;
+    color: var(--muted); margin-top: 4px; letter-spacing: 0.01em;
+  }
+  .address-block .a-code{
+    margin-top: 10px;
+    font-family: var(--sans); font-size: 10.5px; color: var(--ink-soft);
+  }
+  .address-block .a-code strong{
+    font-weight: 500; letter-spacing: 0.18em; color: var(--gold);
+  }
+
+  /* ────────────────────────────────────────────────
+     TIMELINE (déroulement)
+  ──────────────────────────────────────────────── */
+  .timeline{
+    display: flex; flex-direction: column;
+    border-left: 1px solid var(--rule);
+    margin-left: 96px;
+    position: relative;
+  }
+  .tl-row{
+    display: grid; grid-template-columns: 96px 1fr;
+    margin-left: -96px;
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    position: relative;
+  }
+  .tl-row:last-child{ border-bottom: 0;}
+  .tl-time{
+    font-family: var(--serif); font-style: italic; font-size: 19px;
+    color: var(--ink); line-height: 1;
+    padding-right: 16px; padding-top: 2px;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .tl-time small{ display:block; font-family: var(--sans); font-size: 8.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-style: normal; margin-top: 5px; font-weight: 400; white-space: nowrap;}
+  .tl-body{ padding-left: 22px; position: relative; }
+  .tl-body::before{
+    content: ""; position: absolute; left: -3.5px; top: 8px;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 0 3px var(--paper);
+  }
+  .tl-body .tag{
+    display: inline-block; font-size: 8.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 4px; font-weight: 500;
+  }
+  .tl-body h4{ font-family: var(--serif); font-size: 15px; line-height: 1.2; margin-bottom: 3px;}
+  .tl-body p{ font-size: 10.5px; line-height: 1.5; }
+  .tl-body .method{
+    font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 11px; margin: 4px 0 4px;
+  }
+  .tl-pause{
+    background: var(--paper-soft);
+  }
+  .tl-pause .tl-body::before{ background: var(--gold-light); }
+
+  /* ────────────────────────────────────────────────
+     CONTACT page
+  ──────────────────────────────────────────────── */
+  .contact-grid{
+    display: grid; grid-template-columns: 1fr 0.85fr; gap: 24px;
+  }
+  .contact-card{
+    background: linear-gradient(135deg, #e8e3d8 0%, #d6cfbf 100%);
+    color: var(--ink);
+    padding: 26px;
+    border: 1px solid rgba(127,118,105,0.22);
+    border-radius: 3px;
+    display: flex; flex-direction: column; gap: 14px;
+    position: relative; overflow: hidden;
+  }
+  .contact-card::after{
+    content: ""; position: absolute; right: -50px; bottom: -50px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(117,90,45,.10), transparent 60%);
+    pointer-events: none;
+  }
+  .contact-card .label{ font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gold); font-weight: 500;}
+  .contact-card .name{ font-family: var(--serif); font-size: 28px; line-height: 1.1; color: var(--ink); }
+  .contact-card .role{ font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 14px; margin-top: -4px; }
+  .contact-list{ display: flex; flex-direction: column; gap: 10px; margin-top: 4px;}
+  .contact-list li{ list-style: none; display: grid; grid-template-columns: 90px 1fr; gap: 12px; font-size: 11px; align-items: baseline;}
+  .contact-list .k{ font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  .contact-list .v{ color: var(--ink); font-weight: 300;}
+  .contact-list a{ color: var(--ink); text-decoration: none; border-bottom: 1px solid rgba(117,90,45,.4);}
+
+  .resources{
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .res-item{
+    display: grid; grid-template-columns: 1fr auto; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid var(--rule-soft);
+  }
+  .res-item:last-child{ border-bottom: 0;}
+  .res-item .rt{ font-family: var(--serif); font-size: 14px; }
+  .res-item .rt small{ display: block; font-family: var(--sans); font-size: 9.5px; color: var(--muted); margin-top: 2px; font-weight: 400;}
+  .res-item .rp{ font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 14px; align-self: center;}
+
+  /* Legal footer band */
+  .legal{
+    margin-top: auto;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+    font-size: 9px; line-height: 1.55; color: var(--muted); letter-spacing: 0.02em;
+  }
+  .legal strong{ font-weight: 500; color: var(--ink); }
+
+  /* Small list utility */
+  ul.bullets{ list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  ul.bullets li{ position: relative; padding-left: 16px; font-size: 11px; line-height: 1.55; color: var(--ink-soft); }
+  ul.bullets li::before{
+    content: ""; position: absolute; left: 0; top: 8px;
+    width: 6px; height: 1px; background: var(--gold);
+  }
+
+  /* Pull quote */
+  .quote{
+    border-left: 2px solid var(--gold);
+    padding: 4px 0 4px 14px;
+    font-family: var(--serif); font-style: italic; font-size: 16px; line-height: 1.35; color: var(--ink);
+  }
+  .quote::after{
+    content: "— Camille Grignon"; display: block;
+    font-family: var(--sans); font-style: normal; font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); margin-top: 8px;
+  }
+
+  /* Method-tag pill */
+  .pill{
+    display: inline-block; font-family: var(--sans); font-size: 8.5px; letter-spacing: 0.22em;
+    text-transform: uppercase; padding: 4px 10px; border-radius: 999px;
+    background: var(--paper-warm); color: var(--gold); border: 1px solid var(--rule-soft); font-weight: 500;
+  }
+
+
+
+  /* Convention / contrat de formation */
+  .var{
+    display: inline-block;
+    background: var(--gold-cream);
+    color: var(--gold);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.92em; font-weight: 500;
+    padding: 1px 7px; border-radius: 3px;
+    border: 1px dashed rgba(117,90,45,0.45);
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+  }
+  .parties-grid{
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    flex: 1;
+  }
+  .party{
+    background: var(--paper-warm);
+    border: 1px solid var(--rule-soft);
+    border-radius: 3px;
+    padding: 20px 22px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .party-label{
+    font-family: var(--sans); font-size: 9px; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--muted); font-weight: 500;
+  }
+  .party-name{
+    font-family: var(--serif); font-size: 22px; line-height: 1.15; color: var(--ink);
+  }
+  .party-list{
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 8px;
+    padding-top: 8px; border-top: 1px solid var(--rule-soft);
+  }
+  .party-list li{
+    display: grid; grid-template-columns: 90px 1fr; gap: 12px;
+    font-size: 10.5px; align-items: baseline; line-height: 1.4;
+  }
+  .party-list .k{
+    font-size: 8.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted);
+  }
+  .party-list .v{ color: var(--ink); font-weight: 300; }
+  .party-note{
+    font-family: var(--serif); font-style: italic; color: var(--muted); font-size: 11px;
+    margin-top: auto; padding-top: 8px; border-top: 1px solid var(--rule-soft);
+  }
+
+  /* Règlement intérieur — articles */
+  .article{
+    display: grid; grid-template-columns: 96px 1fr; gap: 22px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    align-items: baseline;
+  }
+  .article:first-of-type{ padding-top: 4px; }
+  .article:last-of-type{ border-bottom: 0; }
+  .article .a-no{
+    font-family: var(--sans); font-size: 8.5px; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--muted); font-weight: 400;
+    align-self: start;
+  }
+  .article .a-no strong{
+    display: block; font-family: var(--serif); font-style: italic;
+    font-size: 30px; color: var(--gold); margin-bottom: 6px;
+    letter-spacing: 0; text-transform: none; font-weight: 400;
+  }
+  .article .a-body h3{
+    font-family: var(--serif); font-size: 17px; line-height: 1.2;
+    color: var(--ink); margin-bottom: 8px;
+  }
+  .article .a-body p{ font-size: 11px; line-height: 1.55; }
+  .article .a-body p + p{ margin-top: 6px; }
+  .article .a-body ol,
+  .article .a-body ul{ margin-top: 6px; padding-left: 16px; }
+  .article .a-body li{ font-size: 11px; line-height: 1.55; color: var(--ink-soft); margin-top: 4px; }
+  .article .a-body li::marker{ color: var(--gold); }
+  .article .a-body em.note{
+    display: block; margin-top: 8px;
+    font-family: var(--serif); font-style: italic; font-size: 11px; color: var(--muted);
+  }
+
+  /* Signature block (last page) */
+  .signature{
+    margin-top: 32px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 28px;
+  }
+  .signature .sig-block{
+    border-top: 1px solid var(--ink);
+    padding-top: 14px;
+  }
+  .signature .sig-label{
+    font-family: var(--sans); font-size: 9px; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .signature .sig-name{
+    margin-top: 6px;
+    font-family: var(--serif); font-size: 16px; color: var(--ink);
+  }
+  .signature .sig-meta{
+    margin-top: 4px;
+    font-family: var(--sans); font-size: 10.5px; color: var(--muted);
+  }
+  .signature .sig-line{
+    margin-top: 36px;
+    border-top: 1px dashed var(--rule);
+    padding-top: 8px;
+    font-family: var(--sans); font-size: 9px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  /* ────────────────────────────────────────────────
+     PRINT
+  ──────────────────────────────────────────────── */
+  @media print{
+    @page{ size: A4; margin: 0; }
+    html,body{ background: #fff; }
+    body{ padding: 0; }
+    .toolbar{ display: none !important; }
+    .page{
+      margin: 0; box-shadow: none; border-radius: 0;
+      width: 210mm; height: 297mm; overflow: hidden;
+    }
+  }
+
+  /* ── Tiny screen scaling so it never gets hidden behind the toolbar ── */
+  @media (max-width: 900px){
+    body{ padding-top: 70px; }
+    .toolbar{ top: 10px; right: 10px; left: 10px; justify-content: space-between; }
+    .page{ transform: scale(0.55); transform-origin: top center; height: calc(297mm * 0.55); margin-bottom: -120mm;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- Floating toolbar (screen only) -->
+  <div class="toolbar" aria-hidden="true">
+    <span class="dot"></span>
+    <small>Contrat · 5 pages</small>
+    <button type="button" onclick="window.print()">Télécharger en PDF</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════
+       PAGE 1 · COVER + parties
+  ════════════════════════════════════════════ -->
+
+  <article class="page cover" data-screen-label="01 Couverture">
+    <div class="cover-grid">
+      <div class="cover-left">
+        <div class="brandmark">
+          <div class="bm-mark">b</div>
+          <div class="bm-text">EI Camille Grignon<small>Beauty Home Concept · Amiens</small></div>
+        </div>
+
+        <div class="cover-title-block">
+          <div class="eyebrow">Contrat de formation professionnelle</div>
+          <h1 class="cover-title" style="margin-top: 16px;">Contrat<br>de formation.</h1>
+          <div style="height: 22px;"></div>
+          <p class="lead" style="max-width: 88%;">
+            Contrat de formation professionnelle conclu en application
+            des articles <strong style="font-weight: 500;">L.6353-3 à L.6353-7
+            du Code du travail</strong>, entre l'organisme de formation
+            <em style="font-style: italic;">EI Camille Grignon — Beauty Home Concept</em>
+            et le ou la stagiaire désigné(e).
+          </p>
+          <div style="margin-top: 18px;" class="rule short"></div>
+          <p style="margin-top: 12px; font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 13px;">
+            « Un cadre clair, des engagements précis,
+            une formation de qualité. »
+          </p>
+        </div>
+
+        <div>
+          <div class="cover-meta-grid">
+            <div>
+              <span class="meta-label">Formation</span>
+              <span class="meta-value"><span class="var">{{formation.intitule}}</span></span>
+            </div>
+            <div>
+              <span class="meta-label">Durée</span>
+              <span class="meta-value"><span class="var">{{formation.duree}}</span></span>
+            </div>
+            <div>
+              <span class="meta-label">Date</span>
+              <span class="meta-value"><span class="var">{{formation.dates}}</span></span>
+            </div>
+            <div>
+              <span class="meta-label">Tarif</span>
+              <span class="meta-value"><span class="var">{{tarif.total}}</span>&nbsp;€ TTC</span>
+            </div>
+          </div>
+          <div style="margin-top: 28px;">
+            <div class="qualiopi-mark">
+              <div class="seal">Q</div>
+              <div class="qt">Certifiée Qualiopi<small>FAFCEA · OPCO · CPF</small></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cover-right">
+        <div class="vstamp">EI Camille Grignon · Amiens</div>
+        <div class="placeholder-label">
+          <span>Document contractuel</span>
+          <span style="opacity:.7">Contrat de formation · <span class="var">{{contrat.date_signature}}</span></span>
+        </div>
+      </div>
+    </div>
+  </article>
+  <article class="page" data-screen-label="02 Parties">
+    <div class="runner top">
+      <span>EI Camille Grignon</span>
+      <span class="mono">Contrat de formation</span>
+      <span class="num">02</span>
+    </div>
+    <div class="frame">
+      <div class="chapter-header">
+        <div class="ch-no">I</div>
+        <div class="ch-body">
+          <span class="eyebrow">Identification des parties</span>
+          <h2 class="chapter">Les parties signataires.</h2>
+        </div>
+      </div>
+      
+      <div class="parties-grid">
+        <!-- Organisme -->
+        <div class="party">
+          <div class="party-label">— Entre <span style="color: var(--gold);">l'organisme de formation</span></div>
+          <div class="party-name">EI Camille Grignon — Beauty Home Concept</div>
+          <ul class="party-list">
+            <li><span class="k">Représenté par</span><span class="v">Camille Grignon</span></li>
+            <li><span class="k">Adresse</span><span class="v">22A rue du Général Leclerc, App. 13 · 1<sup>er</sup> étage, 80&nbsp;000 Amiens</span></li>
+            <li><span class="k">SIRET</span><span class="v">910 934 140 000 47</span></li>
+            <li><span class="k">N° formateur</span><span class="v">32 80 02643 80</span></li>
+            <li><span class="k">Email</span><span class="v">beautyhomeconcept@gmail.com</span></li>
+          </ul>
+          <p class="party-note">Ci-après dénommé «&nbsp;l'organisme&nbsp;».</p>
+        </div>
+        <!-- Stagiaire -->
+        <div class="party">
+          <div class="party-label">— Et <span style="color: var(--gold);">le ou la stagiaire</span></div>
+          <div class="party-name"><span class="var">{{stagiaire.nom_prenom}}</span></div>
+          <ul class="party-list">
+            <li><span class="k">Adresse</span><span class="v"><span class="var">{{stagiaire.adresse}}</span></span></li>
+            <li><span class="k">Téléphone</span><span class="v"><span class="var">{{stagiaire.telephone}}</span></span></li>
+            <li><span class="k">Email</span><span class="v"><span class="var">{{stagiaire.email}}</span></span></li>
+            
+            <li><span class="k">Instagram</span><span class="v"><span class="var">{{stagiaire.instagram}}</span></span></li>
+          </ul>
+          <p class="party-note">Ci-après dénommé(e) «&nbsp;le ou la stagiaire&nbsp;».</p>
+        </div>
+      </div>
+    </div>
+    <div class="runner bot"><span>Contrat de formation</span></div>
+  </article>
+  <article class="page" data-screen-label="03 Articles 1–5">
+    <div class="runner top">
+      <span>EI Camille Grignon</span>
+      <span class="mono">Contrat de formation</span>
+      <span class="num">03</span>
+    </div>
+    <div class="frame">
+      <div class="chapter-header">
+        <div class="ch-no">II</div>
+        <div class="ch-body">
+          <span class="eyebrow">Objet, caractéristiques <span class="amp">&amp;</span> dispositions</span>
+          <h2 class="chapter">Articles 1 à 5.</h2>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>01</strong>Objet</div>
+        <div class="a-body">
+          <h3>Objet du contrat</h3>
+          <p>
+          En exécution du présent contrat, l'organisme de formation
+          <strong style="font-weight:500;">EI Camille Grignon — Beauty Home Concept</strong>,
+          représenté par la formatrice Camille Grignon, s'engage à organiser la formation dénommée
+          <strong style="font-weight:500;"><span class="var">{{formation.intitule}}</span></strong>,
+          destinée à transmettre les techniques professionnelles de prothésie ongulaire visées
+          au programme annexé.
+        </p>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>02</strong>Nature</div>
+        <div class="a-body">
+          <h3>Nature et caractéristiques de la formation</h3>
+          <p>
+          Le programme pédagogique est adapté en fonction du niveau initial et des besoins
+          du ou des stagiaires, constatés lors du tour de table.
+        </p>
+        <p>
+          À l'issue de la formation, une <strong style="font-weight:500;">attestation
+          de fin de formation</strong> sera délivrée au stagiaire sous condition d'avoir
+          suivi pleinement la formation.
+        </p>
+        <p>Nombre de stagiaires : <strong style="font-weight:500;">1 ou 2 par session</strong>.</p>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>03</strong>Niveau</div>
+        <div class="a-body">
+          <h3>Niveau de connaissances requis</h3>
+          <p>
+          Le stagiaire déclare disposer des prérequis indiqués au programme de formation
+          annexé. Toutes les notions de base (hygiène, protocole, théorie, produits, matériel)
+          sont revues lors de la formation. La vérification des prérequis est réalisée sur
+          déclaration du stagiaire (attestation sur l'honneur).
+        </p>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>04</strong>Lieu</div>
+        <div class="a-body">
+          <h3>Date, horaires et lieu de la formation</h3>
+          <ul class="bullets">
+          <li><strong style="font-weight:500;">Durée :</strong> <span class="var">{{formation.duree}}</span></li>
+          <li><strong style="font-weight:500;">Date :</strong> <span class="var">{{formation.dates}}</span></li>
+          <li><strong style="font-weight:500;">Horaires :</strong> <span class="var">{{formation.horaires}}</span></li>
+          <li><strong style="font-weight:500;">Adresse :</strong> 22A rue du Général Leclerc, App. 13, 1<sup>er</sup> étage, 80&nbsp;000 Amiens</li>
+        </ul>
+        <em class="note">
+          Locaux partiellement accessibles aux personnes à mobilité réduite (ascenseur).
+          Un entretien préalable avec la référente handicap, Mme&nbsp;Camille Grignon,
+          permet d'identifier les besoins spécifiques. En cas d'impossibilité d'accueil,
+          une réorientation sera proposée.
+        </em>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>05</strong>Dispositions</div>
+        <div class="a-body">
+          <h3>Dispositions particulières</h3>
+          <p>
+          Le stagiaire est invité à se présenter avec des ongles en bon état :
+          ne pas déposer au préalable, prévoir une repousse en gel ou semi-permanent
+          d'au moins 2 semaines. Aucune autre matière que le gel ou le semi-permanent
+          ne sera déposée sur place.
+        </p>
+        <p>
+          Aucun matériel personnel n'est requis : l'ensemble des équipements et produits
+          nécessaires est mis à disposition. Une pause déjeuner de <strong style="font-weight:500;">30&nbsp;minutes</strong>
+          est prévue dans la journée.
+        </p>
+        </div>
+      </div>
+    </div>
+    <div class="runner bot"><span>Contrat de formation</span></div>
+  </article>
+  <article class="page" data-screen-label="04 Articles 6–9">
+    <div class="runner top">
+      <span>EI Camille Grignon</span>
+      <span class="mono">Contrat de formation</span>
+      <span class="num">04</span>
+    </div>
+    <div class="frame">
+      <div class="chapter-header">
+        <div class="ch-no">III</div>
+        <div class="ch-body">
+          <span class="eyebrow">Rétractation, paiement <span class="amp">&amp;</span> inscription</span>
+          <h2 class="chapter">Articles 6 à 9.</h2>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>06</strong>Rétractation</div>
+        <div class="a-body">
+          <h3>Délai de rétractation</h3>
+          <p>
+          Conformément à l'article <strong style="font-weight:500;">L.6353-6 du Code du travail</strong>,
+          le stagiaire bénéficie d'un délai de rétractation de <strong style="font-weight:500;">10&nbsp;jours</strong>
+          à compter de la signature du présent contrat.
+        </p>
+        <p>
+          Dans le cas d'une inscription en dernière minute (jusqu'à 24&nbsp;h avant la date),
+          lorsque le délai légal ne peut matériellement être respecté, le stagiaire reconnaît
+          en être informé et renonce expressément à l'exercice de ce délai afin de pouvoir
+          participer à la session.
+        </p>
+        <p>
+          Toute rétractation doit être notifiée à l'organisme par lettre recommandée
+          avec accusé de réception. Lorsqu'elle intervient dans le respect du délai légal,
+          aucune somme ne peut être réclamée au stagiaire.
+        </p>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>07</strong>Paiement</div>
+        <div class="a-body">
+          <h3>Modalités de paiement</h3>
+          <p>
+          Le prix de la formation est fixé à <strong style="font-weight:500;"><span class="var">{{tarif.total}}</span>&nbsp;€ TTC</strong>.
+        </p>
+        <ul class="bullets">
+          <li><strong style="font-weight:500;">Acompte (30 %)</strong> : <span class="var">{{tarif.acompte}}</span>&nbsp;€ à régler dans les 5&nbsp;jours suivant l'envoi du programme et du règlement intérieur. Si le paiement n'est pas effectué dans ce délai, la date n'est plus garantie.</li>
+          <li><strong style="font-weight:500;">Solde (70 %)</strong> : <span class="var">{{tarif.solde}}</span>&nbsp;€ à l'issue de l'action de formation, par virement instantané ou en espèces.</li>
+        </ul>
+        <em class="note">Le stagiaire s'engage à verser la totalité du prix susmentionné.</em>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>08</strong>Inscription</div>
+        <div class="a-body">
+          <h3>Modalités d'inscription</h3>
+          <p>
+          La réservation s'effectue par mail à beautyhomeconcept@gmail.com ou par message
+          Instagram, et devient effective uniquement après&nbsp;:
+        </p>
+        <ul>
+          <li>signature et paraphe du présent contrat par le stagiaire,</li>
+          <li>versement de l'acompte de 30 %.</li>
+        </ul>
+        <em class="note">
+          En cas de refus d'un financement par un organisme, la formation reste due
+          et n'autorise pas l'annulation. Un report peut être envisagé au cas par cas
+          selon les disponibilités de la formatrice. Le programme détaillé est annexé
+          au présent contrat.
+        </em>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>09</strong>Interruption</div>
+        <div class="a-body">
+          <h3>Interruption du stage</h3>
+          <p>
+          En cas de cessation anticipée du fait de l'abandon du stage par le stagiaire,
+          pour un autre motif que la force majeure dûment reconnue, et après le délai
+          de rétractation prévu à l'article&nbsp;6, la <strong style="font-weight:500;">totalité du prix</strong>
+          de la formation est due.
+        </p>
+        <p>
+          Si le stagiaire est empêché de suivre la formation pour cause de force majeure
+          dûment reconnue, le contrat est résilié et seules
+          les prestations effectivement dispensées sont dues au prorata temporis.
+        </p>
+        <em class="note">
+          La force majeure devra être justifiée (certificat médical ou d'hospitalisation)
+          par lettre recommandée. Les enfants malades, problèmes de voiture, problèmes personnels
+          ou familiaux, maux divers, intempéries ou autres raisons non mentionnées ne sont pas
+          considérés comme cas de force majeure.
+        </em>
+        </div>
+      </div>
+    </div>
+    <div class="runner bot"><span>Contrat de formation</span></div>
+  </article>
+  <article class="page" data-screen-label="05 Articles 10–12 · Signature">
+    <div class="runner top">
+      <span>EI Camille Grignon</span>
+      <span class="mono">Contrat de formation</span>
+      <span class="num">05</span>
+    </div>
+    <div class="frame">
+      <div class="chapter-header">
+        <div class="ch-no">IV</div>
+        <div class="ch-body">
+          <span class="eyebrow">Responsabilités, litiges <span class="amp">&amp;</span> engagements</span>
+          <h2 class="chapter">Articles 10 à 12 · Signatures.</h2>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>10</strong>Responsabilité</div>
+        <div class="a-body">
+          <h3>Responsabilité <span class="amp">&amp;</span> assurances</h3>
+          <p>
+          L'organisme ne peut être tenu responsable des dommages ou pertes d'effets personnels
+          durant la formation. Chaque partie s'engage à souscrire une assurance responsabilité
+          civile couvrant sa propre activité.
+        </p>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>11</strong>Litiges</div>
+        <div class="a-body">
+          <h3>Litiges</h3>
+          <p>
+          En cas de litige, les parties s'efforceront de trouver une solution amiable.
+          À défaut, seul le <strong style="font-weight:500;">tribunal judiciaire d'Amiens</strong>
+          sera compétent. Le présent contrat est soumis au droit français.
+        </p>
+        </div>
+      </div>
+
+      
+      <div class="article">
+        <div class="a-no">Article<strong>12</strong>Engagements</div>
+        <div class="a-body">
+          <h3>Engagements réciproques</h3>
+          <p>
+          <strong style="font-weight:500;">L'organisme</strong> s'engage à délivrer une formation
+          conforme au programme communiqué, à fournir les moyens pédagogiques nécessaires,
+          à assurer la sécurité des participants, à accompagner le stagiaire dans l'acquisition
+          des compétences visées, et à délivrer une attestation de réalisation en fin de session
+          sous réserve de validation des acquis.
+        </p>
+        <p>
+          <strong style="font-weight:500;">Le stagiaire</strong> s'engage à suivre la formation
+          dans son intégralité, à respecter les horaires, les consignes d'hygiène et de sécurité,
+          ainsi que le règlement intérieur annexé.
+        </p>
+        </div>
+      </div>
+
+      <!-- Engagement final + signature -->
+      <div class="card gold" style="margin-top: 18px;">
+        <p style="font-size: 11px; color: var(--ink-soft); font-style: italic; font-family: var(--serif);">
+          En signant ce document, je certifie sur l'honneur posséder les prérequis nécessaires,
+          avoir pris connaissance des objectifs et du contenu de la formation décrits dans le
+          programme annexé, et avoir bénéficié des informations utiles pour vérifier que cette
+          formation correspond à mon niveau et à mes objectifs. Je reconnais avoir pris connaissance
+          du règlement intérieur remis en annexe et en accepte les termes sans réserve.
+        </p>
+      </div>
+
+      <div class="signature" style="margin-top: 22px;">
+        <div class="sig-block">
+          <div class="sig-label">— L'organisme de formation</div>
+          <div class="sig-name">Camille Grignon</div>
+          <div class="sig-meta">EI Camille Grignon · Beauty Home Concept</div>
+          <div class="sig-line"><span class="var">{{signature.organisme}}</span></div>
+        </div>
+        <div class="sig-block">
+          <div class="sig-label">— Le ou la stagiaire</div>
+          <div class="sig-name"><span class="var">{{stagiaire.nom_prenom}}</span></div>
+          <div class="sig-meta">Lu et approuvé · paraphe chaque page avec ses initiales.</div>
+          <div class="sig-line"><span class="var">{{signature.stagiaire}}</span></div>
+        </div>
+      </div>
+
+      <p style="margin-top: 18px; font-family: var(--serif); font-style: italic; color: var(--gold); font-size: 11px;">
+        Contrat fait en double exemplaire à <span class="var">{{contrat.lieu}}</span>, le <span class="var">{{contrat.date_signature}}</span>.
+      </p>
+
+      <div class="legal" style="margin-top: auto; padding-top: 14px;">
+        <div>
+          <strong>EI Camille Grignon</strong> — Beauty Home Concept · SIRET 91093414000047<br>
+          Déclaration d'activité n°&nbsp;32 80 02643 80 enregistrée auprès de la DREETS des Hauts-de-France.
+        </div>
+        <div style="text-align: right;">
+          TVA non applicable, art.&nbsp;293 B du CGI.<br>
+          <em style="font-family: var(--serif); font-style: italic; color: var(--gold);">Document susceptible d'évolutions.</em>
+        </div>
+      </div>
+    </div>
+    <div class="runner bot"><span>Contrat de formation</span></div>
+  </article>
+
+</body>
+</html>

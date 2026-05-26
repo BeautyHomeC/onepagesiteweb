@@ -55,16 +55,22 @@ export default async function ContratFormationPage({ params }: Props) {
       </div>
 
       {/* Info block */}
-      <div className="bg-surface-container-lowest border border-surface-container-highest p-4 text-sm text-on-surface-variant space-y-1">
+      <div className="bg-surface-container-lowest border border-surface-container-highest p-4 text-sm text-on-surface-variant space-y-2">
         <p>
-          <strong className="text-on-surface">Conventions :</strong>{' '}
-          Utilisez <code className="text-xs bg-surface-container px-1">{'{{variable}}'}</code> pour les données dynamiques.
-          La clause RGPD (<code className="text-xs bg-surface-container px-1">{'{{clause_rgpd}}'}</code>) est toujours injectée automatiquement à la fin.
+          <strong className="text-on-surface">Modèles par défaut :</strong>{' '}
+          Les contrats utilisent maintenant les beaux documents A4 générés par Claude Design
+          (<code className="text-xs bg-surface-container px-1">public/templates/convention-pro.html</code> et{' '}
+          <code className="text-xs bg-surface-container px-1">contrat-particulier.html</code>).
+          Variables : <code className="text-xs bg-surface-container px-1">{'{{formation.intitule}}'}</code>,{' '}
+          <code className="text-xs bg-surface-container px-1">{'{{stagiaire.nom_prenom}}'}</code>, etc.
         </p>
         <p>
-          <strong className="text-on-surface">Clients pro :</strong>{' '}
-          Lorsque <code className="text-xs bg-surface-container px-1">client_type = pro</code>, le document est intitulé
-          &laquo; Convention de formation &raquo; (sinon &laquo; Contrat de formation &raquo;).
+          <strong className="text-on-surface">Surcharge par formation :</strong>{' '}
+          Si vous saisissez un contenu ci-dessous, il remplace le modèle par défaut uniquement pour{' '}
+          <em>{formation.titre}</em>. Utilisez alors les variables plates :{' '}
+          <code className="text-xs bg-surface-container px-1">{'{{nom_prenom}}'}</code>,{' '}
+          <code className="text-xs bg-surface-container px-1">{'{{formation}}'}</code>,{' '}
+          <code className="text-xs bg-surface-container px-1">{'{{clause_rgpd}}'}</code>, etc.
         </p>
       </div>
 
