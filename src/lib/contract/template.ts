@@ -9,7 +9,7 @@
 //  dot-notation keys (aligned with public/templates/*.html from Claude Design).
 // ─────────────────────────────────────────────────────────────────────────────
 
-export const RGPD_CLAUSE = `Conformément au Règlement (UE) 2016/679 (RGPD), les données collectées sont utilisées exclusivement pour la gestion de votre formation. Durée de conservation : 5 ans. Droit d'accès, rectification et effacement : contact@beautyhomeconcept.fr — sous réserve des obligations légales de conservation.`
+export const RGPD_CLAUSE = `Conformément au Règlement (UE) 2016/679 (RGPD), les données collectées sont utilisées exclusivement pour la gestion de votre formation. Durée de conservation : 5 ans. Droit d'accès, rectification et effacement : beautyhomeconcept@gmail.com — sous réserve des obligations légales de conservation.`
 
 // ── Legacy flat-key interface (DB templates via Tiptap editor) ──────────────
 export interface TemplateVars {
@@ -57,6 +57,8 @@ export interface TemplateVarsV2 {
   // Signatures (HTML/base64 image — injected after signing)
   'signature.organisme': string
   'signature.stagiaire': string
+  // Audit certificate page (injected by sign route after SHA-256 computation)
+  'audit.bloc'?: string
 }
 
 /** Replace all {{key}} placeholders — supports both flat and dot-notation keys */
