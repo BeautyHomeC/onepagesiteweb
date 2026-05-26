@@ -128,63 +128,13 @@ export async function POST(req: Request) {
       } catch (e) { console.error('Récup contrat signé:', e) }
     }
 
-    // Règlement intérieur — généré depuis le template HTML et mis en cache dans Supabase Storage
+    // Règlement intérieur — lu directement depuis public/documents/reglement-interieurv2.pdf
     let reglementBase64: string | null = null
     try {
-      // v2 = cache key bumped to force regeneration after toolbar-stripping fix
-      const REGLEMENT_STORAGE_PATH = 'reglement/reglement-interieur-v2.pdf'
-
-      // 1. Essayer le cache Supabase Storage
-      const { data: cachedBlob, error: cacheErr } = await supabase.storage
-        .from('contracts')
-        .download(REGLEMENT_STORAGE_PATH)
-
-      if (!cacheErr && cachedBlob) {
-        reglementBase64 = Buffer.from(await cachedBlob.arrayBuffer()).toString('base64')
-      } else {
-        // 2. Générer depuis le template HTML avec Puppeteer
-        const { existsSync } = await import('fs')
-        const { generatePDFFromHtml } = await import('@/lib/contract/pdf')
-
-        const templatesDir = join(process.cwd(), 'public', 'templates')
-        const htmlPath = join(templatesDir, 'reglement-interieur.html')
-
-        if (existsSync(htmlPath)) {
-          let rawHtml = readFileSync(htmlPath, 'utf-8')
-
-          // Remplacer les assets relatifs par des data URIs base64
-          const MIME: Record<string, string> = {
-            png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
-            gif: 'image/gif', svg: 'image/svg+xml', webp: 'image/webp',
-          }
-          rawHtml = rawHtml.replace(/src="(assets\/[^"]+)"/g, (_match, assetPath: string) => {
-            const filePath = join(templatesDir, assetPath)
-            if (!existsSync(filePath)) return _match
-            try {
-              const data = readFileSync(filePath)
-              const ext  = (assetPath.split('.').pop() ?? '').toLowerCase()
-              const mime = MIME[ext] ?? 'application/octet-stream'
-              return `src="data:${mime};base64,${data.toString('base64')}"`
-            } catch { return _match }
-          })
-
-          // Masquer la barre d'outils (bouton "Imprimer") qui ne doit pas apparaître dans le PDF
-          rawHtml = rawHtml.replace(
-            '</head>',
-            '<style>.toolbar,.no-print,[class*="toolbar"]{display:none!important;visibility:hidden!important;}</style></head>'
-          )
-
-          const pdfBuffer = await generatePDFFromHtml(rawHtml)
-          reglementBase64 = pdfBuffer.toString('base64')
-
-          // 3. Mettre en cache dans Supabase Storage pour les prochains appels
-          await supabase.storage
-            .from('contracts')
-            .upload(REGLEMENT_STORAGE_PATH, pdfBuffer, {
-              contentType: 'application/pdf',
-              upsert: true,
-            })
-        }
+      const { existsSync } = await import('fs')
+      const pdfPath = join(process.cwd(), 'public', 'documents', 'reglement-interieurv2.pdf')
+      if (existsSync(pdfPath)) {
+        reglementBase64 = readFileSync(pdfPath).toString('base64')
       }
     } catch (e) {
       console.error('Règlement intérieur (ignoré):', e)
