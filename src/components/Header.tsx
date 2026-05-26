@@ -87,26 +87,14 @@ export default function Header() {
           isMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        {/* Header row: MENU label + close */}
-        <div className="shrink-0 flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-3 border-b border-outline-variant/20 mt-[60px]">
+        {/* Header row: MENU label */}
+        <div className="shrink-0 flex items-center w-full px-margin-mobile md:px-margin-desktop py-3 border-b border-outline-variant/20 mt-[60px]">
           <span
             className="font-label-caps text-[10px] tracking-[0.2em] text-on-surface-variant uppercase"
             style={{ fontFamily: 'var(--font-hanken)' }}
           >
             MENU
           </span>
-          <button
-            onClick={toggle}
-            aria-label="Fermer le menu"
-            className="p-2 -mr-2 text-on-surface hover:text-primary transition-colors duration-300"
-          >
-            <span
-              className="material-symbols-outlined text-[22px]"
-              style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
-            >
-              close
-            </span>
-          </button>
         </div>
 
         {/* Nav links — fill remaining space, no scroll */}

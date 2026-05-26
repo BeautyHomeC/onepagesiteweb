@@ -55,7 +55,7 @@ export default function AboutSection() {
                 className="w-full sm:w-[100px] aspect-[1/1.4] bg-surface-container-low border border-outline-variant/30 relative overflow-hidden shadow-sm shrink-0 group hover:border-primary/40 transition-colors"
               >
                 <img
-                  src="/documents/certificat-qualiopi.png"
+                  src="/documents/certificat-qualiopi.jpg"
                   alt="Certificat Qualiopi Beauty Home Concept"
                   className="absolute inset-0 w-full h-full object-contain p-1"
                   onError={(e) => {

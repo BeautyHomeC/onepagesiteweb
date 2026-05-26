@@ -29,11 +29,15 @@ export default function HeroSection() {
         <div className="md:col-span-6 md:col-start-7 order-1 md:order-2 h-[500px] md:h-[750px] w-full relative overflow-hidden animate-hero-in anim-delay-80 group">
           <div className="absolute inset-0 bg-surface-container-lowest p-2 md:p-4 transition-transform duration-700 ease-out">
             <div className="w-full h-full relative overflow-hidden bg-surface-container-low">
-              <img
-                alt="Camille, prothésiste ongulaire et formatrice"
-                className="w-full h-full object-cover object-[center_15%] scale-[1.03] group-hover:scale-100 transition-transform duration-1000 ease-out"
-                src="/camille-portrait.webp"
-              />
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover object-center scale-[1.03] group-hover:scale-100 transition-transform duration-1000 ease-out"
+              >
+                <source src="/hero-video.mp4" type="video/mp4" />
+              </video>
               <div className="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>
             </div>
           </div>
