@@ -20,11 +20,11 @@ export default function AboutSection() {
     <section id="about" ref={sectionRef} className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-section-gap">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
         <div className="md:col-span-4 md:col-start-2">
-          <div className="aspect-[3/4] overflow-hidden p-4 bg-surface-container-lowest reveal">
+          <div className="aspect-[3/4] overflow-hidden p-4 bg-surface-container-lowest">
             <img 
               alt="Portrait de Camille, prothésiste ongulaire" 
               className="w-full h-full object-cover" 
-              src="https://lh3.googleusercontent.com/aida/ADBb0ugxECCJY7H2l1WFyi4dtnwWdSWY2jLuhCiwlM7dSYkWc8Kp6C2aQxs2ZnaIdWh2YcYeEuVN2jAfLA9SNl8tc9QILOhz8Oh4WDGIbe-l5KrF5YxR_9U7AfwLC9l9sBc5qb0P0xwJdahYdm84nPJfN2CYNEycv2581szCM1dKem_Lxp2anFaBiDRx0Lp9CpTSNsLkIl-x_TP2ZModfkaIltN-6fevytkUeW6HiA9pKY6mTOuHzt9Uks7aOSdSya_uMsAVFJtBOwEc-oU"
+              src="/camille-portrait.webp"
             />
           </div>
         </div>
@@ -43,12 +43,42 @@ export default function AboutSection() {
             </p>
           </div>
 
-          {/* Encart Qualiopi */}
-          <div className="mt-8 p-4 border border-primary/25 bg-surface-container-lowest flex items-center gap-4 reveal reveal-delay-2">
-            <span className="material-symbols-outlined text-[28px] text-primary flex-shrink-0" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>award_star</span>
-            <div>
-              <p className="font-label-caps text-[10px] text-primary uppercase tracking-[0.25em]">Certifiée Qualiopi</p>
-              <p className="font-body-md text-[11px] text-on-surface-variant mt-1 leading-snug">Financement FAFCEA, OPCO, CPF</p>
+          {/* Certificat Qualiopi Document */}
+          <div className="mt-10 reveal reveal-delay-2">
+            <p className="font-label-caps text-[10px] text-primary uppercase tracking-[0.25em] mb-4">Certification Qualité</p>
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+              <a
+                href="/documents/certificat-qualiopi.pdf"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Voir le certificat Qualiopi"
+                className="w-full sm:w-[100px] aspect-[1/1.4] bg-surface-container-low border border-outline-variant/30 relative overflow-hidden shadow-sm shrink-0 group hover:border-primary/40 transition-colors"
+              >
+                <img
+                  src="/documents/certificat-qualiopi.png"
+                  alt="Certificat Qualiopi Beauty Home Concept"
+                  className="absolute inset-0 w-full h-full object-contain p-1"
+                  onError={(e) => {
+                    const target = e.currentTarget as HTMLImageElement
+                    target.style.display = 'none'
+                    const fallback = target.nextElementSibling as HTMLElement
+                    if (fallback) fallback.style.display = 'flex'
+                  }}
+                />
+                <div className="absolute inset-0 bg-primary/5 flex-col items-center justify-center p-2 text-center border-[4px] border-surface hidden">
+                  <span className="material-symbols-outlined text-[24px] text-primary/40 mb-1" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>workspace_premium</span>
+                  <span className="font-playfair text-[8px] text-primary/60">Certificat<br/>Qualiopi</span>
+                </div>
+                <div className="absolute bottom-1 inset-x-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="material-symbols-outlined text-[14px] text-primary" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>open_in_new</span>
+                </div>
+              </a>
+              <div className="flex-1 space-y-3">
+                <p className="font-body-md text-sm text-on-surface-variant leading-relaxed">
+                  L'académie répond aux exigences de qualité du référentiel national. Ce certificat officiel vous garantit une formation de haut niveau et ouvre droit aux financements publics.
+                </p>
+                <p className="font-body-md text-[11px] text-on-surface-variant/70 italic">Financements possibles via OPCO & FAFCEA.</p>
+              </div>
             </div>
           </div>
 

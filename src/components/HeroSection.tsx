@@ -26,12 +26,17 @@ export default function HeroSection() {
             </Link>
           </div>
         </div>
-        <div className="md:col-span-6 md:col-start-7 order-1 md:order-2 h-[530px] md:h-[707px] w-full overflow-hidden p-4 bg-surface-container-lowest animate-hero-in anim-delay-80">
-          <img
-            alt="Expert nail work"
-            className="w-full h-full object-cover object-center scale-[1.03] animate-[heroImageIn_1200ms_cubic-bezier(0.23,1,0.32,1)_both]"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnpPIu5PNiqQWNpyQFNQ4UiBYNhdVVsS96X8TljpqPG1__mH3lqHa37VdsoikxKybUZJKrp9rMdCOQvfFdjlJryLfXuCBWDLGs9pW3X4y8jMN0JbIbxCU7_9G7IYsuH_WZRs1NbIsxm_KIZknW53004GUNQRTYGISGqcIsKnElpLMrf8jH1wAfj80EWaKHZBw_sIjiR7RpVo7pXYG1ae7MnW0FpIzyLPGp-wROwyzE_yAaU-DdGwPHgqiPkQPVp1VOe827dwhVQOyr"
-          />
+        <div className="md:col-span-6 md:col-start-7 order-1 md:order-2 h-[500px] md:h-[750px] w-full relative overflow-hidden animate-hero-in anim-delay-80 group">
+          <div className="absolute inset-0 bg-surface-container-lowest p-2 md:p-4 transition-transform duration-700 ease-out">
+            <div className="w-full h-full relative overflow-hidden bg-surface-container-low">
+              <img
+                alt="Camille, prothésiste ongulaire et formatrice"
+                className="w-full h-full object-cover object-[center_15%] scale-[1.03] group-hover:scale-100 transition-transform duration-1000 ease-out"
+                src="/camille-portrait.webp"
+              />
+              <div className="absolute inset-0 bg-primary/5 mix-blend-overlay"></div>
+            </div>
+          </div>
         </div>
       </div>
       {/* Scroll cue */}

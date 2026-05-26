@@ -362,65 +362,122 @@ export default function SessionBooking({ formation, sessions }: { formation: any
       {/* ── 4-step booking modal ───────────────────────────────── */}
       {selectedSessionId && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-backdrop-in"
-          style={{ background: 'rgba(27,28,28,0.55)', backdropFilter: 'blur(2px)' }}
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-gutter overflow-y-auto animate-backdrop-in"
+          style={{ background: 'transparent' }}
           onClick={step < 4 ? closeFlow : undefined}
         >
+          {/* Background Layer (Soft Focus) */}
           <div
-            className="animate-modal-in bg-surface w-full sm:max-w-xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto flex flex-col"
-            style={{ boxShadow: '0 32px 80px rgba(27,28,28,0.3)' }}
+            className="fixed inset-0 z-0 opacity-40 blur-sm shrink-0"
+            style={{
+              backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDG0n3OY2M98BKcmIcK5L-8p0cr0rZYNTGw0W4TFTQh23I5Tx6aRtlI5mNE_1cz94Pyf72qKLqcQLCNTp4lik5IdynC-TRR6M9mNSVnI1mOH8phYOSCTybEBvGAk_kk7ZLI4qyZPzRqXIkE4_SRc2LqM6J3VdS_raUiabEqsu9Owdy1CLJcSQlSkGUgWC5Yr3O6-wCmXkfg6pj0toXiXUy9sxKppvlf0x1-BeuHBVoDWngrkSjrGziNODdE76om622BGhsC_rdYsmA4")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          ></div>
+          <div className="fixed inset-0 bg-surface/60 backdrop-blur-xl z-0"></div>
+
+          {/* Top Navigation */}
+          <nav className="fixed top-0 w-full z-[110] bg-surface/80 backdrop-blur-md border-b border-outline-variant/10">
+            <div className="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-6 max-w-container-max mx-auto">
+              <div className="flex items-center gap-4">
+                <span className="material-symbols-outlined text-primary text-2xl">spa</span>
+                <span className="font-label-caps text-label-caps tracking-[0.2em] text-on-surface">BEAUTY HOME CONCEPT</span>
+              </div>
+              <div className="hidden md:flex gap-8 items-center">
+                <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="/#formations">FORMATIONS</a>
+                <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="/methode-camille">À PROPOS</a>
+                <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="/#testimonials">AVIS</a>
+                <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="/#contact">CONTACT</a>
+              </div>
+            </div>
+          </nav>
+
+          {/* Modal Card Container */}
+          <section
+            className="w-full max-w-[800px] bg-surface-container-lowest shadow-[0_20px_50px_rgba(181,149,98,0.08)] overflow-hidden relative z-10 animate-modal-in my-24 border border-outline-variant/10 flex flex-col shrink-0"
             onClick={e => e.stopPropagation()}
           >
-            {/* Modal header */}
-            <div className="relative bg-primary text-on-primary px-7 py-6 shrink-0">
-              {step < 4 && (
-                <button
-                  onClick={closeFlow}
-                  aria-label="Fermer"
-                  className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center text-on-primary/50 hover:text-on-primary transition-colors"
-                >
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                    <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                </button>
-              )}
+            {/* Close Button */}
+            {step < 4 && (
+              <button
+                onClick={closeFlow}
+                className="absolute top-8 right-8 text-outline hover:text-primary transition-all duration-300 z-50 flex items-center justify-center w-8 h-8 rounded-full hover:bg-surface-container-low"
+              >
+                <span className="material-symbols-outlined !text-[20px] font-light" style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>close</span>
+              </button>
+            )}
 
-              {/* Step progress */}
-              <div className="flex items-center gap-1.5 mb-5 pr-8">
+            {/* Progress Header */}
+            <div className="px-6 md:px-10 py-8 md:py-12 border-b border-surface-container shrink-0">
+              <div className="flex justify-between items-center max-w-md mx-auto relative">
+                {/* Progress Line */}
+                <div className="absolute top-1/2 left-0 w-full h-[1px] bg-outline-variant -translate-y-1/2 z-0"></div>
+                <div
+                  className="absolute top-1/2 left-0 h-[1px] bg-primary -translate-y-1/2 z-0 transition-all duration-700"
+                  style={{ width: `${((step - 1) / (STEPS.length - 1)) * 100}%` }}
+                ></div>
+
                 {STEPS.map((label, i) => {
                   const n = i + 1
-                  const done   = step > n
+                  const done = step > n
                   const active = step === n
-                  return (
-                    <div key={label} className="flex items-center gap-1.5">
-                      <div className={`flex items-center justify-center w-5 h-5 text-[9px] transition-all ${
-                        done   ? 'bg-on-primary/25 text-on-primary'
-                        : active ? 'bg-on-primary text-primary'
-                        : 'bg-on-primary/10 text-on-primary/40'
-                      }`} style={{ fontFamily: 'var(--font-hanken)', fontWeight: 600 }}>
-                        {done ? '✓' : n}
+
+                  if (done) {
+                    return (
+                      <div key={label} className="relative z-10 flex flex-col items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs">
+                          <span className="material-symbols-outlined text-sm font-semibold" style={{ fontVariationSettings: "'wght' 600" }}>check</span>
+                        </div>
+                        <span className="font-label-caps text-[9px] md:text-[10px] text-on-surface-variant font-medium tracking-widest">{label}</span>
                       </div>
-                      <span className={`text-[9px] uppercase tracking-widest hidden sm:block transition-opacity ${
-                        active ? 'opacity-100' : done ? 'opacity-50' : 'opacity-25'
-                      }`} style={{ fontFamily: 'var(--font-hanken)' }}>{label}</span>
-                      {i < STEPS.length - 1 && (
-                        <div className={`w-4 sm:w-6 h-px transition-colors ${done ? 'bg-on-primary/35' : 'bg-on-primary/12'}`} />
-                      )}
-                    </div>
-                  )
+                    )
+                  } else if (active) {
+                    return (
+                      <div key={label} className="relative z-10 flex flex-col items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-surface-container-lowest border-2 border-primary text-primary flex items-center justify-center text-xs font-bold ring-8 ring-surface-container-lowest">
+                          {n}
+                        </div>
+                        <span className="font-label-caps text-[9px] md:text-[10px] text-primary font-bold tracking-widest">{label}</span>
+                      </div>
+                    )
+                  } else {
+                    return (
+                      <div key={label} className="relative z-10 flex flex-col items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-surface-container-low border border-outline-variant text-outline flex items-center justify-center text-xs ring-8 ring-surface-container-lowest">
+                          {n}
+                        </div>
+                        <span className="font-label-caps text-[9px] md:text-[10px] text-on-surface-variant/50 tracking-widest">{label}</span>
+                      </div>
+                    )
+                  }
                 })}
               </div>
-
-              <h2 className="text-xl font-normal mb-1 leading-snug" style={{ fontFamily: 'var(--font-playfair)' }}>
-                {formation.titre}
-              </h2>
-              <p className="text-sm opacity-70" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 300 }}>
-                Acompte {acompte} € · Solde {solde} €
-              </p>
             </div>
 
-            {/* Step content */}
-            <div className="px-7 py-6 flex-1">
+            {/* Modal Content - px-12 py-16 on desktop */}
+            <div className="flex-1 overflow-y-auto px-6 md:px-12 py-10 md:py-16" style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#d1c5b6 transparent'
+            }}>
+              {/* Step Context Headers */}
+              {step === 2 && !loading && (
+                <header className="text-center mb-10 max-w-lg mx-auto">
+                  <h1 className="font-headline-md text-headline-md text-on-surface mb-2" style={{ fontFamily: 'var(--font-playfair)' }}>Votre Contrat</h1>
+                  <p className="font-body-md text-on-surface-variant text-sm font-light" style={{ fontFamily: 'var(--font-hanken)' }}>
+                    Prenez le temps de lire votre convention de formation.
+                  </p>
+                </header>
+              )}
+              {step === 4 && (
+                <header className="text-center mb-10 max-w-lg mx-auto">
+                  <h1 className="font-headline-md text-headline-md text-on-surface mb-2" style={{ fontFamily: 'var(--font-playfair)' }}>Paiement Sécurisé</h1>
+                  <p className="font-body-md text-on-surface-variant text-sm font-light" style={{ fontFamily: 'var(--font-hanken)' }}>
+                    Finalisez votre inscription en réglant l'acompte de {acompte} €. Le solde de {solde} € sera à régler plus tard.
+                  </p>
+                </header>
+              )}
+
               {loading && step === 1 && (
                 <div className="flex flex-col items-center justify-center py-12 gap-4">
                   <div className="w-6 h-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
@@ -431,7 +488,7 @@ export default function SessionBooking({ formation, sessions }: { formation: any
               )}
 
               {!loading && step === 1 && (
-                <Step1Form initial={formData} onNext={onStep1Next} />
+                <Step1Form initial={formData} onNext={onStep1Next} onCancel={closeFlow} />
               )}
               {step === 2 && (
                 <Step2Contract html={contractHtml} onSign={() => setStep(3)} onBack={() => setStep(1)} />
@@ -455,7 +512,7 @@ export default function SessionBooking({ formation, sessions }: { formation: any
                 </div>
               )}
             </div>
-          </div>
+          </section>
         </div>
       )}
     </>

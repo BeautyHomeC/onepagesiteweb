@@ -12,9 +12,9 @@ export default function MethodeCamillePage() {
         <div className="relative w-full h-[40vh] min-h-[300px] max-h-[500px] bg-surface-container-low overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://lh3.googleusercontent.com/aida/ADBb0ugxECCJY7H2l1WFyi4dtnwWdSWY2jLuhCiwlM7dSYkWc8Kp6C2aQxs2ZnaIdWh2YcYeEuVN2jAfLA9SNl8tc9QILOhz8Oh4WDGIbe-l5KrF5YxR_9U7AfwLC9l9sBc5qb0P0xwJdahYdm84nPJfN2CYNEycv2581szCM1dKem_Lxp2anFaBiDRx0Lp9CpTSNsLkIl-x_TP2ZModfkaIltN-6fevytkUeW6HiA9pKY6mTOuHzt9Uks7aOSdSya_uMsAVFJtBOwEc-oU"
+              src="/camille-portrait.webp"
               alt="Camille au travail"
-              className="w-full h-full object-cover opacity-60 mix-blend-overlay"
+              className="w-full h-full object-cover opacity-50 mix-blend-overlay object-[center_30%]"
             />
           </div>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
@@ -29,10 +29,24 @@ export default function MethodeCamillePage() {
 
         {/* Content Section */}
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 md:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+
+            {/* Portrait */}
+            <div className="lg:col-span-4 order-1">
+              <div className="aspect-[3/4] overflow-hidden bg-surface-container-low p-3">
+                <img
+                  src="/camille-portrait.webp"
+                  alt="Portrait de Camille Grignon — Beauty Home Concept"
+                  className="w-full h-full object-cover object-[center_15%]"
+                />
+              </div>
+              <p className="mt-3 font-label-caps text-[10px] text-on-surface-variant/50 uppercase tracking-[0.2em]">
+                Camille Grignon — Fondatrice
+              </p>
+            </div>
 
             {/* Text Content */}
-            <div className="order-2 lg:order-1">
+            <div className="lg:col-span-5 order-2 lg:pt-4">
               <h2 className="font-headline-md text-3xl text-on-surface mb-8">Mon parcours, ma passion</h2>
               <div className="space-y-6 font-body-md text-on-surface-variant text-lg leading-relaxed">
                 <p>
@@ -48,26 +62,26 @@ export default function MethodeCamillePage() {
             </div>
 
             {/* Stats — editorial layout */}
-            <div className="order-1 lg:order-2">
-              <div className="grid grid-cols-2 gap-x-12 gap-y-12 pt-8 border-t border-outline-variant/30">
+            <div className="lg:col-span-3 order-3">
+              <div className="grid grid-cols-1 gap-x-12 gap-y-8 pt-8 border-t border-outline-variant/30">
                 <div>
-                  <p className="font-playfair text-5xl md:text-6xl text-primary mb-2 leading-none">5+</p>
-                  <p className="font-label-caps text-[11px] text-on-surface uppercase tracking-widest mb-1">Ans d'expérience</p>
+                  <p className="font-playfair text-5xl text-primary mb-1 leading-none">5+</p>
+                  <p className="font-label-caps text-[10px] text-on-surface uppercase tracking-widest mb-1">Ans d'expérience</p>
                   <p className="text-xs text-on-surface-variant">Praticienne certifiée</p>
                 </div>
-                <div className="mt-10">
-                  <p className="font-playfair text-5xl md:text-6xl text-primary mb-2 leading-none">30+</p>
-                  <p className="font-label-caps text-[11px] text-on-surface uppercase tracking-widest mb-1">Formations</p>
+                <div>
+                  <p className="font-playfair text-5xl text-primary mb-1 leading-none">30+</p>
+                  <p className="font-label-caps text-[10px] text-on-surface uppercase tracking-widest mb-1">Formations</p>
                   <p className="text-xs text-on-surface-variant">France &amp; Étranger</p>
                 </div>
                 <div>
-                  <p className="font-playfair text-5xl md:text-6xl text-primary mb-2 leading-none">1000+</p>
-                  <p className="font-label-caps text-[11px] text-on-surface uppercase tracking-widest mb-1">Clientes</p>
+                  <p className="font-playfair text-5xl text-primary mb-1 leading-none">1000+</p>
+                  <p className="font-label-caps text-[10px] text-on-surface uppercase tracking-widest mb-1">Clientes</p>
                   <p className="text-xs text-on-surface-variant">Note moyenne 5 étoiles</p>
                 </div>
-                <div className="mt-10 flex flex-col justify-center">
+                <div>
                   <span
-                    className="material-symbols-outlined text-[40px] text-primary/40 mb-2"
+                    className="material-symbols-outlined text-[32px] text-primary/60 mb-1 block"
                     style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}
                   >
                     award_star
