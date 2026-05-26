@@ -101,7 +101,7 @@ export default function Step3Signature({ defaultName, loading, error, onConfirm,
             />
           </div>
           <div className="flex-grow flex items-center justify-center overflow-hidden">
-            <p className="text-4xl md:text-5xl text-primary opacity-80 min-h-[1.5em] text-center" style={{ fontFamily: "'Dancing Script', cursive" }}>
+            <p className="text-4xl md:text-5xl text-primary opacity-80 min-h-[1.5em] text-center" style={{ fontFamily: 'var(--font-dancing), cursive' }}>
               {textVal}
             </p>
           </div>

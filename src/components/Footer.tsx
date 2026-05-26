@@ -35,6 +35,8 @@ export default function Footer() {
               <Link href="/" className="font-body-md text-sm text-on-surface-variant hover:text-primary transition-colors">Accueil</Link>
               <Link href="/methode-camille" className="font-body-md text-sm text-on-surface-variant hover:text-primary transition-colors">La Méthode Camille</Link>
               <Link href="/#formations" className="font-body-md text-sm text-on-surface-variant hover:text-primary transition-colors">Formations</Link>
+              <Link href="/calendrier" className="font-body-md text-sm text-on-surface-variant hover:text-primary transition-colors">Calendrier</Link>
+              <Link href="/financement" className="font-body-md text-sm text-on-surface-variant hover:text-primary transition-colors">Financement</Link>
               <Link href="/#faq" className="font-body-md text-sm text-on-surface-variant hover:text-primary transition-colors">FAQ</Link>
             </nav>
           </div>
@@ -66,7 +68,7 @@ export default function Footer() {
           </p>
           <div className="flex gap-6">
             <Link href="/mentions-legales" className="font-label-caps text-xs text-on-surface-variant hover:text-primary transition-colors">Mentions légales</Link>
-            <Link href="/mentions-legales#cgv" className="font-label-caps text-xs text-on-surface-variant hover:text-primary transition-colors">CGV</Link>
+            <Link href="/cgv" className="font-label-caps text-xs text-on-surface-variant hover:text-primary transition-colors">CGV</Link>
             <Link href="/admin" className="font-label-caps text-xs text-on-surface-variant opacity-20 hover:opacity-100 transition-opacity">Admin</Link>
           </div>
         </div>

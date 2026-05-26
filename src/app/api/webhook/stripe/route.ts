@@ -131,7 +131,8 @@ export async function POST(req: Request) {
     // Règlement intérieur — généré depuis le template HTML et mis en cache dans Supabase Storage
     let reglementBase64: string | null = null
     try {
-      const REGLEMENT_STORAGE_PATH = 'reglement/reglement-interieur.pdf'
+      // v2 = cache key bumped to force regeneration after toolbar-stripping fix
+      const REGLEMENT_STORAGE_PATH = 'reglement/reglement-interieur-v2.pdf'
 
       // 1. Essayer le cache Supabase Storage
       const { data: cachedBlob, error: cacheErr } = await supabase.storage
@@ -166,6 +167,12 @@ export async function POST(req: Request) {
               return `src="data:${mime};base64,${data.toString('base64')}"`
             } catch { return _match }
           })
+
+          // Masquer la barre d'outils (bouton "Imprimer") qui ne doit pas apparaître dans le PDF
+          rawHtml = rawHtml.replace(
+            '</head>',
+            '<style>.toolbar,.no-print,[class*="toolbar"]{display:none!important;visibility:hidden!important;}</style></head>'
+          )
 
           const pdfBuffer = await generatePDFFromHtml(rawHtml)
           reglementBase64 = pdfBuffer.toString('base64')

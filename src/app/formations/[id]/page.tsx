@@ -1,9 +1,35 @@
+import type { Metadata } from 'next'
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SessionBooking from './SessionBooking';
 import Link from 'next/link';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const supabase = await createClient()
+  const { id } = await params
+  const { data: formation } = await supabase
+    .from('formations')
+    .select('titre, description, prix')
+    .eq('id', id)
+    .single()
+
+  if (!formation) return { title: 'Formation — Beauty Home Concept' }
+
+  return {
+    title: `${formation.titre} | Beauty Home Concept`,
+    description: formation.description
+      ? `${formation.description.slice(0, 155)}…`
+      : `Formation professionnelle certifiée Qualiopi — ${formation.titre}. Éligible FAFCEA, OPCO, CPF. Amiens.`,
+    alternates: { canonical: `/formations/${id}` },
+    openGraph: {
+      title: `${formation.titre} | Beauty Home Concept`,
+      description: formation.description ?? 'Formation professionnelle certifiée Qualiopi à Amiens.',
+      type: 'website',
+    },
+  }
+}
 
 export default async function FormationDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient();
