@@ -362,7 +362,7 @@ export default function SessionBooking({ formation, sessions }: { formation: any
       {/* ── 4-step booking modal ───────────────────────────────── */}
       {selectedSessionId && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-gutter overflow-y-auto animate-backdrop-in"
+          className="fixed inset-0 z-[100] flex flex-col items-center overflow-y-auto py-6 px-4 animate-backdrop-in"
           style={{ background: 'transparent' }}
           onClick={step < 4 ? closeFlow : undefined}
         >
@@ -371,7 +371,7 @@ export default function SessionBooking({ formation, sessions }: { formation: any
 
           {/* Modal Card Container */}
           <section
-            className="w-full max-w-[800px] bg-surface-container-lowest shadow-[0_32px_64px_rgba(27,28,28,0.18)] overflow-hidden relative z-10 animate-modal-in my-8 border border-outline-variant/20 flex flex-col shrink-0"
+            className="w-full max-w-[800px] bg-surface-container-lowest shadow-[0_32px_64px_rgba(27,28,28,0.18)] overflow-hidden relative z-10 animate-modal-in border border-outline-variant/20 flex flex-col shrink-0"
             onClick={e => e.stopPropagation()}
           >
             {/* Close Button */}
@@ -385,7 +385,7 @@ export default function SessionBooking({ formation, sessions }: { formation: any
             )}
 
             {/* Progress Header */}
-            <div className="px-6 md:px-10 py-8 md:py-12 border-b border-surface-container shrink-0">
+            <div className="px-6 md:px-10 py-5 md:py-7 border-b border-surface-container shrink-0">
               <div className="flex justify-between items-center max-w-md mx-auto relative">
                 {/* Progress Line */}
                 <div className="absolute top-1/2 left-0 w-full h-[1px] bg-outline-variant -translate-y-1/2 z-0"></div>

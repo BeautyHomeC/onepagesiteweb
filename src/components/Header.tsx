@@ -87,18 +87,8 @@ export default function Header() {
           isMenuOpen ? "translate-y-0" : "-translate-y-full"
         }`}
       >
-        {/* Header row: MENU label */}
-        <div className="shrink-0 flex items-center w-full px-margin-mobile md:px-margin-desktop py-3 border-b border-outline-variant/20 mt-[60px]">
-          <span
-            className="font-label-caps text-[10px] tracking-[0.2em] text-on-surface-variant uppercase"
-            style={{ fontFamily: 'var(--font-hanken)' }}
-          >
-            MENU
-          </span>
-        </div>
-
         {/* Nav links — fill remaining space, no scroll */}
-        <nav className="flex-1 min-h-0 flex flex-col justify-center px-margin-mobile md:px-margin-desktop gap-1 py-2 overflow-hidden">
+        <nav className="flex-1 min-h-0 flex flex-col justify-center px-margin-mobile md:px-margin-desktop gap-1 pt-[80px] pb-2 overflow-hidden">
           {NAV_ITEMS.map(({ href, label }) => {
             const active = isActive(href);
             return (

@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 import { createHash } from 'crypto'
 import { createAdminClient } from '@/lib/supabase/server'
@@ -156,6 +156,28 @@ function buildAuditHtml(params: {
 </article>`
 }
 
+// ── Inline local asset images as base64 data URLs ────────────────────────────
+// Puppeteer's setContent() has no base URL, so relative src="assets/..." fail.
+// This function replaces them with inline base64 data URIs before rendering.
+function inlineLocalAssets(html: string, templatesDir: string): string {
+  const MIME: Record<string, string> = {
+    png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg',
+    gif: 'image/gif', svg: 'image/svg+xml', webp: 'image/webp',
+  }
+  return html.replace(/src="(assets\/[^"]+)"/g, (match, assetPath) => {
+    const filePath = join(templatesDir, assetPath)
+    if (!existsSync(filePath)) return match
+    try {
+      const data = readFileSync(filePath)
+      const ext  = (assetPath.split('.').pop() ?? '').toLowerCase()
+      const mime = MIME[ext] ?? 'application/octet-stream'
+      return `src="data:${mime};base64,${data.toString('base64')}"`
+    } catch {
+      return match
+    }
+  })
+}
+
 // ── Route handler ─────────────────────────────────────────────────────────────
 
 export async function POST(req: Request) {
@@ -268,8 +290,13 @@ export async function POST(req: Request) {
       ? renderedHtml.replace('</head>', PDF_OVERRIDE + '</head>')
       : PDF_OVERRIDE + renderedHtml
 
+    // ── Inline local images (logo, organisme signature) as base64 ───────────
+    // Puppeteer's setContent() has no base URL, so src="assets/..." would 404.
+    const templatesDir = join(process.cwd(), 'public', 'templates')
+    const htmlForPDFInlined = inlineLocalAssets(htmlForPDF, templatesDir)
+
     // ── Generate PDF via Puppeteer ───────────────────────────────────────────
-    const pdfBuffer = await generatePDFFromHtml(htmlForPDF)
+    const pdfBuffer = await generatePDFFromHtml(htmlForPDFInlined)
 
     const tempUuid    = randomUUID()
     const storagePath = `${tempUuid}/contrat-signe.pdf`
