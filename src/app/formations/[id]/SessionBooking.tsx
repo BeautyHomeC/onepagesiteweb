@@ -94,25 +94,25 @@ function WaitlistModal({
                 Laissez vos coordonnées. Vous serez automatiquement prévenue par email si une place se libère.
               </p>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-x-gutter gap-y-6">
                 {(['prenom', 'nom'] as const).map((field) => (
-                  <div key={field}>
-                    <label className="block text-[10px] uppercase tracking-[0.14em] text-on-surface-variant mb-1.5" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}>
+                  <div key={field} className="flex flex-col gap-1.5 group">
+                    <label className="font-label-caps text-[11px] tracking-widest text-outline/70 group-focus-within:text-primary transition-colors uppercase" style={{ fontFamily: 'var(--font-hanken)' }}>
                       {field === 'prenom' ? 'Prénom' : 'Nom'} <span className="text-primary">*</span>
                     </label>
                     <input
                       value={form[field]}
                       onChange={(e) => setForm((f) => ({ ...f, [field]: e.target.value }))}
                       required
-                      className="w-full border border-outline-variant px-4 py-3 text-sm text-on-surface bg-surface-container-lowest placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors"
-                      style={{ fontFamily: 'var(--font-hanken)' }}
+                      className="bg-transparent border-b border-outline-variant/40 focus:border-primary py-3 text-on-surface text-[15px] outline-none placeholder:text-outline-variant/40 transition-colors"
+                      style={{ fontFamily: 'var(--font-hanken)', fontWeight: 300 }}
                     />
                   </div>
                 ))}
               </div>
 
-              <div>
-                <label className="block text-[10px] uppercase tracking-[0.14em] text-on-surface-variant mb-1.5" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}>
+              <div className="flex flex-col gap-1.5 group">
+                <label className="font-label-caps text-[11px] tracking-widest text-outline/70 group-focus-within:text-primary transition-colors uppercase" style={{ fontFamily: 'var(--font-hanken)' }}>
                   Email <span className="text-primary">*</span>
                 </label>
                 <input
@@ -120,8 +120,8 @@ function WaitlistModal({
                   value={form.email}
                   onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                   required
-                  className="w-full border border-outline-variant px-4 py-3 text-sm text-on-surface bg-surface-container-lowest placeholder:text-on-surface-variant/40 focus:outline-none focus:border-primary transition-colors"
-                  style={{ fontFamily: 'var(--font-hanken)' }}
+                  className="bg-transparent border-b border-outline-variant/40 focus:border-primary py-3 text-on-surface text-[15px] outline-none placeholder:text-outline-variant/40 transition-colors"
+                  style={{ fontFamily: 'var(--font-hanken)', fontWeight: 300 }}
                 />
               </div>
 
@@ -366,36 +366,12 @@ export default function SessionBooking({ formation, sessions }: { formation: any
           style={{ background: 'transparent' }}
           onClick={step < 4 ? closeFlow : undefined}
         >
-          {/* Background Layer (Soft Focus) */}
-          <div
-            className="fixed inset-0 z-0 opacity-40 blur-sm shrink-0"
-            style={{
-              backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDG0n3OY2M98BKcmIcK5L-8p0cr0rZYNTGw0W4TFTQh23I5Tx6aRtlI5mNE_1cz94Pyf72qKLqcQLCNTp4lik5IdynC-TRR6M9mNSVnI1mOH8phYOSCTybEBvGAk_kk7ZLI4qyZPzRqXIkE4_SRc2LqM6J3VdS_raUiabEqsu9Owdy1CLJcSQlSkGUgWC5Yr3O6-wCmXkfg6pj0toXiXUy9sxKppvlf0x1-BeuHBVoDWngrkSjrGziNODdE76om622BGhsC_rdYsmA4")',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-            }}
-          ></div>
-          <div className="fixed inset-0 bg-surface/60 backdrop-blur-xl z-0"></div>
-
-          {/* Top Navigation */}
-          <nav className="fixed top-0 w-full z-[110] bg-surface/80 backdrop-blur-md border-b border-outline-variant/10">
-            <div className="flex justify-between items-center w-full px-margin-mobile md:px-margin-desktop py-6 max-w-container-max mx-auto">
-              <div className="flex items-center gap-4">
-                <span className="material-symbols-outlined text-primary text-2xl">spa</span>
-                <span className="font-label-caps text-label-caps tracking-[0.2em] text-on-surface">BEAUTY HOME CONCEPT</span>
-              </div>
-              <div className="hidden md:flex gap-8 items-center">
-                <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="/#formations">FORMATIONS</a>
-                <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="/methode-camille">À PROPOS</a>
-                <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="/#testimonials">AVIS</a>
-                <a className="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors" href="/#contact">CONTACT</a>
-              </div>
-            </div>
-          </nav>
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-surface-container-lowest/80 backdrop-blur-md z-0" />
 
           {/* Modal Card Container */}
           <section
-            className="w-full max-w-[800px] bg-surface-container-lowest shadow-[0_20px_50px_rgba(181,149,98,0.08)] overflow-hidden relative z-10 animate-modal-in my-24 border border-outline-variant/10 flex flex-col shrink-0"
+            className="w-full max-w-[800px] bg-surface-container-lowest shadow-[0_32px_64px_rgba(27,28,28,0.18)] overflow-hidden relative z-10 animate-modal-in my-8 border border-outline-variant/20 flex flex-col shrink-0"
             onClick={e => e.stopPropagation()}
           >
             {/* Close Button */}
@@ -426,28 +402,28 @@ export default function SessionBooking({ formation, sessions }: { formation: any
                   if (done) {
                     return (
                       <div key={label} className="relative z-10 flex flex-col items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs">
-                          <span className="material-symbols-outlined text-sm font-semibold" style={{ fontVariationSettings: "'wght' 600" }}>check</span>
+                        <div className="w-7 h-7 bg-primary text-on-primary flex items-center justify-center">
+                          <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 0, 'wght' 600, 'GRAD' 0, 'opsz' 20" }}>check</span>
                         </div>
-                        <span className="font-label-caps text-[9px] md:text-[10px] text-on-surface-variant font-medium tracking-widest">{label}</span>
+                        <span className="font-label-caps text-[9px] md:text-[10px] text-on-surface-variant tracking-widest">{label}</span>
                       </div>
                     )
                   } else if (active) {
                     return (
                       <div key={label} className="relative z-10 flex flex-col items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-surface-container-lowest border-2 border-primary text-primary flex items-center justify-center text-xs font-bold ring-8 ring-surface-container-lowest">
+                        <div className="w-7 h-7 bg-surface-container-lowest border-2 border-primary text-primary flex items-center justify-center text-xs font-medium" style={{ fontFamily: 'var(--font-hanken)' }}>
                           {n}
                         </div>
-                        <span className="font-label-caps text-[9px] md:text-[10px] text-primary font-bold tracking-widest">{label}</span>
+                        <span className="font-label-caps text-[9px] md:text-[10px] text-primary tracking-widest">{label}</span>
                       </div>
                     )
                   } else {
                     return (
                       <div key={label} className="relative z-10 flex flex-col items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-surface-container-low border border-outline-variant text-outline flex items-center justify-center text-xs ring-8 ring-surface-container-lowest">
+                        <div className="w-7 h-7 bg-surface-container-lowest border border-outline-variant/60 text-on-surface-variant/40 flex items-center justify-center text-xs" style={{ fontFamily: 'var(--font-hanken)' }}>
                           {n}
                         </div>
-                        <span className="font-label-caps text-[9px] md:text-[10px] text-on-surface-variant/50 tracking-widest">{label}</span>
+                        <span className="font-label-caps text-[9px] md:text-[10px] text-on-surface-variant/40 tracking-widest">{label}</span>
                       </div>
                     )
                   }
