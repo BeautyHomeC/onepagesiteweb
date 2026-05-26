@@ -150,10 +150,14 @@
     display: flex; align-items: center; gap: 10px;
   }
   .brandmark .bm-mark{
-    width: 28px; height: 28px; border-radius: 50%;
-    background: var(--gold); color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--serif); font-style: italic; font-size: 16px; line-height: 1;
+    width: 40px; height: 32px;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .brandmark .bm-mark img{
+    width: 100%; height: 100%;
+    object-fit: contain;
+    display: block;
   }
   .brandmark .bm-text{
     font-family: var(--sans); font-size: 10px; letter-spacing: 0.32em;
@@ -650,7 +654,7 @@
   <!-- Floating toolbar (screen only) -->
   <div class="toolbar" aria-hidden="true">
     <span class="dot"></span>
-    <small>Contrat · 5 pages</small>
+    <small>Contrat · 6 pages</small>
     <button type="button" onclick="window.print()">Télécharger en PDF</button>
   </div>
 
@@ -662,7 +666,7 @@
     <div class="cover-grid">
       <div class="cover-left">
         <div class="brandmark">
-          <div class="bm-mark">b</div>
+          <div class="bm-mark"><img src="assets/logo-bhc.png" alt="Logo Beauty Home Concept"></div>
           <div class="bm-text">EI Camille Grignon<small>Beauty Home Concept · Amiens</small></div>
         </div>
 
@@ -706,19 +710,13 @@
           <div style="margin-top: 28px;">
             <div class="qualiopi-mark">
               <div class="seal">Q</div>
-              <div class="qt">Certifiée Qualiopi<small>FAFCEA · OPCO · CPF</small></div>
+              <div class="qt">Certifiée Qualiopi<small>FAFCEA · OPCO · </small></div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="cover-right">
-        <div class="vstamp">EI Camille Grignon · Amiens</div>
-        <div class="placeholder-label">
-          <span>Document contractuel</span>
-          <span style="opacity:.7">Contrat de formation · <span class="var">{{contrat.date_signature}}</span></span>
-        </div>
-      </div>
+      <div class="cover-right"></div>
     </div>
   </article>
   <article class="page" data-screen-label="02 Parties">
@@ -746,7 +744,7 @@
             <li><span class="k">Adresse</span><span class="v">22A rue du Général Leclerc, App. 13 · 1<sup>er</sup> étage, 80&nbsp;000 Amiens</span></li>
             <li><span class="k">SIRET</span><span class="v">910 934 140 000 47</span></li>
             <li><span class="k">N° formateur</span><span class="v">32 80 02643 80</span></li>
-            <li><span class="k">Email</span><span class="v">beautyhomeconcept@gmail.com</span></li>
+            <li><span class="k">Email</span><span class="v"><a href="mailto:contact@beautyhomeconcept.fr">contact@beautyhomeconcept.fr</a></span></li>
           </ul>
           <p class="party-note">Ci-après dénommé «&nbsp;l'organisme&nbsp;».</p>
         </div>
@@ -856,10 +854,20 @@
         <div class="a-body">
           <h3>Dispositions particulières</h3>
           <p>
-          Le stagiaire est invité à se présenter avec des ongles en bon état :
-          ne pas déposer au préalable, prévoir une repousse en gel ou semi-permanent
-          d'au moins 2 semaines. Aucune autre matière que le gel ou le semi-permanent
-          ne sera déposée sur place.
+          <strong style="font-weight: 500;">Pour les formations de manucure russe :</strong>
+          le stagiaire est invité à se présenter avec des ongles en bon état — ne pas
+          déposer au préalable et prévoir une repousse en gel ou semi-permanent
+          <strong style="font-weight:500;">d'au moins 2 semaines</strong>. Le stagiaire
+          peut également se présenter avec des <strong style="font-weight: 500;">ongles nus</strong>.
+          Aucune autre matière que le gel ou le semi-permanent ne sera déposée sur place.
+        </p>
+        <p>
+          <strong style="font-weight: 500;">Pour les formations sur pieds (semi permanent pieds) :</strong>
+          le stagiaire vient avec son propre modèle. Le modèle est convoqué à
+          <strong style="font-weight: 500;">13 h</strong> pour les formations d'<strong style="font-weight: 500;">1 jour</strong>,
+          et à <strong style="font-weight: 500;">13 h le deuxième jour</strong> pour les formations de
+          <strong style="font-weight: 500;">2 jours</strong>. À défaut, le stagiaire doit en avertir la formatrice
+          au moins deux semaines à l'avance afin qu'un modèle lui soit fourni.
         </p>
         <p>
           Aucun matériel personnel n'est requis : l'ensemble des équipements et produits
@@ -892,21 +900,20 @@
         <div class="a-body">
           <h3>Délai de rétractation</h3>
           <p>
-          Conformément à l'article <strong style="font-weight:500;">L.6353-6 du Code du travail</strong>,
-          le stagiaire bénéficie d'un délai de rétractation de <strong style="font-weight:500;">10&nbsp;jours</strong>
-          à compter de la signature du présent contrat.
-        </p>
-        <p>
-          Dans le cas d'une inscription en dernière minute (jusqu'à 24&nbsp;h avant la date),
-          lorsque le délai légal ne peut matériellement être respecté, le stagiaire reconnaît
-          en être informé et renonce expressément à l'exercice de ce délai afin de pouvoir
-          participer à la session.
-        </p>
-        <p>
-          Toute rétractation doit être notifiée à l'organisme par lettre recommandée
-          avec accusé de réception. Lorsqu'elle intervient dans le respect du délai légal,
-          aucune somme ne peut être réclamée au stagiaire.
-        </p>
+            Conformément à l'article <strong style="font-weight:500;">L.6353-5 du Code du travail</strong>,
+            le stagiaire bénéficie d'un délai de rétractation de <strong style="font-weight:500;">10&nbsp;jours</strong>
+            à compter de la signature du présent contrat, pendant lequel il peut se rétracter
+            sans frais ni justification.
+          </p>
+          <p>
+            La rétractation doit être notifiée à l'organisme par lettre recommandée
+            avec accusé de réception, ou par tout autre moyen permettant d'en attester
+            la date de réception.
+          </p>
+          <em class="note">
+            Lorsque la rétractation intervient dans le délai légal, aucune somme ne peut
+            être réclamée au stagiaire et l'acompte versé lui est restitué.
+          </em>
         </div>
       </div>
 
@@ -919,8 +926,8 @@
           Le prix de la formation est fixé à <strong style="font-weight:500;"><span class="var">{{tarif.total}}</span>&nbsp;€ TTC</strong>.
         </p>
         <ul class="bullets">
-          <li><strong style="font-weight:500;">Acompte (30 %)</strong> : <span class="var">{{tarif.acompte}}</span>&nbsp;€ à régler dans les 5&nbsp;jours suivant l'envoi du programme et du règlement intérieur. Si le paiement n'est pas effectué dans ce délai, la date n'est plus garantie.</li>
-          <li><strong style="font-weight:500;">Solde (70 %)</strong> : <span class="var">{{tarif.solde}}</span>&nbsp;€ à l'issue de l'action de formation, par virement instantané ou en espèces.</li>
+          <li><strong style="font-weight:500;">Acompte obligatoire (30 %)</strong> : <span class="var">{{tarif.acompte}}</span>&nbsp;€, versé en ligne lors de la <strong style="font-weight:500;">réservation et de la signature électronique</strong> du présent contrat sur le site beautyhomeconcept.fr.</li>
+          <li><strong style="font-weight:500;">Solde (70 %)</strong> : <span class="var">{{tarif.solde}}</span>&nbsp;€, à régler par <strong style="font-weight:500;">virement bancaire instantané</strong> ou <strong style="font-weight:500;">en espèces</strong> à la fin de la formation.</li>
         </ul>
         <em class="note">Le stagiaire s'engage à verser la totalité du prix susmentionné.</em>
         </div>
@@ -932,12 +939,13 @@
         <div class="a-body">
           <h3>Modalités d'inscription</h3>
           <p>
-          La réservation s'effectue par mail à beautyhomeconcept@gmail.com ou par message
-          Instagram, et devient effective uniquement après&nbsp;:
+          L'inscription s'effectue <strong style="font-weight:500;">directement en ligne</strong>
+          sur le site <strong style="font-weight:500;">beautyhomeconcept.fr</strong>,
+          et devient effective uniquement après&nbsp;:
         </p>
         <ul>
-          <li>signature et paraphe du présent contrat par le stagiaire,</li>
-          <li>versement de l'acompte de 30 %.</li>
+          <li><strong style="font-weight:500;">signature électronique</strong> du présent contrat par le stagiaire,</li>
+          <li><strong style="font-weight:500;">versement de l'acompte obligatoire de 30 %</strong> en ligne.</li>
         </ul>
         <em class="note">
           En cas de refus d'un financement par un organisme, la formation reste due
@@ -954,28 +962,30 @@
         <div class="a-body">
           <h3>Interruption du stage</h3>
           <p>
-          En cas de cessation anticipée du fait de l'abandon du stage par le stagiaire,
-          pour un autre motif que la force majeure dûment reconnue, et après le délai
-          de rétractation prévu à l'article&nbsp;6, la <strong style="font-weight:500;">totalité du prix</strong>
-          de la formation est due.
+          <strong style="font-weight:500;">Passé le délai de rétractation de 10&nbsp;jours</strong>
+          prévu à l'article 6, en cas d'abandon du stage par le stagiaire pour un autre motif
+          que la force majeure dûment reconnue, <strong style="font-weight:500;">la totalité
+          du prix</strong> de la formation reste due, conformément à l'article L.6354-1 du Code du travail.
         </p>
         <p>
           Si le stagiaire est empêché de suivre la formation pour cause de force majeure
-          dûment reconnue, le contrat est résilié et seules
-          les prestations effectivement dispensées sont dues au prorata temporis.
+          dûment reconnue, le contrat est résilié et seules les prestations effectivement
+          dispensées sont dues au prorata temporis.
         </p>
         <em class="note">
-          La force majeure devra être justifiée (certificat médical ou d'hospitalisation)
-          par lettre recommandée. Les enfants malades, problèmes de voiture, problèmes personnels
-          ou familiaux, maux divers, intempéries ou autres raisons non mentionnées ne sont pas
-          considérés comme cas de force majeure.
+          La force majeure s'entend au sens de l'article 1218 du Code civil : événement
+          échappant au contrôle du stagiaire, imprévisible et irrésistible, justifié par
+          tout moyen probant (certificat médical ou d'hospitalisation, attestation officielle)
+          transmis par lettre recommandée avec accusé de réception. Sont expressément
+          <strong style="font-style: normal; font-family: var(--sans); font-weight: 500; color: var(--ink);">exclus du cas de force majeure</strong> :
+          les problèmes de transport, la garde d'enfants malades, et les intempéries.
         </em>
         </div>
       </div>
     </div>
     <div class="runner bot"><span>Contrat de formation</span></div>
   </article>
-  <article class="page" data-screen-label="05 Articles 10–12 · Signature">
+  <article class="page" data-screen-label="05 Articles 10–12">
     <div class="runner top">
       <span>EI Camille Grignon</span>
       <span class="mono">Contrat de formation</span>
@@ -985,8 +995,8 @@
       <div class="chapter-header">
         <div class="ch-no">IV</div>
         <div class="ch-body">
-          <span class="eyebrow">Responsabilités, litiges <span class="amp">&amp;</span> engagements</span>
-          <h2 class="chapter">Articles 10 à 12 · Signatures.</h2>
+          <span class="eyebrow">Responsabilités <span class="amp">&amp;</span> litiges</span>
+          <h2 class="chapter">Articles 10 à 12.</h2>
         </div>
       </div>
 
@@ -1007,12 +1017,21 @@
       <div class="article">
         <div class="a-no">Article<strong>11</strong>Litiges</div>
         <div class="a-body">
-          <h3>Litiges</h3>
+          <h3>Litiges <span class="amp">&amp;</span> médiation</h3>
           <p>
-          En cas de litige, les parties s'efforceront de trouver une solution amiable.
-          À défaut, seul le <strong style="font-weight:500;">tribunal judiciaire d'Amiens</strong>
-          sera compétent. Le présent contrat est soumis au droit français.
-        </p>
+            En cas de litige, les parties s'efforceront de trouver une solution amiable.
+            Le stagiaire peut, conformément aux articles
+            <strong style="font-weight:500;">L.612-1 et suivants du Code de la consommation</strong>,
+            recourir gratuitement au médiateur de la consommation suivant&nbsp;:
+          </p>
+          <ul class="bullets">
+            <li><strong style="font-weight:500;">CNPM — Médiation Consommation</strong>, 27 avenue de la Libération, 42400 Saint-Chamond — <a href="https://cnpm-mediation-consommation.eu" style="color: var(--gold);">cnpm-mediation-consommation.eu</a></li>
+          </ul>
+          <p>
+            À défaut d'accord amiable ou de médiation, seul le
+            <strong style="font-weight:500;">tribunal judiciaire d'Amiens</strong>
+            sera compétent. Le présent contrat est soumis au droit français.
+          </p>
         </div>
       </div>
 
@@ -1035,6 +1054,49 @@
         </p>
         </div>
       </div>
+    </div>
+    <div class="runner bot"><span>Contrat de formation</span></div>
+  </article>
+  <article class="page" data-screen-label="06 Article 13 · Signature">
+    <div class="runner top">
+      <span>EI Camille Grignon</span>
+      <span class="mono">Contrat de formation</span>
+      <span class="num">06</span>
+    </div>
+    <div class="frame">
+      <div class="chapter-header">
+        <div class="ch-no">V</div>
+        <div class="ch-body">
+          <span class="eyebrow">Données personnelles <span class="amp">&amp;</span> signature</span>
+          <h2 class="chapter">Article 13 · Signatures.</h2>
+        </div>
+      </div>
+
+      <div class="article">
+        <div class="a-no">Article<strong>13</strong>Données</div>
+        <div class="a-body">
+          <h3>Protection des données personnelles</h3>
+          <p>
+            Les informations recueillies dans le cadre du présent contrat font l'objet
+            d'un traitement informatique par <strong style="font-weight:500;">EI Camille Grignon</strong>,
+            responsable de traitement, aux seules fins de gestion administrative
+            et pédagogique de la formation (inscription, suivi, attestation, facturation).
+          </p>
+          <p>
+            Les données sont conservées <strong style="font-weight:500;">3&nbsp;ans</strong>
+            à compter de la fin de la relation contractuelle pour les besoins commerciaux,
+            et <strong style="font-weight:500;">10&nbsp;ans</strong> pour les pièces comptables
+            (article L.123-22 du Code de commerce).
+          </p>
+          <p>
+            Conformément au <strong style="font-weight:500;">RGPD (UE 2016/679)</strong>
+            et à la loi Informatique et Libertés modifiée, le stagiaire dispose d'un droit
+            d'accès, de rectification, d'effacement, de limitation, de portabilité et d'opposition,
+            qu'il peut exercer en écrivant à <strong style="font-weight:500;"><a href="mailto:contact@beautyhomeconcept.fr">contact@beautyhomeconcept.fr</a></strong>.
+            Il dispose également du droit d'introduire une réclamation auprès de la CNIL.
+          </p>
+        </div>
+      </div>
 
       <!-- Engagement final + signature -->
       <div class="card gold" style="margin-top: 18px;">
@@ -1052,12 +1114,13 @@
           <div class="sig-label">— L'organisme de formation</div>
           <div class="sig-name">Camille Grignon</div>
           <div class="sig-meta">EI Camille Grignon · Beauty Home Concept</div>
-          <div class="sig-line"><span class="var">{{signature.organisme}}</span></div>
+          <div style="margin-top: 12px; min-height: 70px; display: flex; align-items: center;"><img src="assets/signature-camille.png" alt="Signature Camille Grignon" style="max-height: 70px; max-width: 180px;"></div>
+          <div class="sig-line" style="margin-top: 8px;">Signé électroniquement</div>
         </div>
         <div class="sig-block">
           <div class="sig-label">— Le ou la stagiaire</div>
           <div class="sig-name"><span class="var">{{stagiaire.nom_prenom}}</span></div>
-          <div class="sig-meta">Lu et approuvé · Signé électroniquement — art.&nbsp;1367 Code civil &amp; Règlement eIDAS n°&nbsp;910/2014.</div>
+          <div class="sig-meta">Lu et approuvé · paraphe chaque page avec ses initiales.</div>
           <div class="sig-line"><span class="var">{{signature.stagiaire}}</span></div>
         </div>
       </div>
@@ -1074,9 +1137,6 @@
         <div style="text-align: right;">
           TVA non applicable, art.&nbsp;293 B du CGI.<br>
           <em style="font-family: var(--serif); font-style: italic; color: var(--gold);">Document susceptible d'évolutions.</em>
-        </div>
-        <div style="grid-column: span 2; padding-top: 8px; border-top: 1px solid var(--rule-soft); margin-top: 6px;">
-          <strong>Protection des données (RGPD)</strong> — Conformément au Règlement (UE) 2016/679, vos données personnelles sont utilisées exclusivement pour la gestion de votre formation. Conservation : 5 ans. Droits d'accès, rectification et effacement : contact@beautyhomeconcept.fr.
         </div>
       </div>
     </div>
