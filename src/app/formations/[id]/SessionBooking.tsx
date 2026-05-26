@@ -220,34 +220,52 @@ export default function SessionBooking({ formation, sessions }: { formation: any
   return (
     <>
       {/* ── Sessions list ──────────────────────────────────────── */}
-      <div className="bg-surface border border-outline-variant" style={{ boxShadow: '0 8px 40px rgba(181,149,98,0.07)' }}>
-        <div className="px-8 py-7 border-b border-outline-variant">
-          <h3 className="font-headline-sm text-on-surface mb-1" style={{ fontFamily: 'var(--font-playfair)', fontSize: '20px', fontWeight: 400 }}>
-            Prochaines sessions
-          </h3>
-          <p className="text-on-surface-variant text-sm">Sélectionnez une date pour réserver votre place.</p>
+      <div className="bg-surface-container-low">
+
+        {/* Header */}
+        <div className="pb-6 border-b border-outline-variant/40">
+          <p className="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-[0.25em] mb-3"
+             style={{ fontFamily: 'var(--font-hanken)' }}>
+            PROCHAINES SESSIONS
+          </p>
+          <p className="text-sm text-on-surface-variant" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 300 }}>
+            Sélectionnez une date pour réserver votre place.
+          </p>
         </div>
 
-        <div className="divide-y divide-outline-variant">
+        {/* Session rows */}
+        <div>
           {sessions.length > 0 ? sessions.map(s => {
-            const debut = new Date(s.date_debut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
-            const fin   = new Date(s.date_fin).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+            const debut   = new Date(s.date_debut).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })
+            const fin     = new Date(s.date_fin).toLocaleDateString('fr-FR',   { day: 'numeric', month: 'long', year: 'numeric' })
             const sameDay = debut === fin
             const isFull  = s.places_disponibles <= 0
 
             return (
-              <div key={s.id} className="px-8 py-6 flex flex-col sm:flex-row sm:items-center justify-between gap-5 hover:bg-surface-container-lowest transition-colors">
-                <div className="space-y-1">
-                  <p className="text-on-surface font-medium text-sm" style={{ fontFamily: 'var(--font-hanken)' }}>
+              <div
+                key={s.id}
+                className="py-6 border-b border-outline-variant/40 flex flex-col sm:flex-row sm:items-center justify-between gap-5"
+              >
+                <div className="space-y-1.5">
+                  <p
+                    className="text-on-surface text-sm"
+                    style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}
+                  >
                     {sameDay ? `Le ${debut}` : `Du ${debut} au ${fin}`}
                   </p>
                   {isFull ? (
-                    <p className="text-xs uppercase tracking-widest text-on-surface-variant/60" style={{ fontFamily: 'var(--font-hanken)' }}>
+                    <p
+                      className="font-label-caps text-[9px] uppercase tracking-[0.2em] text-on-surface-variant/50"
+                      style={{ fontFamily: 'var(--font-hanken)' }}
+                    >
                       Session complète
                     </p>
                   ) : (
-                    <p className="text-xs uppercase tracking-widest" style={{ color: '#755a2d', fontFamily: 'var(--font-hanken)' }}>
-                      {s.places_disponibles} place{s.places_disponibles > 1 ? 's' : ''} restante{s.places_disponibles > 1 ? 's' : ''}
+                    <p
+                      className="font-label-caps text-[9px] uppercase tracking-[0.2em] text-primary"
+                      style={{ fontFamily: 'var(--font-hanken)' }}
+                    >
+                      {s.places_disponibles} place{s.places_disponibles > 1 ? 's' : ''} disponible{s.places_disponibles > 1 ? 's' : ''}
                     </p>
                   )}
                 </div>
@@ -255,7 +273,7 @@ export default function SessionBooking({ formation, sessions }: { formation: any
                 {isFull ? (
                   <button
                     onClick={() => setWaitlist(s.id)}
-                    className="shrink-0 border border-outline-variant text-on-surface-variant px-6 py-3 text-xs uppercase tracking-widest hover:border-on-surface hover:text-on-surface transition-colors whitespace-nowrap min-h-[44px]"
+                    className="shrink-0 border border-outline-variant text-on-surface-variant px-6 py-3 text-[10px] uppercase tracking-widest hover:border-on-surface hover:text-on-surface transition-colors whitespace-nowrap min-h-[44px]"
                     style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}
                   >
                     Liste d'attente
@@ -263,30 +281,70 @@ export default function SessionBooking({ formation, sessions }: { formation: any
                 ) : (
                   <button
                     onClick={() => openFlow(s.id)}
-                    className="shrink-0 border border-primary text-primary px-6 py-3 text-xs uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-colors whitespace-nowrap min-h-[44px]"
+                    className="shrink-0 border border-primary text-primary px-6 py-4 text-[10px] uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-colors whitespace-nowrap min-h-[44px] flex items-center gap-2"
                     style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}
                   >
-                    Réserver — acompte {acompte} €
+                    S'inscrire et payer
+                    <span className="material-symbols-outlined text-[16px]"
+                          style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>
+                      arrow_forward
+                    </span>
                   </button>
                 )}
               </div>
             )
           }) : (
-            <div className="px-8 py-10 text-center">
-              <p className="text-on-surface-variant text-sm italic">Aucune session disponible pour le moment.</p>
-              <p className="text-on-surface-variant text-xs mt-2 tracking-wide">Contactez-nous pour être informée des prochaines dates.</p>
+            <div className="py-10 text-center">
+              <p className="text-on-surface-variant text-sm italic" style={{ fontFamily: 'var(--font-hanken)', fontWeight: 300 }}>
+                Aucune session disponible pour le moment.
+              </p>
+              <p className="text-on-surface-variant text-xs mt-2 tracking-wide" style={{ fontFamily: 'var(--font-hanken)' }}>
+                Contactez-nous pour être informée des prochaines dates.
+              </p>
             </div>
           )}
         </div>
 
-        <div className="px-8 py-5 border-t border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <p className="text-sm text-on-surface-variant" style={{ fontFamily: 'var(--font-hanken)' }}>
-            Le solde de <strong className="text-on-surface">{solde} €</strong> est réglé le dernier jour de la formation.
-          </p>
+        {/* Pricing summary + programme download */}
+        <div className="pt-6 space-y-4">
+          <div className="flex justify-between items-end">
+            <div className="space-y-1">
+              <p className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-[0.2em]"
+                 style={{ fontFamily: 'var(--font-hanken)' }}>
+                ACOMPTE
+              </p>
+              <p className="font-playfair text-2xl text-on-surface">{acompte} €</p>
+            </div>
+            <div className="text-right space-y-1">
+              <p className="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-[0.2em]"
+                 style={{ fontFamily: 'var(--font-hanken)' }}>
+                SOLDE (dernier jour)
+              </p>
+              <p className="font-playfair text-2xl text-on-surface-variant">{solde} €</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 text-on-surface-variant/50 pt-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+            </svg>
+            <span className="font-label-caps text-[9px] uppercase tracking-[0.2em]"
+                  style={{ fontFamily: 'var(--font-hanken)' }}>
+              Paiement 100% sécurisé · Stripe
+            </span>
+          </div>
+
           {formation.programme_pdf_url && (
-            <a href={formation.programme_pdf_url} target="_blank" rel="noopener noreferrer" download
-              className="inline-flex items-center gap-2 text-primary hover:opacity-70 transition-opacity text-xs uppercase tracking-widest whitespace-nowrap"
-              style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}>
+            <a
+              href={formation.programme_pdf_url}
+              target="_blank" rel="noopener noreferrer" download
+              className="inline-flex items-center gap-2 text-primary hover:opacity-70 transition-opacity text-[10px] uppercase tracking-widest"
+              style={{ fontFamily: 'var(--font-hanken)', fontWeight: 500 }}
+            >
+              <span className="material-symbols-outlined text-[14px]"
+                    style={{ fontVariationSettings: "'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24" }}>
+                download
+              </span>
               Télécharger le programme (PDF)
             </a>
           )}
@@ -309,7 +367,7 @@ export default function SessionBooking({ formation, sessions }: { formation: any
           onClick={step < 4 ? closeFlow : undefined}
         >
           <div
-            className="animate-modal-in bg-surface w-full sm:max-w-xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto flex flex-col"
+            className={`animate-modal-in bg-surface w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto flex flex-col ${step === 2 ? 'sm:max-w-3xl' : 'sm:max-w-xl'}`}
             style={{ boxShadow: '0 32px 80px rgba(27,28,28,0.3)' }}
             onClick={e => e.stopPropagation()}
           >

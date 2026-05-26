@@ -26,9 +26,10 @@ export async function generatePDFFromHtml(html: string): Promise<Buffer> {
     const { default: puppeteer } = await import('puppeteer-core')
 
     // Use env var (set in Vercel dashboard) or fall back to the installed package version
+    // NOTE: Vercel runs on x64 Linux; the pack filename requires the .x64 architecture suffix
     const remoteUrl =
       process.env.CHROMIUM_REMOTE_EXEC_PATH ??
-      `https://github.com/Sparticuz/chromium/releases/download/v148.0.0/chromium-v148.0.0-pack.tar`
+      `https://github.com/Sparticuz/chromium/releases/download/v148.0.0/chromium-v148.0.0-pack.x64.tar`
 
     browser = await puppeteer.launch({
       args: (chromium as any).args,
