@@ -57,6 +57,9 @@ export async function generatePDFFromHtml(html: string): Promise<Buffer> {
 
   try {
     const page = await browser.newPage()
+    // Set viewport wider than 900px so the template's @media (max-width:900px)
+    // mobile-scaling rule never fires during PDF rendering.
+    await page.setViewport({ width: 1200, height: 900 })
     await page.emulateMediaType('print')
     await page.setContent(html, { waitUntil: 'networkidle0', timeout: 30_000 })
     const pdf = await page.pdf({

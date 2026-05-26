@@ -82,8 +82,23 @@ export async function POST(req: Request) {
 
     const renderedHtml = renderTemplate(rawHtml, vars)
 
+    // ── Inject PDF-specific CSS override before Puppeteer rendering ──────────
+    // Neutralises the template's @media (max-width:900px) mobile-scaling block
+    // which clips pages to ~55% height. This runs in addition to setting the
+    // Puppeteer viewport to 1200px (belt-and-suspenders approach).
+    const PDF_OVERRIDE = `<style id="__pdf_override">
+.toolbar{display:none!important}
+@media(max-width:900px){
+  body{padding-top:0!important}
+  .page{transform:none!important;height:297mm!important;margin-bottom:0!important}
+}
+</style>`
+    const htmlForPDF = renderedHtml.includes('</head>')
+      ? renderedHtml.replace('</head>', PDF_OVERRIDE + '</head>')
+      : PDF_OVERRIDE + renderedHtml
+
     // ── Generate PDF via Puppeteer ───────────────────────────────────────────
-    const pdfBuffer = await generatePDFFromHtml(renderedHtml)
+    const pdfBuffer = await generatePDFFromHtml(htmlForPDF)
 
     const tempUuid    = randomUUID()
     const storagePath = `${tempUuid}/contrat-signe.pdf`
