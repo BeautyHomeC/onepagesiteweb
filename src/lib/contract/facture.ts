@@ -32,7 +32,12 @@ function formatDate(iso: string) {
   })
 }
 
-function invoiceRef(stripeId: string, paidAt: string): string {
+/** Formats a monetary amount with exactly 2 decimal places (French accounting standard) */
+function formatEur(amount: number): string {
+  return amount.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
+
+export function invoiceRef(stripeId: string, paidAt: string): string {
   const d = new Date(paidAt)
   const yy = d.getFullYear()
   const mm = String(d.getMonth() + 1).padStart(2, '0')
@@ -41,22 +46,42 @@ function invoiceRef(stripeId: string, paidAt: string): string {
 }
 
 export function generateFactureHTML(p: FactureParams): string {
-  const gold = '#755a2d'
-  const goldLight = 'rgba(117,90,45,0.07)'
+  const gold       = '#755a2d'
+  const goldLight  = 'rgba(117,90,45,0.07)'
   const goldBorder = 'rgba(117,90,45,0.2)'
-  const dark = '#1b1c1c'
-  const muted = '#5a5248'
-  const subtle = '#8c8278'
-  const line = '#e9e8e8'
-  const serif = "'Playfair Display', Georgia, serif"
-  const sans = "'Hanken Grotesk', Arial, Helvetica, sans-serif"
+  const dark       = '#1b1c1c'
+  const muted      = '#5a5248'
+  const subtle     = '#8c8278'
+  const line       = '#e9e8e8'
+  const serif      = "'Playfair Display', Georgia, serif"
+  const sans       = "'Hanken Grotesk', Arial, Helvetica, sans-serif"
 
-  const logo = logoBase64()
-  const ref = invoiceRef(p.stripeId, p.paidAt)
+  const logo         = logoBase64()
+  const ref          = invoiceRef(p.stripeId, p.paidAt)
   const dateEmission = formatDate(p.paidAt)
-  const nomClient = `${p.prenom} ${p.nom}`.trim()
-  const prixTotal = p.acompte + p.solde
-  const docType = p.clientType === 'pro' ? 'Convention' : 'Contrat'
+  const nomClient    = `${p.prenom} ${p.nom}`.trim()
+  const prixTotal    = p.acompte + p.solde
+  const docType      = p.clientType === 'pro' ? 'Convention' : 'Contrat'
+
+  // ─── Conditions de règlement — selon type client ────────────────────────────
+  // B2B (pro) : mentions obligatoires Art. L.441-10 + D.441-5 Code de Commerce
+  // B2C (particulier) : confirmation d'inscription et modalité de solde
+  const conditionsHTML = p.clientType === 'pro'
+    ? `<p style="margin:0 0 4px;">
+        <strong style="font-weight:500; color:${dark};">Conditions de règlement :</strong>
+        paiement à réception de facture.
+       </p>
+       <p style="margin:0;">
+        Tout retard de paiement entraîne, de plein droit, l'application de pénalités de retard
+        au taux annuel de 3 fois le taux d'intérêt légal en vigueur, ainsi qu'une indemnité
+        forfaitaire pour frais de recouvrement de 40 € (Art. L.441-10 et D.441-5 du Code de Commerce).
+       </p>`
+    : `<p style="margin:0;">
+        Votre inscription est confirmée à réception de cet acompte.
+        Le solde de <strong style="font-weight:500; color:${dark};">${formatEur(p.solde)} €</strong>
+        sera réglé le dernier jour de formation.
+        Conservez ce document comme justificatif de paiement.
+       </p>`
 
   return `<!DOCTYPE html>
 <html lang="fr">
@@ -80,7 +105,7 @@ export function generateFactureHTML(p: FactureParams): string {
   .logo-sub { font-family: ${sans}; font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase; color: ${subtle}; font-weight: 400; }
   .invoice-title-block { text-align: right; }
   .invoice-type { font-family: ${sans}; font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase; color: ${gold}; font-weight: 500; margin-bottom: 6px; }
-  .invoice-ref { font-family: ${serif}; font-size: 22px; font-weight: 400; color: ${dark}; }
+  .invoice-ref { font-family: ${serif}; font-size: 24px; font-weight: 400; color: ${dark}; }
   .invoice-date { font-family: ${sans}; font-size: 11px; color: ${muted}; font-weight: 300; margin-top: 4px; }
   .parties { padding: 24px 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
   .party-block { }
@@ -97,13 +122,19 @@ export function generateFactureHTML(p: FactureParams): string {
   table.lines tbody td { font-family: ${sans}; font-size: 13px; font-weight: 300; color: ${dark}; padding: 12px 0; vertical-align: top; }
   table.lines tbody td:last-child { text-align: right; font-weight: 400; }
   table.lines tbody td.desc-sub { font-size: 11px; color: ${muted}; margin-top: 2px; display: block; }
-  .totals-box { background: ${goldLight}; border: 1px solid ${goldBorder}; padding: 20px 24px; margin: 0 48px 24px; }
+  .totals-box { background: ${goldLight}; border: 1px solid ${goldBorder}; padding: 20px 24px; margin: 0 48px 20px; }
   table.totals { width: 100%; border-collapse: collapse; }
   table.totals td { font-family: ${sans}; font-size: 13px; font-weight: 300; color: ${muted}; padding: 5px 0; }
   table.totals td:last-child { text-align: right; font-weight: 400; color: ${dark}; }
   table.totals tr.total-row td { font-family: ${serif}; font-size: 16px; font-weight: 400; color: ${gold}; padding-top: 12px; border-top: 1px solid ${goldBorder}; }
   table.totals tr.total-row td:last-child { font-family: ${serif}; font-size: 18px; }
-  .paid-badge { display: inline-block; background: ${gold}; color: #fff; font-family: ${sans}; font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; font-weight: 500; padding: 5px 14px; margin: 0 48px 24px; }
+  /* Badge : label en uppercase + référence en casse originale */
+  .paid-badge-wrap { margin: 0 48px 20px; display: flex; align-items: center; gap: 10px; }
+  .paid-badge-label { display: inline-flex; align-items: center; gap: 6px; background: ${gold}; color: #fff; font-family: ${sans}; font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; font-weight: 500; padding: 5px 14px; white-space: nowrap; }
+  .paid-badge-ref { font-family: ${sans}; font-size: 10px; color: ${muted}; font-weight: 300; letter-spacing: 0.02em; }
+  /* Conditions de règlement */
+  .conditions { margin: 0 48px 20px; padding: 14px 16px; border: 1px solid ${line}; background: #fafaf9; }
+  .conditions p { font-family: ${sans}; font-size: 10px; color: ${subtle}; font-weight: 300; line-height: 1.65; }
   .spacer { flex: 1; }
   .footer { margin-top: auto; padding: 20px 48px; border-top: 1px solid ${line}; display: flex; justify-content: space-between; align-items: flex-end; }
   .footer-left { font-family: ${sans}; font-size: 10px; color: ${subtle}; font-weight: 300; line-height: 1.7; }
@@ -116,7 +147,7 @@ export function generateFactureHTML(p: FactureParams): string {
 
   <div class="gold-bar"></div>
 
-  <!-- Header -->
+  <!-- En-tête -->
   <div class="header">
     <div class="logo-area">
       ${logo
@@ -181,39 +212,48 @@ export function generateFactureHTML(p: FactureParams): string {
             <span class="desc-sub">Organisme certifié Qualiopi · NDA 32 80 02643 80</span>
           </td>
           <td style="color:${muted}; font-size:12px;">Acompte (30%)</td>
-          <td>${p.acompte.toLocaleString('fr-FR')} €</td>
+          <td>${formatEur(p.acompte)} €</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Totaux -->
+  <!-- Récapitulatif des montants -->
   <div class="totals-box">
     <table class="totals">
       <tbody>
         <tr>
           <td>Acompte réglé le ${dateEmission}</td>
-          <td>${p.acompte.toLocaleString('fr-FR')} €</td>
+          <td>${formatEur(p.acompte)} €</td>
         </tr>
         <tr>
           <td>Solde restant (à régler le dernier jour de formation)</td>
-          <td>${p.solde.toLocaleString('fr-FR')} €</td>
+          <td>${formatEur(p.solde)} €</td>
         </tr>
         <tr class="total-row">
           <td>Prix total de la formation</td>
-          <td>${prixTotal.toLocaleString('fr-FR')} €</td>
+          <td>${formatEur(prixTotal)} €</td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div>
-    <div class="paid-badge">✓ Acompte encaissé — Référence : ${p.stripeId}</div>
+  <!-- Badge de paiement : label uppercase + référence Stripe en casse originale -->
+  <div class="paid-badge-wrap">
+    <div class="paid-badge-label">
+      &#10003;&nbsp;Acompte encaissé — CB en ligne (Stripe)
+    </div>
+    <span class="paid-badge-ref">Réf. ${p.stripeId}</span>
+  </div>
+
+  <!-- Conditions de règlement -->
+  <div class="conditions">
+    ${conditionsHTML}
   </div>
 
   <div class="spacer"></div>
 
-  <!-- Footer légal -->
+  <!-- Pied de page légal -->
   <div class="footer">
     <div class="footer-left">
       <span class="footer-brand">Beauty Home Concept</span>
