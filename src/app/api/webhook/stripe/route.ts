@@ -100,19 +100,41 @@ export async function POST(req: Request) {
     const formationTitre = formation?.titre ?? session.metadata?.formation_titre ?? 'Formation'
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin
 
-    // Stripe invoice
+    // Facture — URL Stripe conservée pour le bouton email, PDF remplacé par notre template custom
     let invoiceUrl: string | null = null
     let invoicePdfBase64: string | null = null
+
+    // 1. Récupérer l'URL Stripe (bouton "Télécharger" dans l'email)
     if (session.invoice) {
       try {
         const invoice = await stripe.invoices.retrieve(session.invoice as string)
         invoiceUrl = invoice.hosted_invoice_url ?? null
-        if (invoice.invoice_pdf) {
-          const r = await fetch(invoice.invoice_pdf)
-          if (r.ok) invoicePdfBase64 = Buffer.from(await r.arrayBuffer()).toString('base64')
-        }
-      } catch (e) { console.error('Facture Stripe:', e) }
+      } catch (e) { console.error('Facture Stripe URL:', e) }
     }
+
+    // 2. Générer notre propre PDF de facture aux couleurs du site
+    try {
+      const { generateFactureHTML } = await import('@/lib/contract/facture')
+      const { generatePDFFromHtml } = await import('@/lib/contract/pdf')
+      const factureHtml = generateFactureHTML({
+        prenom:        reservation.prenom ?? '',
+        nom:           reservation.nom ?? '',
+        email:         reservation.email_client ?? '',
+        telephone:     reservation.telephone ?? reservation.telephone_client ?? '',
+        adresse:       reservation.adresse ?? '',
+        clientType:    (reservation.client_type ?? 'particulier') as 'particulier' | 'pro',
+        raisonSociale: reservation.raison_sociale ?? undefined,
+        siret:         reservation.siret ?? undefined,
+        formationTitre,
+        dateSession,
+        acompte:       acompteAmount,
+        solde:         Math.round((formation?.prix ?? 0) * 0.7),
+        stripeId:      stripeId,
+        paidAt:        reservation.acompte_paid_at ?? new Date().toISOString(),
+      })
+      const facturePdf = await generatePDFFromHtml(factureHtml)
+      invoicePdfBase64 = facturePdf.toString('base64')
+    } catch (e) { console.error('Facture custom:', e) }
 
     // Signed contract from Storage
     let contratBase64: string | null = null
