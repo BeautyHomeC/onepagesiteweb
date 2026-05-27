@@ -165,10 +165,27 @@ export async function deleteSession(id: string) {
   await requireAuth();
   const supabase = await createAdminClient();
 
+  // Check for linked reservations before attempting delete
+  const { count, error: countError } = await supabase
+    .from('reservations')
+    .select('id', { count: 'exact', head: true })
+    .eq('session_id', id);
+
+  if (countError) {
+    console.error('Count reservations error:', countError);
+    throw new Error('Erreur lors de la vérification des réservations liées.');
+  }
+
+  if (count && count > 0) {
+    throw new Error(
+      `Impossible de supprimer : cette session a ${count} réservation${count > 1 ? 's' : ''} liée${count > 1 ? 's' : ''}. Annulez d'abord les réservations.`
+    );
+  }
+
   const { error } = await supabase.from('sessions').delete().eq('id', id);
   if (error) {
     console.error('Delete session error:', error);
-    throw new Error('Impossible de supprimer cette session (il y a peut-être déjà des réservations).');
+    throw new Error('Impossible de supprimer cette session.');
   }
 
   revalidatePath('/admin/sessions');
