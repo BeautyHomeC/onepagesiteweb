@@ -104,6 +104,56 @@ export async function GET(req: Request, { params }: Params) {
     }
   }
 
+  // 4. Facture d'acompte — regenerated from stored reservation data
+  if (reservation.stripe_payment_id && reservation.acompte_paid_at) {
+    try {
+      const { generateFactureHTML } = await import('@/lib/contract/facture')
+      const { generatePDFFromHtml } = await import('@/lib/contract/pdf')
+      const acompteAmount = reservation.acompte_amount ?? 0
+      const prixTotal = (reservation as any).sessions?.formations?.prix ?? 0
+
+      const factureAcompteHtml = generateFactureHTML({
+        prenom:        reservation.prenom ?? '',
+        nom:           reservation.nom ?? '',
+        email:         reservation.email_client ?? '',
+        telephone:     reservation.telephone ?? reservation.telephone_client ?? '',
+        adresse:       reservation.adresse ?? '',
+        clientType:    (reservation.client_type ?? 'particulier') as 'particulier' | 'pro',
+        raisonSociale: reservation.raison_sociale ?? undefined,
+        siret:         reservation.siret ?? undefined,
+        formationTitre,
+        dateSession,
+        acompte:       acompteAmount,
+        solde:         Math.max(0, prixTotal - acompteAmount),
+        stripeId:      reservation.stripe_payment_id,
+        paidAt:        reservation.acompte_paid_at,
+      })
+
+      const factureAcomptePdf = await generatePDFFromHtml(factureAcompteHtml)
+      zip.file(`Facture_acompte_${safeName}.pdf`, factureAcomptePdf)
+    } catch (e) {
+      console.error('Facture acompte ZIP error:', e)
+    }
+  }
+
+  // 5. Facture finale — fetched from Storage if the solde has been paid
+  const factureFinalePath = (reservation as any).facture_finale_url as string | null
+  if (factureFinalePath) {
+    try {
+      const { data: signedFinale } = await supabaseAdmin.storage
+        .from('contracts')
+        .createSignedUrl(factureFinalePath, 3600)
+      if (signedFinale?.signedUrl) {
+        const r = await fetch(signedFinale.signedUrl)
+        if (r.ok) {
+          zip.file(`Facture_finale_${safeName}.pdf`, await r.arrayBuffer())
+        }
+      }
+    } catch (e) {
+      console.error('Facture finale ZIP error:', e)
+    }
+  }
+
   // Generate ZIP buffer
   const zipBuffer = await zip.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' })
 
