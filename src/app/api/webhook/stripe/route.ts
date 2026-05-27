@@ -34,6 +34,103 @@ export async function POST(req: Request) {
 
   const supabase = await createAdminClient()
 
+  // ── FINAL PAYMENT BRANCH ─────────────────────────────────────────────────
+  if (session.metadata?.is_final_payment === 'true') {
+    // This checkout was for the final balance (solde), not the initial deposit
+    const { data: reservation } = await supabase
+      .from('reservations')
+      .select(`
+        id, prenom, nom, nom_client, email_client,
+        telephone, telephone_client, adresse, client_type, raison_sociale, siret,
+        acompte_amount, acompte_paid_at, stripe_payment_id, solde_paid_at,
+        sessions ( date_debut, date_fin, formations ( titre, prix ) )
+      `)
+      .eq('id', reservationId)
+      .single()
+
+    if (!reservation || reservation.solde_paid_at) {
+      // Already processed or not found
+      return NextResponse.json({ received: true })
+    }
+
+    const formation: any = (reservation as any).sessions?.formations
+    const sessionRow: any = (reservation as any).sessions
+    const dateDebut = new Date(sessionRow?.date_debut ?? Date.now()).toLocaleDateString('fr-FR')
+    const dateFin   = new Date(sessionRow?.date_fin   ?? Date.now()).toLocaleDateString('fr-FR')
+    const dateSession = dateDebut === dateFin ? `le ${dateDebut}` : `du ${dateDebut} au ${dateFin}`
+    const formationTitre = formation?.titre ?? 'Formation'
+    const prixTotal = formation?.prix ?? 0
+    const acompte = reservation.acompte_amount ?? 0
+    const solde = Math.round((session.amount_total ?? 0) / 100)
+    const soldePaidAt = new Date().toISOString()
+    const nomComplet = (`${reservation.prenom ?? ''} ${reservation.nom ?? ''}`.trim() || reservation.nom_client) ?? 'client'
+
+    // Generate final invoice PDF
+    let facturePdfBuffer: Buffer | null = null
+    let facturePath: string | null = null
+    try {
+      const { generateFactureFinaleHTML } = await import('@/lib/contract/facture-finale')
+      const { generatePDFFromHtml } = await import('@/lib/contract/pdf')
+      const factureHtml = generateFactureFinaleHTML({
+        prenom: reservation.prenom ?? '',
+        nom: reservation.nom ?? '',
+        email: reservation.email_client ?? '',
+        telephone: reservation.telephone ?? reservation.telephone_client ?? '',
+        adresse: reservation.adresse ?? '',
+        clientType: (reservation.client_type ?? 'particulier') as 'particulier' | 'pro',
+        raisonSociale: reservation.raison_sociale ?? undefined,
+        siret: reservation.siret ?? undefined,
+        formationTitre, dateSession, prixTotal, acompte,
+        acompteStripeId: reservation.stripe_payment_id ?? reservationId,
+        acomptePaidAt: reservation.acompte_paid_at ?? soldePaidAt,
+        solde, soldePaidAt, soldePaymentMethod: 'CB en ligne (Stripe)',
+      })
+      facturePdfBuffer = await generatePDFFromHtml(factureHtml)
+      const { error: upErr } = await supabase.storage
+        .from('contracts')
+        .upload(`${reservationId}/facture-finale.pdf`, facturePdfBuffer, {
+          contentType: 'application/pdf', upsert: true,
+        })
+      if (!upErr) facturePath = `${reservationId}/facture-finale.pdf`
+    } catch (e) { console.error('[webhook-final] PDF error:', e) }
+
+    // Update reservation
+    await supabase.from('reservations').update({
+      solde_paid_at: soldePaidAt,
+      solde_payment_method: 'CB en ligne (Stripe)',
+      stripe_solde_session_id: session.id,
+      ...(facturePath ? { facture_finale_url: facturePath } : {}),
+    }).eq('id', reservationId)
+
+    // Send email
+    try {
+      const resendFinal = new Resend(process.env.RESEND_API_KEY)
+      const FinalInvoiceEmail = (await import('@/emails/FinalInvoiceEmail')).default
+      const attachments: Array<{ filename: string; content: string }> = []
+      if (facturePdfBuffer) {
+        attachments.push({
+          filename: `Facture_solde_${nomComplet.replace(/\s+/g, '_')}.pdf`,
+          content: facturePdfBuffer.toString('base64'),
+        })
+      }
+      await resendFinal.emails.send({
+        from: 'Beauty Home Concept <contact@beautyhomeconcept.fr>',
+        to: [reservation.email_client!],
+        subject: `Paiement complet — ${formationTitre}`,
+        react: FinalInvoiceEmail({
+          nomClient: nomComplet,
+          prenom: reservation.prenom ?? nomComplet.split(' ')[0],
+          formationTitre, dateSession, prixTotal, acompte, solde,
+          soldePaymentMethod: 'CB en ligne (Stripe)',
+        }),
+        attachments,
+      })
+    } catch (e) { console.error('[webhook-final] Email error:', e) }
+
+    return NextResponse.json({ received: true })
+  }
+  // ── END FINAL PAYMENT BRANCH ─────────────────────────────────────────────
+
   // Idempotence
   const { data: existing } = await supabase
     .from('reservations')
