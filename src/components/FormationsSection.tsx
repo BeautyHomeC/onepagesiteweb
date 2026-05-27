@@ -83,12 +83,24 @@ export default function FormationsSection() {
         }
 
         if (sessionsRes.data) {
+          // Sessions are ordered ascending by date_debut.
+          // Priority: nearest session with available places; fallback to nearest full session.
           const byFormation: Record<string, any> = {};
+
+          // First pass: pick the earliest session that has available places
+          sessionsRes.data.forEach((s: any) => {
+            if (s.places_disponibles > 0 && !byFormation[s.formation_id]) {
+              byFormation[s.formation_id] = s;
+            }
+          });
+
+          // Second pass: for formations still without a session, pick the nearest one (even if full)
           sessionsRes.data.forEach((s: any) => {
             if (!byFormation[s.formation_id]) {
               byFormation[s.formation_id] = s;
             }
           });
+
           setNextSessions(byFormation);
         }
       } catch (e) {

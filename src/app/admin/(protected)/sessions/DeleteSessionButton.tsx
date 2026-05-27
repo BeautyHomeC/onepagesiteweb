@@ -8,13 +8,12 @@ export default function DeleteSessionButton({ id }: { id: string }) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   async function handleDelete() {
-    if (!confirm('Êtes-vous sûr de vouloir supprimer cette session ? Cela ne supprimera pas les réservations liées.')) return;
-    
+    if (!confirm('Êtes-vous sûr de vouloir supprimer cette session ?')) return;
+
     setIsDeleting(true);
-    try {
-      await deleteSession(id);
-    } catch (error: any) {
-      alert(error.message);
+    const result = await deleteSession(id);
+    if (!result.success) {
+      alert(result.error ?? 'Erreur lors de la suppression.');
       setIsDeleting(false);
     }
   }

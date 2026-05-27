@@ -161,7 +161,7 @@ export async function createSession(formData: FormData) {
   return { success: true };
 }
 
-export async function deleteSession(id: string) {
+export async function deleteSession(id: string): Promise<{ success: boolean; error?: string }> {
   await requireAuth();
   const supabase = await createAdminClient();
 
@@ -173,19 +173,20 @@ export async function deleteSession(id: string) {
 
   if (countError) {
     console.error('Count reservations error:', countError);
-    throw new Error('Erreur lors de la vérification des réservations liées.');
+    return { success: false, error: 'Erreur lors de la vérification des réservations liées.' };
   }
 
   if (count && count > 0) {
-    throw new Error(
-      `Impossible de supprimer : cette session a ${count} réservation${count > 1 ? 's' : ''} liée${count > 1 ? 's' : ''}. Annulez d'abord les réservations.`
-    );
+    return {
+      success: false,
+      error: `Impossible de supprimer : cette session a ${count} réservation${count > 1 ? 's' : ''} liée${count > 1 ? 's' : ''}. Annulez d'abord les réservations.`,
+    };
   }
 
   const { error } = await supabase.from('sessions').delete().eq('id', id);
   if (error) {
     console.error('Delete session error:', error);
-    throw new Error('Impossible de supprimer cette session.');
+    return { success: false, error: 'Impossible de supprimer cette session.' };
   }
 
   revalidatePath('/admin/sessions');
